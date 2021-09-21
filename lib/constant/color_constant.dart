@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 /// 颜色常量
 class Colours {
+  // 可点击的action btn
+  static const Color actionClickable = Color(0xFF4facfe);
+
   static const Color textLinkColor = Color(0xFF1E90FF);
 
   static const Color emphasizeFontColor = Color(0xFF303133);

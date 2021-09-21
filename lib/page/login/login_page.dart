@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' as prefix2;
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +34,11 @@ import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/toast_util.dart';
 import 'package:wall/util/version_util.dart';
+import 'package:wall/widget/common/button/long_flat_btn.dart';
 import 'package:wall/widget/common/my_text_field.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
-import '../application.dart';
+import '../../application.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -75,6 +78,10 @@ class _SMSLoginPageState extends State<LoginPage> {
 
     // 登录页面也检查更新
     VersionUtils.checkUpdate().then((res) => VersionUtils.displayUpdateDialog(res, slient: true));
+
+    // TODO 去掉这一行
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    Provider.of<ThemeProvider>(context, listen: false).setTheme(Themes.light);
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await SpUtil.getInstance();
@@ -197,7 +204,7 @@ class _SMSLoginPageState extends State<LoginPage> {
         RegTemp.phone = _phoneController.text;
         RegTemp.invitationCode = _iCodeController.text;
         // 跳转到个人信息页面
-        NavigatorUtils.push(context, LoginRouter.loginInfoPage);
+        NavigatorUtils.push(context, LoginRouter.registerAccSetPage);
       } else {
         NavigatorUtils.goBack(context);
         if (StrUtil.isEmpty(res.message)) {
@@ -236,16 +243,64 @@ class _SMSLoginPageState extends State<LoginPage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("登录后即可加入WALL",
-              style: TextStyle(
-                  fontSize: 23.0,
-                  fontWeight: FontWeight.bold,
-                  foreground: Paint()
-                    ..shader = const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF4facfe), Color(0xFF00f2fe)])
-                        .createShader(const Rect.fromLTWH(0, 0, 207, 23)))),
+          // Container(
+          //   alignment: Alignment.centerLeft,
+          //   child: TextLiquidFill(
+          //     text: '欢迎加入WALL',
+          //     boxHeight: 60,
+          //     boxWidth: 180,
+          //     textAlign: TextAlign.justify,
+          //     waveColor: const Color(0xFF4facfe),
+          //     boxBackgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
+          //     textStyle: TextStyle(
+          //         fontSize: 23.0,
+          //         fontWeight: FontWeight.bold,
+          //         foreground: Paint()
+          //           ..shader = const LinearGradient(
+          //                   begin: Alignment.topLeft,
+          //                   end: Alignment.bottomRight,
+          //                   colors: [Color(0xFF4facfe), Color(0xFF00f2fe)])
+          //               .createShader(const Rect.fromLTWH(0, 0, 207, 23))),
+          //   ),
+          // ),
+          ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  colors: <Color>[Color(0xFF4facfe), Color(0xFF00f2fe)],
+                  tileMode: TileMode.mirror,
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.srcIn,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 38.0),
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.bold,
+                    // color: Colours.emphasizeFontColor,
+                    // foreground: Paint()
+                    //   ..shader = const LinearGradient(
+                    //           begin: Alignment.topLeft,
+                    //           end: Alignment.bottomRight,
+                    //           colors: [Color(0xFF4facfe), Color(0xFF00f2fe)])
+                    //       .createShader(const Rect.fromLTWH(0, 0, 207, 23))
+                  ),
+                  child: AnimatedTextKit(isRepeatingAnimation: true, totalRepeatCount: 2, animatedTexts: [
+                    WavyAnimatedText('登录后即可加入WALL', speed: const Duration(milliseconds: 350)),
+                  ]),
+                ),
+              )),
+
+          // Text("登录后即可加入WALL",
+          //     style: TextStyle(
+          //         fontSize: 23.0,
+          //         fontWeight: FontWeight.bold,
+          //         foreground: Paint()
+          //           ..shader = const LinearGradient(
+          //                   begin: Alignment.topLeft,
+          //                   end: Alignment.bottomRight,
+          //                   colors: [Color(0xFF4facfe), Color(0xFF00f2fe)])
+          //               .createShader(const Rect.fromLTWH(0, 0, 207, 23)))),
           Gaps.vGap5,
           _renderSubBody(),
           Gaps.vGap20,
@@ -363,6 +418,48 @@ class _SMSLoginPageState extends State<LoginPage> {
   }
 
   _renderGetCodeLine() {
+    return LongFlatButton(
+      text: Text(
+        !_codeWaiting ? '获取短信验证码' : '重新获取 $s秒',
+        style: const TextStyle(color: Colors.white),
+      ),
+      enabled: _canGetCode,
+      onPressed: _codeWaiting
+          ? null
+          : () async {
+              String phone = _phoneController.text;
+              if (phone.isEmpty || phone.length < 11) {
+                ToastUtil.showToast(context, '手机号格式不正确');
+                return;
+              }
+              Util.showDefaultLoadingWithBounds(context);
+              Result res = await MemberApi.sendPhoneVerificationCode(_phoneController.text);
+              NavigatorUtils.goBack(context);
+
+              if (!res.isSuccess) {
+                ToastUtil.showToast(context, res.message);
+                return;
+              }
+              ToastUtil.showToast(context, '发送成功');
+              _nodeText1.unfocus();
+              setState(() {
+                s = second;
+                _showCodeInput = true;
+                _canGetCode = false;
+                _codeWaiting = true;
+              });
+              _nodeText2.requestFocus();
+              _subscription = Stream.periodic(const Duration(seconds: 1), (int i) {
+                setState(() {
+                  s = second - i - 1;
+                  if (s! < 1) {
+                    _canGetCode = true;
+                    _codeWaiting = false;
+                  }
+                });
+              }).take(second).listen((event) {});
+            },
+    );
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(

@@ -121,7 +121,11 @@ class MemberApi {
 // }
 
   static Future<Result> login(String phone) async {
-    return Future.value(await httpUtil2.post(Api.apiLoginByPhone, data: {'phone': phone}));
+    Result<String> res = await httpUtil2.post(Api.apiLoginByPhone, data: {'phone': phone});
+    if (res.isSuccess) {
+      res.data = res.oriData.toString();
+    }
+    return Future.value(res);
   }
 //
 // static Future<Map<String, dynamic>> getAccountSetting({String passiveAccountId}) async {

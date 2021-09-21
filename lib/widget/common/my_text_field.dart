@@ -121,7 +121,7 @@ class _MyTextFieldState extends State<MyTextField> {
                     : (widget.keyboardType != TextInputType.text
                         ? [BlacklistingTextInputFormatter(RegExp("[\u4e00-\u9fa5]"))]
                         : null),
-            onChanged: (val) => widget.onChange(val),
+            onChanged: widget.onChange == null ? null : (val) => widget.onChange(val),
             onSubmitted: (val) => widget.onSub != null ? widget.onSub(val) : null,
             decoration: InputDecoration(
                 border: widget.border ?? null,

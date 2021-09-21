@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'application.dart';
 import 'config/routes/routes.dart';
 import 'page/splash_page.dart';
+import 'provider/account_local_provider.dart';
 import 'provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,9 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(const WallApp());
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // SystemChrome.setSystemUIOverlayStyle(
+  //     SystemUiOverlayStyle.);
   // 透明状态栏
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -271,7 +274,7 @@ class _WallAppState extends State<WallApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider(create: (BuildContext context) => AccountLocalProvider()),
+        ChangeNotifierProvider(create: (BuildContext context) => AccountLocalProvider()),
         // ChangeNotifierProvider(create: (BuildContext context) => TweetTypesFilterProvider()),
         ChangeNotifierProvider(create: (BuildContext context) => ThemeProvider()),
         // ChangeNotifierProvider(create: (BuildContext context) => TweetProvider()),

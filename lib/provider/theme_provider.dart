@@ -16,6 +16,8 @@ class ThemeProvider extends ChangeNotifier {
 
   void syncTheme() {
     String? themeStr = SpUtil.getString(SharedCst.theme);
+    themeStr = "Dark";
+    notifyListeners();
     if (themeStr != null && themeStr != themes[Themes.system]) {
       notifyListeners();
     }

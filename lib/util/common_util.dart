@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,18 +51,6 @@ class Util {
     NavigatorUtils.goBack(context);
   }
 
-  static void showDefaultLoadingWithAsyncCall(
-    BuildContext context,
-    Function call, {
-    double size = 30,
-  }) async {
-    showDefaultLoadingWithBounds(context, size: size);
-    if (call != null) {
-      await call();
-    }
-    NavigatorUtils.goBack(context);
-  }
-
   static void showDefaultLoadingWithBounds(BuildContext context, {double size = 25, String text = ""}) {
     showDialog(
         context: context,
@@ -73,12 +60,12 @@ class Util {
             type: MaterialType.transparency,
             child: Center(
                 child: SizedBox(
-              width: ScreenUtil().setWidth(300),
-              height: ScreenUtil().setWidth(300),
+              width: ScreenUtil().setWidth(100),
+              height: ScreenUtil().setWidth(100),
               child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: ThemeUtil.isDark(context) ? Colors.black54 : Colors.white30,
+                    borderRadius: BorderRadius.circular(7),
+                    color: ThemeUtil.isDark(context) ? Colors.black54 : Colors.black54,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 3.0),
                   alignment: Alignment.center,

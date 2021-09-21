@@ -10,7 +10,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:wall/config/routes/route_handlers.dart';
 import 'package:wall/config/routes/router_init.dart';
-import 'package:wall/page/login_page.dart';
+import 'package:wall/page/login/login_page.dart';
+import 'package:wall/page/splash_page.dart';
 import 'package:wall/widget/common/widget_not_found.dart';
 
 class Routes {
@@ -58,9 +59,9 @@ class Routes {
     //   return WebViewPage(title: title, url: url, source: source);
     // }));
     //
-    // router.define(splash, handler: Handler(handlerFunc: (_, params) {
-    //   return SplashPage();
-    // }));
+    router.define(splash, handler: Handler(handlerFunc: (_, params) {
+      return SplashPage();
+    }));
     //
     // router.define(tweetDetail, handler: Handler(handlerFunc: (_, params) {
     //   int tweetId = int.parse(params['tweetId'].first);
