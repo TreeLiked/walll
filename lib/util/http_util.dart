@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wall/api/api_category.dart';
 import 'package:wall/api/device_api.dart';
+import 'package:wall/config/routes/login_router.dart';
 import 'package:wall/config/routes/routes.dart';
 import 'package:wall/constant/app_constant.dart';
 import 'package:wall/constant/result_code.dart';
@@ -221,7 +222,7 @@ class HttpUtil {
         if (resMap["message"] != null) {
           ToastUtil.showToast(context, resMap["message"], gravity: ToastGravity.CENTER);
         }
-        NavigatorUtils.push(context, Routes.loginPage, clearStack: true);
+        NavigatorUtils.push(context, LoginRouter.loginIndex, clearStack: true);
 
         print("-------------------------------finish---------------------------------");
 

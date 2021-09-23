@@ -2,48 +2,30 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:iap_app/common-widget/text_clickable_iitem.dart';
-import 'package:iap_app/routes/fluro_navigator.dart';
-import 'package:iap_app/util/common_util.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wall/util/common_util.dart';
+import 'package:wall/widget/common/button/my_text_btn.dart';
+import 'package:wall/widget/common/dialog/simple_cancel_confirm_dialog.dart';
+
+import 'navigator_util.dart';
 
 class PermissionUtil {
   /// 校验申请获取 相册和相机权限
   static Future<bool> checkAndRequestPhotos(BuildContext context, {bool needCamera = false}) async {
     if (!await Permission.photos.isGranted) {
-      if (await Permission.photos.isUndetermined) {
+      if (await Permission.photos.isDenied) {
         return Permission.photos.request().isGranted;
       } else {
-        Utils.showSimpleConfirmDialog(
-            context,
-            '无法访问照片',
-            '你未开启"允许Wall访问照片和相机"选项，将无法发表内容，更换头像等',
-            ClickableText('知道了', () {
-              NavigatorUtils.goBack(context);
-            }),
-            ClickableText('去设置', () async {
-              await openAppSettings();
-            }),
-            barrierDismissible: false);
+        openDialog(context, '无法访问照片', '您未开启"允许Wall访问照片和相机"选项，将无法发表内容，更换头像等');
       }
       return false;
     }
     if (needCamera && Platform.isAndroid) {
       if (!await Permission.camera.isGranted) {
-        if (await Permission.camera.isUndetermined) {
+        if (await Permission.camera.isDenied) {
           return Permission.camera.request().isGranted;
         } else {
-          Utils.showSimpleConfirmDialog(
-              context,
-              '无法访问照片',
-              '你未开启"允许Wall访问照片和相机"选项，将无法发表内容，更换头像等',
-              ClickableText('知道了', () {
-                NavigatorUtils.goBack(context);
-              }),
-              ClickableText('去设置', () async {
-                await openAppSettings();
-              }),
-              barrierDismissible: false);
+          openDialog(context, '无法访问照片', '您未开启"允许Wall访问照片和相机"选项，将无法发表内容，更换头像等');
           return false;
         }
       }
@@ -57,7 +39,7 @@ class PermissionUtil {
     bool hasPermission = await Permission.notification.isGranted;
 
     if (!hasPermission) {
-      if (await Permission.notification.isUndetermined) {
+      if (await Permission.notification.isDenied) {
         return Permission.notification.request().isGranted;
       } else {
         int random = Random().nextInt(1000);
@@ -67,17 +49,7 @@ class PermissionUtil {
         if (showTipIfDetermined) {
           int random2 = Random().nextInt(probability) + 1;
           if (random2 == 1) {
-            Utils.showSimpleConfirmDialog(
-                context,
-                '无法发送通知',
-                '你未开启"允许Wall发送通知"选项，将收不到包括用户私信，点赞评论等的通知',
-                ClickableText('知道了', () {
-                  NavigatorUtils.goBack(context);
-                }),
-                ClickableText('去设置', () async {
-                  await openAppSettings();
-                }),
-                barrierDismissible: false);
+            openDialog(context, '未开启通知权限', '您未开启"允许Wall发送通知"选项，将收不到包括用户私信，点赞评论等的通知');
           }
         }
         return false;
@@ -86,28 +58,32 @@ class PermissionUtil {
     return true;
   }
 
-
   static Future<bool> checkAndRequestStorage(BuildContext context,
       {bool showTipIfDetermined = false, int probability = 10}) async {
     bool hasPermission = await Permission.storage.isGranted;
     if (!hasPermission) {
-      if (await Permission.storage.isUndetermined) {
+      if (await Permission.storage.isDenied) {
         return Permission.storage.request().isGranted;
       } else {
-        Utils.showSimpleConfirmDialog(
-            context,
-            '无法访问',
-            '你未开启"允许Wall访问或保存照片"选项，将无法发表内容，更换头像或保存内容等',
-            ClickableText('知道了', () {
-              NavigatorUtils.goBack(context);
-            }),
-            ClickableText('去设置', () async {
-              await openAppSettings();
-            }),
-            barrierDismissible: false);
+        openDialog(context, '存储失败', '你未开启"允许Wall访问或保存照片"选项，将无法发表内容，更换头像或保存内容等');
         return false;
       }
     }
     return true;
+  }
+
+
+  static void openDialog(BuildContext context, title, content) {
+    Util.displayDialog(
+        context,
+        SimpleCancelConfirmDialog(
+          title,
+          content,
+          MyTextButton(
+              text: const Text("知道了"), enabled: true, onPressed: () => NavigatorUtils.goBack(context)),
+          MyTextButton(
+              text: const Text("去设置"), enabled: true, onPressed: () async => await openAppSettings()),
+        ),
+        barrierDismissible: false);
   }
 }

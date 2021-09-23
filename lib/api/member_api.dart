@@ -85,19 +85,9 @@ class MemberApi {
     return httpUtil2.get(Api.apiCheckVerificationCode + "?p=$phone&c=$vCode");
   }
 
-// static Future<Result> checkNickRepeat(String nick) async {
-//   Response response;
-//   String url = Api.API_CHECK_NICK_REPEAT + "?n=$nick";
-//   try {
-//     response = await httpUtil2.dio.get(url);
-//     Map<String, dynamic> json = Api.convertResponse(response.data);
-//     LogUtil.e(json, tag: _TAG);
-//     return Result.fromJson(json);
-//   } on DioError catch (e) {
-//     Api.formatError(e);
-//   }
-//   return null;
-// }
+static Future<Result> checkNickRepeat(String nick) async {
+  return httpUtil2.get(Api.API_CHECK_NICK_REPEAT + "?n=$nick");
+}
 //
 // static Future<Result> register(String phone, String nick, String avatarUrl, int orgId, String iCode) async {
 //   Response response;

@@ -10,4 +10,13 @@ class AppCst {
 
   static const String androidAppId = "com.iutr.wall";
 
+
+  /// oss相关
+  static const String accessKeyId = "LTAI4FukqK1vSNmmDv18VGXw";
+  static const String accessKeySecret = "iiUEipG0HKLTDYbdFoRAJPedn4XNu5";
+  static const String postUrl = "http://iutr-media.oss-cn-hangzhou.aliyuncs.com";
+
+  static const String thumbnailSuffix = "?x-oss-process=style/image_thumbnail";
+  static const String previewSuffix = "?x-oss-process=style/image_preview";
+
 }

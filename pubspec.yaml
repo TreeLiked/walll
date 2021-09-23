@@ -102,6 +102,8 @@ dev_dependencies:
   image_picker: ^0.8.4+2
   # 图片裁剪
   image_cropper: ^1.4.1
+  # svg
+  flutter_svg: ^0.22.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -116,6 +118,9 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/common/
+    - assets/svg/
+    - assets/svg/crm/
 
 
   # To add assets to your application, add an assets section, like this:

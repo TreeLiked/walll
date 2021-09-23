@@ -1,5 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:wall/config/routes/router_init.dart';
+import 'package:wall/page/login/login_page.dart';
+import 'package:wall/page/register/register_account_info_set.dart';
 
 class LoginRouter implements IRouterProvider {
   static String loginIndex = "/login";
@@ -8,13 +10,10 @@ class LoginRouter implements IRouterProvider {
 
   @override
   void initRouter(FluroRouter router) {
-    router.define(loginIndex,
-        handler: Handler(handlerFunc: (_, params) => null));
-
-    router.define(registerAccSetPage,
-        handler: Handler(handlerFunc: (_, params) => AccountInfoCPage()));
+    router.define(loginIndex, handler: Handler(handlerFunc: (_, params) => RegisterAccSetPage()));
 
     // router.define(loginOrgPage,
     //     handler: Handler(handlerFunc: (_, params) => OrgInfoCPage()));
+    router.define(registerAccSetPage, handler: Handler(handlerFunc: (_, params) => RegisterAccSetPage()));
   }
 }

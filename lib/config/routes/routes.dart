@@ -14,11 +14,12 @@ import 'package:wall/page/login/login_page.dart';
 import 'package:wall/page/splash_page.dart';
 import 'package:wall/widget/common/widget_not_found.dart';
 
+import 'login_router.dart';
+
 class Routes {
   static String index = "/";
   static String splash = "/splash";
 
-  static String loginPage = "login";
   static String webViewPage = "/webview";
 
   static String hot = "/hot";
@@ -74,9 +75,7 @@ class Routes {
     //   return TweetTypeInfGroPlfPage(tweetId, type);
     // }));
     //
-    router.define(loginPage, handler: Handler(handlerFunc: (_, params) {
-      return LoginPage();
-    }));
+
 
     // router.define(index, handler: indexHandler);
     router.define(home, handler: homeHandler);
@@ -102,7 +101,7 @@ class Routes {
     /// 各自路由由各自模块管理，统一在此添加初始化
 
     // _listRouter.add(SettingRouter());
-    // _listRouter.add(LoginRouter());
+    _listRouter.add(LoginRouter());
     // _listRouter.add(SquareRouter());
     // _listRouter.add(NotificationRouter());
     // _listRouter.add(CircleRouter());

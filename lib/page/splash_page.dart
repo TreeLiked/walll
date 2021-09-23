@@ -15,6 +15,7 @@ import 'package:wall/api/common_api.dart';
 import 'package:wall/api/device_api.dart';
 import 'package:wall/api/member_api.dart';
 import 'package:wall/api/university_api.dart';
+import 'package:wall/config/routes/login_router.dart';
 import 'package:wall/config/routes/routes.dart';
 import 'package:wall/constant/app_constant.dart';
 import 'package:wall/constant/shared_constant.dart';
@@ -204,7 +205,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _goLogin() {
-    NavigatorUtils.push(context, Routes.loginPage, replace: true);
+    NavigatorUtils.push(context, LoginRouter.loginIndex, replace: true);
   }
 
   @override
@@ -230,6 +231,7 @@ class _SplashPageState extends State<SplashPage> {
                 //     placeholder: (context, _) => const CupertinoActivityIndicator(),
                 //     height: double.infinity,
                 //     fadeInCurve: Curves.linear);
+                // TODO 111
                 return Text("111");
               },
               onIndexChanged: (index) {
@@ -345,6 +347,7 @@ class _SplashPageState extends State<SplashPage> {
             fadeInCurve: Curves.linear,
           );
         } else {
+          //  TODO 111
           return const Text("1222");
           // return Index();
         }
