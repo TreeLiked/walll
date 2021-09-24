@@ -140,8 +140,17 @@ class HttpUtil {
     Result<T> result = Result(false);
     try {
       response = await dio.get(url, cancelToken: cancelToken, queryParameters: data);
-      Map<String, dynamic> json = response.data;
-      return Result.fromJson(json);
+      var responseContent = response.data;
+      if(responseContent is Map) {
+        LogUtil.d(responseContent);
+        Map<String, dynamic> json = response.data;
+        return Result.fromJson(json);
+      } else {
+        // 兼容没有返回result的接口
+        result.isSuccess = true;
+        result.data = responseContent;
+        return result;
+      }
     } on DioError catch (e) {
       if (CancelToken.isCancel(e)) {
         result.message = e.message;
@@ -155,7 +164,16 @@ class HttpUtil {
     Response response;
     try {
       response = await dio.post(url, data: data, options: options, cancelToken: cancelToken);
-      return Result.fromJson(response.data);
+      var responseContent = response.data;
+      if(responseContent is Map) {
+        Map<String, dynamic> json = response.data;
+        return Result.fromJson(json);
+      } else {
+        // 兼容没有返回result的接口
+        result.isSuccess = true;
+        result.data = responseContent;
+        return result;
+      }
     } on DioError catch (e) {
       if (CancelToken.isCancel(e)) {
         result.message = e.message;
@@ -200,35 +218,35 @@ class HttpUtil {
     LogUtil.e(
         '<-- Response to [ $requestId ] <-- $requestPath: ${val.length > 100 ? val.substring(0, 100) : val}',
         tag: _tag);
-    Map<String, dynamic> resMap = Api.convertResponse(resp.data);
-    if (resMap.isNotEmpty && resMap.containsKey("code") && resMap.containsKey("success")) {
-      String code = resMap["code"].toString();
-      if (code == ResultCode.loginOut) {
-        BuildContext context = Application.context!;
+    if(resp.data is Map) {
+      Map<String, dynamic> resMap = Api.convertResponse(resp.data);
+      if (resMap.isNotEmpty && resMap.containsKey("code") && resMap.containsKey("success")) {
+        String code = resMap["code"].toString();
+        if (code == ResultCode.loginOut) {
+          BuildContext context = Application.context!;
 
-        if (Application.getDeviceId != null) {
-          DeviceApi.removeDeviceInfo(Application.getAccountId, Application.getDeviceId);
+          if (Application.getDeviceId != null) {
+            DeviceApi.removeDeviceInfo(Application.getAccountId, Application.getDeviceId);
+          }
+          Application.setLocalAccountToken(null);
+          Application.setAccount(null);
+          Application.setAccountId(null);
+          await SpUtil.clear();
+
+          Provider.of<MsgProvider>(context, listen: false).clear();
+
+          httpUtil.clearAuthToken();
+          httpUtil2.clearAuthToken();
+
+          if (resMap["message"] != null) {
+            ToastUtil.showToast(context, resMap["message"], gravity: ToastGravity.CENTER);
+          }
+          NavigatorUtils.push(context, LoginRouter.loginIndex, clearStack: true);
+          return handler.next(resp);
         }
-        Application.setLocalAccountToken(null);
-        Application.setAccount(null);
-        Application.setAccountId(null);
-        await SpUtil.clear();
-
-        Provider.of<MsgProvider>(context, listen: false).clear();
-
-        httpUtil.clearAuthToken();
-        httpUtil2.clearAuthToken();
-
-        if (resMap["message"] != null) {
-          ToastUtil.showToast(context, resMap["message"], gravity: ToastGravity.CENTER);
-        }
-        NavigatorUtils.push(context, LoginRouter.loginIndex, clearStack: true);
-
-        print("-------------------------------finish---------------------------------");
-
-        return handler.next(resp);
       }
     }
+
     return handler.next(resp);
   }
 

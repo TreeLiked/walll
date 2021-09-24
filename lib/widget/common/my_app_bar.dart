@@ -90,8 +90,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   right: 8.0,
                   child: Theme(
                       data: Theme.of(context).copyWith(
-                          buttonTheme: ButtonThemeData(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          buttonTheme: const ButtonThemeData(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
                         minWidth: 60.0,
                       )),
                       child: actionWidget ??

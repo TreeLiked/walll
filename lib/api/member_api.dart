@@ -78,37 +78,27 @@ class MemberApi {
   // }
   //
   static Future<Result> sendPhoneVerificationCode(String phone) async {
-    return httpUtil2.get(Api.API_SEND_VERIFICATION_CODE + "?p=$phone");
+    return httpUtil2.get(Api.apiSendVerificationCode + "?p=$phone");
   }
 
   static Future<Result> checkVerificationCode(String phone, String vCode) async {
     return httpUtil2.get(Api.apiCheckVerificationCode + "?p=$phone&c=$vCode");
   }
 
-static Future<Result> checkNickRepeat(String nick) async {
-  return httpUtil2.get(Api.API_CHECK_NICK_REPEAT + "?n=$nick");
-}
-//
-// static Future<Result> register(String phone, String nick, String avatarUrl, int orgId, String iCode) async {
-//   Response response;
-//   String url = Api.API_REGISTER_BY_PHONE;
-//   var data = {
-//     'phone': phone,
-//     'nick': nick,
-//     'avatarUrl': avatarUrl,
-//     'orgId': orgId,
-//     'iCode': iCode,
-//   };
-//   try {
-//     response = await httpUtil2.dio.post(url, data: data);
-//     Map<String, dynamic> json = Api.convertResponse(response.data);
-//     LogUtil.e(json, tag: _TAG);
-//     return Result.fromJson(json);
-//   } on DioError catch (e) {
-//     Api.formatError(e);
-//   }
-//   return null;
-// }
+  static Future<Result> checkNickRepeat(String nick) async {
+    return httpUtil2.get(Api.apiCheckNickRepeat + "?n=$nick");
+  }
+
+  static Future<Result> register(String phone, String nick, String avatarUrl, int orgId, String iCode) async {
+    var data = {
+      'phone': phone,
+      'nick': nick,
+      'avatarUrl': avatarUrl,
+      'orgId': orgId,
+      'iCode': iCode,
+    };
+    return await httpUtil2.post(Api.registerByPhone, data: data);
+  }
 
   static Future<Result> login(String phone) async {
     Result<String> res = await httpUtil2.post(Api.apiLoginByPhone, data: {'phone': phone});

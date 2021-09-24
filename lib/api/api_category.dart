@@ -62,7 +62,7 @@ class Api {
   static const String API_CIRCLE_TWEET_LIST = Api.apiBaseAlUrl + "/circletweet/list.json";
 
   // sms
-  static const String API_SEND_VERIFICATION_CODE = apiBaseAlUrl + "/sms/send.do";
+  static const String apiSendVerificationCode = apiBaseAlUrl + "/sms/send.do";
   static const String apiCheckVerificationCode = apiBaseAlUrl + "/sms/check.do";
 
   // member start --------
@@ -80,9 +80,9 @@ class Api {
 
   static const String API_ACCOUNT_MOD_BASIC = apiBaseTrUrl + "/account/edit/basic.do";
 
-  static const String API_CHECK_NICK_REPEAT = apiBaseTrUrl + "/account/nickCheck.do";
+  static const String apiCheckNickRepeat = apiBaseTrUrl + "/account/nickCheck.do";
 
-  static const String API_REGISTER_BY_PHONE = apiBaseTrUrl + "/auth/rbp.do";
+  static const String registerByPhone = apiBaseTrUrl + "/auth/rbp.do";
 
   static const String apiLoginByPhone = apiBaseTrUrl + "/auth/lbp.do";
 

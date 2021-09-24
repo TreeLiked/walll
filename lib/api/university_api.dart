@@ -30,22 +30,14 @@ class UniversityApi {
   //   return res;
   // }
   //
-  // static Future<List<University>> blurQueryUnis(String blurStr) async {
-  //   Response response;
-  //   String url = Api.API_BLUR_QUERY_UNIVERSITY + "?n=$blurStr";
-  //   ;
-  //   try {
-  //     response = await httpUtil2.dio.get(url);
-  //     List<dynamic> temp = response.data;
-  //     if (CollectionUtil.isListEmpty(temp)) {
-  //       return [];
-  //     }
-  //     return temp.map((f) => University.fromJson(f)).toList();
-  //   } on DioError catch (e) {
-  //     Api.formatError(e);
-  //   }
-  //   return null;
-  // }
+  static Future<List<University>> blurQueryUnis(String blurStr) async {
+    Result res = await httpUtil2.get(Api.API_BLUR_QUERY_UNIVERSITY + "?n=$blurStr");
+    if (res.isSuccess) {
+      List<dynamic> temp = res.data;
+      return temp.map((f) => University.fromJson(f)).toList();
+    }
+    return [];
+  }
 
   static Future<University?> queryUnis(String accountToken) async {
     Result<University> res = await httpUtil2.post(Api.apiGetOrg);

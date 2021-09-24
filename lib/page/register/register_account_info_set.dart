@@ -8,6 +8,7 @@ import 'package:wall/api/member_api.dart';
 import 'package:wall/config/routes/login_router.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
+import 'package:wall/constant/url_constant.dart';
 import 'package:wall/model/biz/login/register_temp.dart';
 import 'package:wall/util/asset_util.dart';
 import 'package:wall/util/common_util.dart';
@@ -23,6 +24,8 @@ import 'package:wall/widget/common/my_app_bar.dart';
 import 'package:wall/widget/common/my_text_field_with_shadow.dart';
 
 class RegisterAccSetPage extends StatefulWidget {
+  const RegisterAccSetPage({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _RegisterAccSetPageState();
@@ -36,6 +39,10 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
   File? _avatarFile;
 
   bool _canGoNext = false;
+
+  String _svgMalePath = "crm/male_profile_default";
+  String _svgFemalePath = "crm/female_profile_default";
+  bool _isMale = true;
 
   @override
   void initState() {
@@ -62,14 +69,14 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
         ),
         body: KeyboardActions(
           child: _buildBody(),
-          config: KeyboardActionsConfig(keyboardActionsPlatform: KeyboardActionsPlatform.IOS, actions: []),
+          config: KeyboardActionsConfig(keyboardActionsPlatform: KeyboardActionsPlatform.IOS, actions: [
+            // TODO action
+          ]),
         ));
   }
 
   _goChoiceAvatar() async {
-    print('111-------------------');
     bool hasPer = await PermissionUtil.checkAndRequestPhotos(context);
-    print('222-------------------$hasPer');
 
     if (!hasPer) {
       ToastUtil.showToast(context, "未获取相册权限");
@@ -132,13 +139,47 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
                               color: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
                               shape: BoxShape.circle),
                           child: _avatarFile == null
-                              ? const LoadAssetSvg("crm/female_profile_default", width: 75)
+                              ? LoadAssetSvg(_isMale ? _svgMalePath : _svgFemalePath, width: 70)
                               : ClipOval(
                                   child: Image.file(_avatarFile!,
-                                      width: 75,
-                                      height: 75,
+                                      width: 70,
+                                      height: 70,
                                       fit: BoxFit.cover,
                                       repeat: ImageRepeat.noRepeat)))))),
+          Container(
+              alignment: Alignment.center,
+              child: Container(
+                  margin: const EdgeInsets.only(top: 25),
+                  width: 160,
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  decoration: BoxDecoration(
+                      color: isDark ? Colours.borderColorFirstDark : Colours.borderColorFirst,
+                      borderRadius: BorderRadius.circular(25.0)),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    GestureDetector(
+                        child: Icon(Icons.person_pin,
+                            size: 30, color: !_isMale ? Colors.lightGreen : const Color(0xFFCDB6DD)),
+                        onTap: () {
+                          setState(() {
+                            _isMale = !_isMale;
+                          });
+                        }),
+                    Gaps.hGap30,
+                    Gaps.vLine,
+                    Gaps.hGap30,
+                    GestureDetector(
+                        child: Icon(_avatarFile == null ? Icons.edit : Icons.water_damage_outlined,
+                            size: 30, color: Colors.amber),
+                        onTap: () {
+                          if (_avatarFile == null) {
+                            _goChoiceAvatar();
+                            return;
+                          }
+                          setState(() {
+                            _avatarFile = null;
+                          });
+                        })
+                  ]))),
           Container(
             decoration: BoxDecoration(
                 // color: !isDark ? Color(0xfff7f8f8) : Colours.dark_bg_color_darker,
@@ -151,9 +192,6 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
                 Expanded(
                   child: MyShadowTextField(
                     focusNode: _nodeText1,
-                    // config: Utils.getKeyboardActionsConfig(context, [
-                    //   _nodeText1,
-                    // ]),
                     bgColor: Colors.transparent,
                     controller: _nickController,
                     maxLength: 16,
@@ -209,8 +247,14 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
         ToastUtil.showToast(context, '昵称重复了，换一个试试吧');
       } else {
         RegTemp.nick = nick;
-        String? url =
-            await OssUtil.uploadImage(_avatarFile!.path, _avatarFile!.readAsBytesSync(), OssUtil.destAvatar);
+
+        String? url;
+        if (_avatarFile == null) {
+          url = _isMale ? UrlCst.defaultMaleAvatar : UrlCst.defaultFemaleAvatar;
+        } else {
+          url = await OssUtil.uploadImage(
+              _avatarFile!.path, _avatarFile!.readAsBytesSync(), OssUtil.destAvatar);
+        }
         NavigatorUtils.goBack(context);
         if (url != null) {
           RegTemp.avatarUrl = url;

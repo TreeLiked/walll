@@ -104,7 +104,7 @@ class _SplashPageState extends State<SplashPage> {
   // }
 
   void _initSplash() {
-    _subscription = TimerStream("", const Duration(milliseconds: 2000)).listen((_) async {
+    _subscription = TimerStream("", const Duration(milliseconds: 1000)).listen((_) async {
       String storageToken = SpUtil.getString(SharedCst.localAccountToken, defValue: '')!;
 
       LogUtil.v("- - - 执行登录 - - -, storageToken: $storageToken", tag: _tag);

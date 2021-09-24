@@ -15,6 +15,7 @@ class Colours {
   static const Color holderFontColor = Color(0xFFC0C4CC);
 
   static const Color borderColorFirst = Color(0xFFF2F6FC);
+  // static const Color borderColorFirstDark = Color(0xFFF2F6FC);
   static const Color borderColorSecond = Color(0xFFDCDFE6);
   static const Color borderColorFirstDark = Color(0xff202122);
 

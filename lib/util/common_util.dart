@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/size_constant.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -80,7 +81,7 @@ class Util {
 
   static List<Widget> _renderLoadingList(BuildContext context, double size, String text) {
     List<Widget> list = [];
-    list.add(SpinKitChasingDots(color: Colors.lightBlueAccent, size: size));
+    list.add(SpinKitSpinningLines(color: Colours.actionClickable, size: size,itemCount: 3));
     if (!StrUtil.isEmpty(text)) {
       list.add(Padding(
           padding: const EdgeInsets.all(5.0),

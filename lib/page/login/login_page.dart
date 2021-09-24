@@ -41,6 +41,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import '../../application.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   _SMSLoginPageState createState() => _SMSLoginPageState();
 }
@@ -78,10 +80,6 @@ class _SMSLoginPageState extends State<LoginPage> {
 
     // 登录页面也检查更新
     VersionUtils.checkUpdate().then((res) => VersionUtils.displayUpdateDialog(res, slient: true));
-
-    // TODO 去掉这一行
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    Provider.of<ThemeProvider>(context, listen: false).setTheme(Themes.light);
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await SpUtil.getInstance();
@@ -265,7 +263,7 @@ class _SMSLoginPageState extends State<LoginPage> {
           // ),
           ShaderMask(
               shaderCallback: (Rect bounds) {
-                return LinearGradient(
+                return const LinearGradient(
                   colors: <Color>[Color(0xFF4facfe), Color(0xFF00f2fe)],
                   tileMode: TileMode.mirror,
                 ).createShader(bounds);
@@ -330,13 +328,16 @@ class _SMSLoginPageState extends State<LoginPage> {
           ),
           _showCodeInput
               ? Container(
-                  margin: const EdgeInsets.only(top: 5),
+                  decoration: BoxDecoration(
+                      color: isDark ? Colours.borderColorFirstDark : Colours.borderColorFirst,
+                      borderRadius: BorderRadius.circular(6.0)),
+                  margin: const EdgeInsets.only(top: 15),
                   child: Row(
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         margin: const EdgeInsets.only(right: 10),
-                        child: Text('验证码'),
+                        child: const Text('验证码'),
                       ),
                       Gaps.vLine,
                       Expanded(
@@ -360,13 +361,16 @@ class _SMSLoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     _renderHit('应用内测中，请输入邀请码', color: Colors.lightGreen),
                     Container(
-                        margin: const EdgeInsets.only(top: 5),
+                        decoration: BoxDecoration(
+                            color: isDark ? Colours.borderColorFirstDark : Colours.borderColorFirst,
+                            borderRadius: BorderRadius.circular(6.0)),
+                        margin: const EdgeInsets.only(top: 15),
                         child: Row(
                           children: <Widget>[
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               margin: const EdgeInsets.only(right: 10),
-                              child: Text('邀请码'),
+                              child: const Text('邀请码'),
                             ),
                             Gaps.vLine,
                             Expanded(
@@ -460,60 +464,6 @@ class _SMSLoginPageState extends State<LoginPage> {
               }).take(second).listen((event) {});
             },
     );
-    return Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-            color: _canGetCode
-                ? Colors.amber
-                : (!isDark ? Colours.borderColorSecond : Colours.borderColorFirstDark)),
-        child: TextButton(
-          child: Text(!_codeWaiting ? '获取短信验证码' : '重新获取 $s(s)', style: TextStyle(color: Colors.white)),
-          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          // color: _canGetCode ? Colors.amber : null,
-          // padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-          // disabledColor: !isDark ? Color(0xffD7D6D9) : Colours.dark_bg_color_darker,
-
-          onPressed: _codeWaiting
-              ? null
-              : () async {
-                  String phone = _phoneController.text;
-                  if (phone.isEmpty || phone.length < 11) {
-                    ToastUtil.showToast(context, '手机号格式不正确');
-                    return Future.value(false);
-                  } else {
-                    Util.showDefaultLoadingWithBounds(context);
-                    Result res = await MemberApi.sendPhoneVerificationCode(_phoneController.text);
-                    NavigatorUtils.goBack(context);
-
-                    if (res.isSuccess) {
-                      ToastUtil.showToast(context, '发送成功');
-                      _nodeText1.unfocus();
-                      _nodeText2.requestFocus();
-                      setState(() {
-                        s = second;
-                        this._showCodeInput = true;
-                        this._canGetCode = false;
-                        _codeWaiting = true;
-                      });
-                      _subscription = Stream.periodic(Duration(seconds: 1), (int i) {
-                        setState(() {
-                          s = second - i - 1;
-                          if (s! < 1) {
-                            _canGetCode = true;
-                            _codeWaiting = false;
-                          }
-                        });
-                      }).take(second).listen((event) {});
-
-                      return Future.value(true);
-                    } else {
-                      ToastUtil.showToast(context, res.message);
-                      return Future.value(false);
-                    }
-                  }
-                },
-        ));
   }
 
 // _renderOtherLine() {
