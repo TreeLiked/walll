@@ -22,11 +22,10 @@ class Routes {
 
   static String webViewPage = "/webview";
 
-  static String hot = "/hot";
-
   // home index
   static String home = "/home";
-  static String create = "/home/create";
+  static String tweetCreate = "/home/tweetCreate";
+
   static String notification = "/home/notification";
   static String filter = "/home/filter";
   static String square = "/home/square";
@@ -76,14 +75,13 @@ class Routes {
     // }));
     //
 
-
     // router.define(index, handler: indexHandler);
     router.define(home, handler: homeHandler);
     // router.define(square, handler: squareHandler, transitionType: TransitionType.fadeIn);
     //
     // router.define(create, handler: createHandler);
     // router.define(notification, handler: notificationHandler);
-    // router.define(accountProfile, handler: accountProfileHandler);
+    router.define(accountProfile, handler: accountProfileHandler,transitionType: TransitionType.fadeIn);
     //
     // router.define(inputTextPage, handler: inputPageHandler);
     // router.define(reportPage, handler: reportHandler);
@@ -111,21 +109,4 @@ class Routes {
       routerProvider.initRouter(router);
     }
   }
-
-// static String assembleArgs(Map<String, dynamic> args) {
-//   StringBuffer sb = new StringBuffer("?");
-//   args.forEach((key, value) {
-//     sb.write(key);
-//     sb.write("=");
-//     if (value is String) {
-//       sb.write(FluroConvertUtils.fluroCnParamsEncode(value));
-//     } else {
-//       sb.write(value);
-//     }
-//     sb.write("&");
-//   });
-//   String url = sb.toString();
-//   print(url);
-//   return url.substring(0, url.length - 1);
-// }
 }

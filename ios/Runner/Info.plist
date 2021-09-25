@@ -19,9 +19,11 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>是否允许“Wall”访问您的媒体资料库，以分享视频或音乐</string>
 	<key>NSCameraUsageDescription</key>
 	<string>“Wall”请求在您使用期间获取您的相机权限，以上传头像或发表图片内容</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

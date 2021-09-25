@@ -8,6 +8,8 @@ import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:fluro/fluro.dart' as fluro;
 import 'package:common_utils/common_utils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:wall/provider/msg_provider.dart';
+import 'package:wall/provider/tweet_provider.dart';
 
 import 'application.dart';
 import 'config/routes/routes.dart';
@@ -277,9 +279,9 @@ class _WallAppState extends State<WallApp> {
         ChangeNotifierProvider(create: (BuildContext context) => AccountLocalProvider()),
         // ChangeNotifierProvider(create: (BuildContext context) => TweetTypesFilterProvider()),
         ChangeNotifierProvider(create: (BuildContext context) => ThemeProvider()),
-        // ChangeNotifierProvider(create: (BuildContext context) => TweetProvider()),
+        ChangeNotifierProvider(create: (BuildContext context) => TweetProvider()),
         // ChangeNotifierProvider(create: (BuildContext context) => CircleTweetProvider()),
-        // ChangeNotifierProvider(create: (BuildContext context) => MsgProvider()),
+        ChangeNotifierProvider(create: (BuildContext context) => MsgProvider()),
       ],
       // child:  MaterialApp(
       //     title: 'Wall',

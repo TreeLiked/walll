@@ -1,6 +1,8 @@
 /// app constant
 class AppCst {
   static const String authHeaderVal = "Authorization";
+  static const String accountIdIdentifier = "acId";
+
 
   /// 版本信息
   static const int versionIdAndroid = 40;

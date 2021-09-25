@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:wall/api/member_api.dart';
 import 'package:wall/config/routes/login_router.dart';
+import 'package:wall/constant/asset_path_constant.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/constant/url_constant.dart';
@@ -40,8 +41,6 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
 
   bool _canGoNext = false;
 
-  String _svgMalePath = "crm/male_profile_default";
-  String _svgFemalePath = "crm/female_profile_default";
   bool _isMale = true;
 
   @override
@@ -139,7 +138,9 @@ class _RegisterAccSetPageState extends State<RegisterAccSetPage> {
                               color: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
                               shape: BoxShape.circle),
                           child: _avatarFile == null
-                              ? LoadAssetSvg(_isMale ? _svgMalePath : _svgFemalePath, width: 70)
+                              ? LoadAssetSvg(
+                                  _isMale ? AssetPathCst.svgMaleAvatarPath : AssetPathCst.svgFemaleAvatarPath,
+                                  width: 70)
                               : ClipOval(
                                   child: Image.file(_avatarFile!,
                                       width: 70,

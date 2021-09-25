@@ -28,6 +28,8 @@ class Gaps {
   static const Widget vGap20 = SizedBox(height: 20.0);
   static const Widget vGap25 = SizedBox(height: 25.0);
   static const Widget vGap50 = SizedBox(height: 50.0);
+  static const Widget vGap60 = SizedBox(height: 60.0);
+  static const Widget vGap70 = SizedBox(height: 70.0);
 
   static Widget line = const Divider();
 

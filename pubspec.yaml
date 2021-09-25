@@ -53,6 +53,8 @@ dev_dependencies:
   dio: ^4.0.0
   # 全局数据存储，类Vuex
   provider: ^6.0.0
+  # bloc
+  flutter_bloc: ^7.3.0
   # 本地键值对存储
   shared_preferences: ^2.0.8
   # 权限管理
@@ -73,6 +75,8 @@ dev_dependencies:
   event_bus: ^2.0.0
   # model序列化
   json_annotation: ^4.1.0
+  # ws
+  stomp_dart_client: ^0.4.3
 
   # 图片缓存
   cached_network_image: ^3.1.0
@@ -102,8 +106,12 @@ dev_dependencies:
   image_picker: ^0.8.4+2
   # 图片裁剪
   image_cropper: ^1.4.1
+  # 图片保存
+  image_gallery_saver: ^1.7.0
   # svg
   flutter_svg: ^0.22.0
+  # 下拉刷新
+  pull_to_refresh: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -121,6 +129,7 @@ flutter:
     - assets/icons/common/
     - assets/svg/
     - assets/svg/crm/
+    - assets/svg/common/
 
 
   # To add assets to your application, add an assets section, like this:

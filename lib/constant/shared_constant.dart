@@ -9,4 +9,6 @@ class SharedCst {
 
   static const String lastCacheClearDate = "lastCacheClearDate";
 
+  static const String unLikeTweetIds = "unLikeTweetIds";
+
 }

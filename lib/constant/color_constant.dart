@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 /// 颜色常量
 class Colours {
+
+  static const Color mainColor = Color(0xFF1E90FF);
+
+
   // 可点击的action btn
   static const Color actionClickable = Color(0xFF4facfe);
 
@@ -25,4 +29,9 @@ class Colours {
 
   static const Color lightIndicatorColor = Colors.amber;
   static const Color darkIndicatorColor = Colors.amber;
+
+
+
+  static const Color maleMainColor = Color(0xFF38B6FF);
+  static const Color feMaleMainColor = Color(0xFFFFA0B1);
 }

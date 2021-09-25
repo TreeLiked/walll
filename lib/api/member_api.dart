@@ -2,7 +2,10 @@ import 'dart:core';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:wall/api/api_category.dart';
+import 'package:wall/constant/app_constant.dart';
 import 'package:wall/model/biz/account/account.dart';
+import 'package:wall/model/biz/account/account_campus_profile.dart';
+import 'package:wall/model/biz/account/account_display_info.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/util/http_util.dart';
 
@@ -25,43 +28,23 @@ class MemberApi {
     return Future.value(Account.fromJson(res.jsonData!));
   }
 
-  // static Future<AccountCampusProfile> getAccountCampusProfile(String accountId) async {
-  //   Response response;
-  //   try {
-  //     response = await httpUtil2.dio.get(Api.API_QUERY_ACCOUNT_CAMPUS_PROFILE);
-  //     Map<String, dynamic> json = Api.convertResponse(response.data);
-  //     LogUtil.e(json, tag: _TAG);
-  //
-  //     dynamic json2 = json["data"];
-  //     if (json2 == null) {
-  //       return null;
-  //     }
-  //     AccountCampusProfile profile = AccountCampusProfile.fromJson(json2);
-  //     return profile;
-  //   } on DioError catch (e) {
-  //     Api.formatError(e);
-  //   }
-  //   return null;
-  // }
-  //
-  // static Future<AccountDisplayInfo> getAccountDisplayProfile(String accountId) async {
-  //   Response response;
-  //   try {
-  //     response = await httpUtil2.dio.get(
-  //         Api.API_QUERY_FILTERED_ACCOUNT_PROFILE + "?${SharedConstant.ACCOUNT_ID_IDENTIFIER}=" + accountId);
-  //     Map<String, dynamic> json = Api.convertResponse(response.data);
-  //     LogUtil.e(json, tag: _TAG);
-  //     dynamic json2 = json["data"];
-  //     if (json2 == null) {
-  //       return null;
-  //     }
-  //     AccountDisplayInfo account = AccountDisplayInfo.fromJson(json2);
-  //     return account;
-  //   } on DioError catch (e) {
-  //     Api.formatError(e);
-  //   }
-  //   return null;
-  // }
+  static Future<AccountCampusProfile?> getAccountCampusProfile(String accountId) async {
+    Result res = await httpUtil2.get(Api.queryAccountCampusProfile);
+    if (!res.isSuccess) {
+      return Future.value(null);
+    }
+    return AccountCampusProfile.fromJson(res.oriData);
+  }
+
+  static Future<AccountDisplayInfo?> getAccountDisplayProfile(String accountId) async {
+    Result res = await httpUtil2
+        .get(Api.apiQueryFilteredAccountProfile, data: {AppCst.accountIdIdentifier: accountId});
+    if (!res.isSuccess) {
+      return Future.value(null);
+    }
+    return AccountDisplayInfo.fromJson(res.oriData);
+  }
+
   //
   // static Future<Result> modAccount(AccountEditParam param) async {
   //   Response response;

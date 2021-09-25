@@ -24,6 +24,8 @@ import 'package:wall/constant/text_constant.dart';
 import 'package:wall/constant/url_constant.dart';
 import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/org/university.dart';
+import 'package:wall/page/account/account_profile_index.dart';
+import 'package:wall/page/home_page.dart';
 import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/theme_provider.dart';
 import 'package:wall/util/http_util.dart';
@@ -108,6 +110,8 @@ class _SplashPageState extends State<SplashPage> {
       String storageToken = SpUtil.getString(SharedCst.localAccountToken, defValue: '')!;
 
       LogUtil.v("- - - 执行登录 - - -, storageToken: $storageToken", tag: _tag);
+      httpUtil.updateAuthToken(storageToken);
+      httpUtil2.updateAuthToken(storageToken);
 
       Account? acc;
       if (storageToken == '' || (acc = await MemberApi.getMyAccount(storageToken)) == null) {
@@ -210,8 +214,9 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    prefix0.ScreenUtil.init(const BoxConstraints(maxWidth: 1242, maxHeight: 2688),
-        designSize: const Size(1242, 2688));
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    prefix0.ScreenUtil.init(BoxConstraints(maxWidth: width, maxHeight: height), designSize: MediaQuery.of(context).size);
 
     Application.screenWidth = prefix0.ScreenUtil().screenWidth;
     Application.screenHeight = prefix0.ScreenUtil().scaleHeight;
@@ -293,7 +298,6 @@ class _SplashPageState extends State<SplashPage> {
         ],
       );
     } else {
-
       if (_displayAd && _adValueMap != null) {
         UMengUtil.userGoPage(UMengUtil.pageAd);
         w = Stack(
@@ -347,9 +351,8 @@ class _SplashPageState extends State<SplashPage> {
             fadeInCurve: Curves.linear,
           );
         } else {
-          //  TODO 111
-          return const Text("1222");
-          // return Index();
+          return const HomePage();
+          // return AccountProfileIndex("eefff7ec10ec40eab8d7a99057139d17", "预售春天", "https://tva1.sinaimg.cn/large/008i3skNgy1gusyaltieej60u00u0q6202.jpg");
         }
       }
     }
@@ -357,7 +360,6 @@ class _SplashPageState extends State<SplashPage> {
     return Material(child: w);
     // child: OrgInfoCPage());
   }
-
 
   void _checkOrDisplayAd() async {
     Map<String, dynamic> splashAd = await CommonApi.getSplashAd();

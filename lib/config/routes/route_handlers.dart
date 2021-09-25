@@ -1,13 +1,15 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-
+import 'package:wall/page/account/account_profile_index.dart';
+import 'package:wall/page/home_page.dart';
+import 'package:wall/util/fluro_convert_utils.dart';
 
 // var indexHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
 //   return Index();
 // });
 
 var homeHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-  return Text("111");
+  return const HomePage();
 });
 
 // var squareHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -71,14 +73,12 @@ var homeHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<
 //
 //   return ReportPage(type, refId, title);
 // });
-//
-// var accountProfileHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-//   String nick = params['nick'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['nick'].first);
-//   String accountId =
-//       params['accId'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['accId'].first);
-//
-//   String avatarUrl =
-//       params['avatarUrl'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['avatarUrl'].first);
-//
-//   return AccountProfile(accountId, nick, avatarUrl);
-// });
+
+var accountProfileHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  String nick = params['nick'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['nick']!.first);
+  String accountId =
+      params['accId'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['accId']!.first);
+  String avatarUrl =
+      params['avatarUrl'] == null ? "" : FluroConvertUtils.fluroCnParamsDecode(params['avatarUrl']!.first);
+  return AccountProfileIndex(accountId, nick, avatarUrl);
+});

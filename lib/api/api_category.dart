@@ -26,7 +26,7 @@ class Api {
   static const String API_TWEET_DELETE = apiBaseAlUrl + "/tweet/d.do";
   static const String API_TWEET_QUERY_SIN = "/tweet/listSingle.json";
   static const String API_TWEET_QUERY = "/tweet/list.json";
-  static const String API_TWEET_QUERY2 = "/tweet/listUni.json";
+  static const String apiGetTweet = "/tweet/listUni.json";
   static const String API_TWEET_QUERY_SELF = "/tweet/account/pushed.json";
   static const String API_TWEET_QUERY_PUBLIC = "/tweet/account/publicPushed.json";
   static const String API_TWEET_MEDIA_UPLOAD_REQUEST = "/tweet/media/generate.json";
@@ -69,10 +69,10 @@ class Api {
   static const String apiGetAccount = apiBaseTrUrl + "/account/getAccInfo.json";
 
   static const String apiGetAccountProfile = apiBaseTrUrl + "/account/getProfileInfo.json";
-  static const String API_QUERY_ACCOUNT_CAMPUS_PROFILE =
+  static const String queryAccountCampusProfile =
       apiBaseTrUrl + "/account/getCampusProfile.json";
 
-  static const String API_QUERY_FILTERED_ACCOUNT_PROFILE = apiBaseTrUrl + "/account/getShowInfo.json";
+  static const String apiQueryFilteredAccountProfile = apiBaseTrUrl + "/account/getShowInfo.json";
 
   static const String API_QUERY_ACCOUNT_SETTING = apiBaseTrUrl + "/account/getSettings.json";
 

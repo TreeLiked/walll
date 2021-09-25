@@ -1,4 +1,4 @@
-class CollectionUtil {
+class CollUtil {
   static bool isListEmpty(List? list) {
     return list == null || list.isEmpty;
   }
