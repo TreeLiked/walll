@@ -28,7 +28,7 @@ class AccountAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double genderFloatSize = size / 2.7;
+    double genderFloatSize = size / 3;
     return Stack(children: [
       Container(
           decoration: BoxDecoration(

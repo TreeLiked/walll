@@ -247,6 +247,8 @@ class _HomePageState extends State<HomePage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
+                    // height: 100,
+                    padding: const EdgeInsets.only(bottom: 5.0),
                     width: double.infinity,
                     // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
                     child: Stack(

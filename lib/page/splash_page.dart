@@ -218,9 +218,11 @@ class _SplashPageState extends State<SplashPage> {
     double height = MediaQuery.of(context).size.height;
     prefix0.ScreenUtil.init(BoxConstraints(maxWidth: width, maxHeight: height), designSize: MediaQuery.of(context).size);
 
-    Application.screenWidth = prefix0.ScreenUtil().screenWidth;
-    Application.screenHeight = prefix0.ScreenUtil().scaleHeight;
+    Application.screenWidth = width;
+    Application.screenHeight = height;
     Application.context = context;
+
+    LogUtil.e("ScreenWith: $width, ScreenHeight: $height");
 
     Widget w;
     if (_displayGuide) {

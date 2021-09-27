@@ -21,4 +21,8 @@ class AppCst {
   static const String thumbnailSuffix = "?x-oss-process=style/image_thumbnail";
   static const String previewSuffix = "?x-oss-process=style/image_preview";
 
+
+  /// 首页最大展示的点赞数量
+  static const int indexMaxDisplayPraiseSize = 10;
+
 }

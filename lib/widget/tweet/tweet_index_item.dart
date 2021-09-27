@@ -14,6 +14,8 @@ import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/tweet/tweet_body_wrapper.dart';
 import 'package:fluro/fluro.dart';
 import 'package:wall/widget/tweet/tweet_index_item_header.dart';
+import 'package:wall/widget/tweet/tweet_media_wrapper.dart';
+import 'package:wall/widget/tweet/tweet_praise_wrapper.dart';
 
 class TweetIndexItem extends StatelessWidget {
 //  final recomKey = GlobalKey<RecommendationState>();
@@ -72,7 +74,7 @@ class TweetIndexItem extends StatelessWidget {
 
   Widget cardContainer2(BuildContext context) {
     Widget wd = Container(
-        padding: EdgeInsets.only(bottom: 5.0, top: indexInList == 0 ? 12.0 : 4.0, left: 10.0, right: 15.0),
+        padding: EdgeInsets.only(bottom: 0.0, top: indexInList == 0 ? 12.0 : 10.0, left: 10.0, right: 15.0),
         // color: isDark ? Colours.dark_bg_color : Colors.white,
         child: GestureDetector(
           onTap: () => _forwardDetail(context),
@@ -89,15 +91,16 @@ class TweetIndexItem extends StatelessWidget {
                   children: <Widget>[
                     TweetIndexItemHeader(tweet.account!, tweet.anonymous!, tweet.sentTime!,
                         myNickClickable: myNickClickable, official: false),
-                    Gaps.vGap5,
+                    Gaps.vGap10,
 //                    TweetTypeWrapper(tweet.type),
 
-                    Gaps.vGap2,
-                    TweetBodyWrapper(tweet.body, maxLine: 3, fontSize: 15.0, height: 1.6),
-                    // TweetMediaWrapper(tweet.id, medias: tweet.medias, tweet: tweet),
+                    // Gaps.vGap2,
+                    TweetBodyWrapper(tweet.body, maxLine: 3, fontSize: 15, height: 1.6),
+                    TweetMediaWrapper(tweet.id!, medias: tweet.medias, tweet: tweet),
                     // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
                     Gaps.vGap8,
 
+                    TweetPraiseWrapper(tweet, prefixIcon: true),
                     // TweetCampusWrapper(
                     //   tweet.id,
                     //   tweet.account.institute,
@@ -123,7 +126,7 @@ class TweetIndexItem extends StatelessWidget {
 //                    displayComment ? Gaps.vGap25 : Gaps.vGap10,
 
                     Gaps.line,
-                    Gaps.vGap10
+                    Gaps.vGap5
                   ],
                 ),
               )

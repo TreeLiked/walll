@@ -16,8 +16,9 @@ class Gaps {
   static const Widget hGap30 = SizedBox(width: 30.0);
 
   /// 垂直间隔
-  static const Widget vGap4 = SizedBox(height: 4.0);
   static const Widget vGap2 = SizedBox(height: 2.0);
+  static const Widget vGap3 = SizedBox(height: 3.0);
+  static const Widget vGap4 = SizedBox(height: 4.0);
   static const Widget vGap5 = SizedBox(height: 5.0);
   static const Widget vGap8 = SizedBox(height: 8.0);
   static const Widget vGap10 = SizedBox(height: 10.0);

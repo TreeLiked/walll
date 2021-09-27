@@ -30,8 +30,6 @@ class Colours {
   static const Color lightIndicatorColor = Colors.amber;
   static const Color darkIndicatorColor = Colors.amber;
 
-
-
-  static const Color maleMainColor = Color(0xFF38B6FF);
-  static const Color feMaleMainColor = Color(0xFFFFA0B1);
+  static const Color maleMainColor = Color(0xFF7F95D1);
+  static const Color feMaleMainColor = Color(0xFFFF82A9);
 }
