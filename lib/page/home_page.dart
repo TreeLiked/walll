@@ -32,6 +32,7 @@ import 'package:wall/util/perm_util.dart';
 import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/umeng_util.dart';
 import 'package:wall/widget/common/account_avatar.dart';
+import 'package:wall/widget/common/account_avatar_2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -75,6 +76,22 @@ class _HomePageState extends State<HomePage>
   bool _displayCreate = true;
 
   late BuildContext _myContext;
+
+  int _currentNavIndex = 0;
+
+  final Widget createWidgetLight = Transform.translate(
+      offset: const Offset(0, 5),
+      child: Container(
+          padding: const EdgeInsets.all(7.0),
+          width: 35,
+          height: 35,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              gradient: const LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  colors: [Color(0xFFFFFFFF), Color(0xFF00f2fe), Color(0xFFFFFFFF)])),
+          child: const LoadAssetSvg("nav/nav_create", width: 35, height: 35, color: Colors.white)));
 
   @override
   void initState() {
@@ -192,8 +209,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Future getData(int page) async {
-    List<BaseTweet> pbt =
-        await (TweetApi.queryTweets(PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
+    List<BaseTweet> pbt = await (TweetApi.queryTweets(PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
     return pbt;
   }
 
@@ -232,373 +248,177 @@ class _HomePageState extends State<HomePage>
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
         appBar: PreferredSize(
-          child: AppBar(
-            elevation: 0,
-            backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
-          ),
+          child: AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
           preferredSize: Size.zero,
         ),
         body: SafeArea(
-          bottom: false,
-          child: Stack(
-            children: <Widget>[
+            bottom: false,
+            child: Stack(children: <Widget>[
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    // height: 100,
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    width: double.infinity,
-                    // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned(
-                          left: prefix0.ScreenUtil().setWidth(10.0),
-                          child: Consumer<AccountLocalProvider>(
-                            builder: (_, model, __) {
-                              var acc = model.account;
-                              return InkWell(
-                                child: AccountAvatar(avatarUrl: acc!.avatarUrl!, size: 35.0, cache: true)
-                              );
-                              // return IconButton(
-                              //     iconSize: 35,
-                              //     onPressed: () {
-                              //       BottomSheetUtil.showBottomSheet(context, 0.7, PersonalCenter());
-                              //       UMengUtil.userGoPage(UMengUtil.PAGE_PC);
-                              //     },
-                              //     icon: AccountAvatar(
-                              //         avatarUrl: acc.avatarUrl, size: 50.0, whitePadding: true, cache: true));
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: double.maxFinite,
-                          alignment: Alignment.center,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            child: TabBar(
-                              labelStyle: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w400, color: Colors.amber[600]),
-                              unselectedLabelStyle:
-                                  TextStyle(fontSize: 14, color: isDark ? Colors.white24 : Colors.black),
-                              indicatorSize: TabBarIndicatorSize.label,
-                              indicator: const UnderlineTabIndicator(
-                                  insets: EdgeInsets.symmetric(horizontal: 10.0),
-                                  borderSide: BorderSide(color: Colours.mainColor, width: 4.0)),
-                              controller: _tabController,
-                              labelColor: isDark ? Colors.white : Colors.black,
-                              isScrollable: true,
-                              onTap: (index) {
-                                if (index == _currentTabIndex) {
-                                  if (index == 0) {
-                                    if (msgProvider.tweetNewCnt > 0) {
-                                      // PageSharedWidget.tabIndexRefreshController.requestRefresh();
-                                      Provider.of<MsgProvider>(context, listen: false).updateTweetNewCnt(0);
-                                    }
-                                    // PageSharedWidget.homepageScrollController.animateTo(0.0,
-                                    //     duration: Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
-                                    return;
-                                  }
-                                }
-                                _tabController.animateTo(index);
-                                setState(() {
-                                  _currentTabIndex = index;
-//                              _displayCreate = _currentTabIndex == 0;
-                                });
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      // height: 100,
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      width: double.infinity,
+                      // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned(
+                            left: prefix0.ScreenUtil().setWidth(10.0),
+                            child: Consumer<AccountLocalProvider>(
+                              builder: (_, model, __) {
+                                var acc = model.account;
+                                return InkWell(
+                                    child: AccountAvatar(avatarUrl: acc!.avatarUrl!, size: 35.0, cache: true));
+                                // return IconButton(
+                                //     iconSize: 35,
+                                //     onPressed: () {
+                                //       BottomSheetUtil.showBottomSheet(context, 0.7, PersonalCenter());
+                                //       UMengUtil.userGoPage(UMengUtil.PAGE_PC);
+                                //     },
+                                //     icon: AccountAvatar(
+                                //         avatarUrl: acc.avatarUrl, size: 50.0, whitePadding: true, cache: true));
                               },
-                              tabs: const [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Text('推荐',
-                                      style: TextStyle(
-                                          fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Text('热榜',
-                                      style: TextStyle(
-                                          fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-                                )
-                                // Tab(
-                                //     child: Text('热门',
-                                //         style: TextStyle(
-                                //             color: _getTabColor(1),
-                                //             fontWeight: FontWeight.w500,
-                                //             letterSpacing: 1.1))),
-                                // Tab(child: Text('圈子', style: pfStyle.copyWith(color: _getTabColor(2)))),
-                              ],
                             ),
                           ),
-                        ),
-                        // Positioned(
-                        //     right: prefix0.ScreenUtil().setWidth(10.0),
-                        //     child: IconButton(
-                        //       icon: Badge(
-                        //           elevation: 0,
-                        //           child: LoadAssetIcon(
-                        //             "notification/bell",
-                        //             color: Utils.badgeHasData(msgProvider.totalCnt)
-                        //                 ? Colors.amber
-                        //                 : isDark
-                        //                     ? Colors.white54
-                        //                     : Colors.black87,
-                        //             width: 25.0,
-                        //             height: 25.0,
-                        //           ),
-                        //           badgeColor: Colors.red[400],
-                        //           padding: EdgeInsets.all(msgProvider.totalCnt >= 10 ? 2 : 5),
-                        //           animationType: BadgeAnimationType.fade,
-                        //           showBadge: Utils.badgeHasData(msgProvider.totalCnt),
-                        //           badgeContent: Utils.getRpWidget(msgProvider.totalCnt)),
-                        //       onPressed: () => NavigatorUtils.push(context, Routes.notification),
-                        //     )),
-                      ],
+                          Container(
+                            width: double.maxFinite,
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 0),
+                              child: TabBar(
+                                labelStyle:
+                                    TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.amber[600]),
+                                unselectedLabelStyle:
+                                    TextStyle(fontSize: 14, color: isDark ? Colors.white24 : Colors.black),
+                                indicatorSize: TabBarIndicatorSize.label,
+                                indicator: const UnderlineTabIndicator(
+                                    insets: EdgeInsets.symmetric(horizontal: 10.0),
+                                    borderSide: BorderSide(color: Colours.mainColor, width: 4.0)),
+                                controller: _tabController,
+                                labelColor: isDark ? Colors.white : Colors.black,
+                                isScrollable: true,
+                                onTap: (index) {
+                                  if (index == _currentTabIndex) {
+                                    if (index == 0) {
+                                      if (msgProvider.tweetNewCnt > 0) {
+                                        // PageSharedWidget.tabIndexRefreshController.requestRefresh();
+                                        Provider.of<MsgProvider>(context, listen: false).updateTweetNewCnt(0);
+                                      }
+                                      // PageSharedWidget.homepageScrollController.animateTo(0.0,
+                                      //     duration: Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
+                                      return;
+                                    }
+                                  }
+                                  _tabController.animateTo(index);
+                                  setState(() {
+                                    _currentTabIndex = index;
+//                              _displayCreate = _currentTabIndex == 0;
+                                  });
+                                },
+                                tabs: const [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Text('推荐',
+                                        style:
+                                            TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Text('热榜',
+                                        style:
+                                            TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
+                                  )
+                                  // Tab(
+                                  //     child: Text('热门',
+                                  //         style: TextStyle(
+                                  //             color: _getTabColor(1),
+                                  //             fontWeight: FontWeight.w500,
+                                  //             letterSpacing: 1.1))),
+                                  // Tab(child: Text('圈子', style: pfStyle.copyWith(color: _getTabColor(2)))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        TweetIndexTabView(),
-                        TweetIndexTabView(),
-                        // CircleMainNew()
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              _displayCreate
-                  ? Positioned(
-                      left: stickLeft ? 3.9 : null,
-                      right: stickLeft ? null : 20,
-                      top: floatingOffset.dy,
-                      child: Container(
-                        width: 55,
-                        height: 55,
-                        child: Draggable(
-                          feedback: FloatingActionButton(
-                              child: Container(
-                                  width: 55,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(27.5),
-                                      gradient: new LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: isDark
-                                              ? ([Colors.black26, Colors.black45])
-                                              : [Color(0xffFFFFFF), Color(0xffdfe9f3)])),
-                                  child: Icon(Icons.add,
-                                      size: 28.0, color: isDark ? Colors.amber[300] : Colors.grey)),
-                              backgroundColor: isDark ? Colors.black45 : Color(0xffF8F8FF),
-                              splashColor: Colors.white12,
-                              elevation: 10.0,
-                              onPressed: null),
-                          child: FloatingActionButton(
-                              // child: Icon(
-                              //   Icons.add,
-                              //   color: isDark ? Colors.amber[300] : Colors.black,
-                              // ),
-                              child: Container(
-                                  width: 55,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(27.5),
-                                      gradient: new LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: isDark
-                                              ? ([Colors.black26, Colors.black45])
-                                              : [Color(0xffFFFFFF), Color(0xffdfe9f3)])),
-                                  child: Icon(Icons.add,
-                                      size: 28.0, color: isDark ? Colors.amber[300] : Colors.amber[700])),
-                              // child: LoadAssetIcon(
-                              //   "create",
-                              //   color: isDark ? Colors.yellow : Colors.lightBlueAccent,
-                              //   width: 23.0,
-                              //   height: 23.0,
-                              // ),
-                              // backgroundColor: isDark ? Colors.black45 : Color(0xffF8F8FF),
-                              elevation: 10.0,
-                              // foregroundColor: Colors.yellow,
-
-                              splashColor: Colors.white12,
-                              onPressed: () => NavigatorUtils.push(
-                                  context,
-                                  Routes.tweetCreate +
-                                      FluroConvertUtils.assembleArgs({
-                                        "type": 0,
-                                        "title": "发布内容",
-                                        "hintText": "分享校园新鲜事",
-                                        "circleId": "-1"
-                                      }),
-                                  transitionType: TransitionType.fadeIn)),
-
-                          //拖动过程中，在原来位置停留的Widget，设定这个可以保留原本位置的残影，如果不需要可以直接设置为Container()
-                          childWhenDragging: Container(),
-                          //拖动结束后的Widget
-                          onDragEnd: (details) {
-                            double targetX = details.offset.dx;
-                            double targetY = details.offset.dy - 50;
-                            if (targetY >= Application.screenHeight! - 190 || targetY <= 20) {
-                              targetY = Application.screenHeight! - 190;
-                            }
-                            setState(() {
-                              stickLeft = targetX < middle;
-                              floatingOffset = new Offset(0.0, targetY);
-                            });
-                          },
-                        ),
-                      ))
-                  : Gaps.empty,
-            ],
-          ),
+                    Expanded(
+                        child: TabBarView(controller: _tabController, children: [
+                      TweetIndexTabView(),
+                      TweetIndexTabView(),
+                      // CircleMainNew()
+                    ]))
+                  ])
+            ])),
+        resizeToAvoidBottomInset: false,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: MediaQuery.removePadding(
+          context: context,
+          // height: 83,
+          // padding: EdgeInsets.all(0.0),
+          child: BottomNavigationBar(
+              iconSize: 30,
+              type: BottomNavigationBarType.fixed,
+              elevation: 0,
+              enableFeedback: true,
+              selectedLabelStyle: const TextStyle(fontSize: 11.5),
+              fixedColor: Colours.getEmphasizedTextColor(context),
+              unselectedLabelStyle: const TextStyle(fontSize: 11.5),
+              unselectedItemColor: Colours.greyText,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: _getIcon("nav_index", false), label: '首页', activeIcon: _getIcon("nav_index", true)),
+                BottomNavigationBarItem(
+                    icon: _getIcon("nav_cate", false), label: '分类', activeIcon: _getIcon("nav_cate", true)),
+                BottomNavigationBarItem(
+                    icon: isDark ? _getCreateWidgetDark() : createWidgetLight,
+                    label: '',
+                    activeIcon: isDark ? _getCreateWidgetDark() : createWidgetLight),
+                BottomNavigationBarItem(
+                    icon: _getIcon("nav_noti", false), label: '消息', activeIcon: _getIcon("nav_noti", true)),
+                BottomNavigationBarItem(
+                    icon: _getIcon("nav_my", false), label: '我的', activeIcon: _getIcon("nav_my", true)),
+              ],
+              currentIndex: _currentNavIndex,
+              onTap: _handleNavChanged),
         ),
       );
     });
   }
 
-  Color _getTabColor(int index) {
-    if (_currentTabIndex == index) {
-      return isDark ? Colors.white : Colors.black;
-    }
-    return isDark ? Colors.white38 : Colors.black54;
+  Widget _getIcon(String oriName, bool isSel) {
+    return LoadAssetSvg(
+        "nav/$oriName${isSel ? '_sel' : isDark ? '_unsel_dark' : '_unsel'}",
+        width: 30,
+        height: 30);
   }
 
-//   List<Widget> _sliverBuilder(BuildContext context, bool innerBoxIsScrolled) {
-//     return <Widget>[
-//       SliverAppBar(
-//         centerTitle: true,
-//         backgroundColor: isDark ? Colours.dark_bg_color : Color(0xfff4f5f6),
-//         //标题居中
-//
-//         title: GestureDetector(
-//             child: Text(
-//               Application.getOrgName ?? TextConstant.TEXT_UN_CATCH_ERROR,
-//               style: TextStyle(fontSize: Dimens.font_sp15, fontWeight: FontWeight.w400),
-//             ),
-//             onTap: () => PageSharedWidget.homepageScrollController
-//                 .animateTo(.0, duration: Duration(milliseconds: 1688), curve: Curves.easeInOutQuint)),
-//         elevation: 0.3,
-//         actions: <Widget>[
-//           IconButton(
-//             icon: Icon(Icons.blur_on),
-//             onPressed: () {
-//               NavigatorUtils.push(context, Routes.square, transitionType: TransitionType.fadeIn);
-//             },
-//           ),
-//           IconButton(
-//               key: _menuKey,
-//               icon: Icon(Icons.add),
-//               onPressed: _showAddMenu,
-//               color: ThemeUtils.getIconColor(context)),
-//         ],
-//
-//         expandedHeight: 0,
-//         // expandedHeight: SizeConstant.HP_COVER_HEIGHT,
-//         // backgroundColor: GlobalConfig.DEFAULT_BAR_BACK_COLOR,
-//         // backgroundColor: Colors.transparent,
-//         floating: false,
-//         pinned: true,
-//         snap: false,
-// //         flexibleSpace: FlexibleSpaceBar(
-// //             background: CachedNetworkImage(
-// //           imageUrl:
-// //               'https://tva1.sinaimg.cn/large/00831rSTgy1gdf8bz0p5xj31hc0u0n01.jpgs',
-// //           fit: BoxFit.cover,
-// //         )),
-//       ),
-//     ];
-//   }
+  Widget _getCreateWidgetDark() {
+    return Transform.translate(
+        offset: const Offset(0, 5),
+        child: Container(
+            padding: const EdgeInsets.all(7.0),
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                gradient: const LinearGradient(
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                    colors: [Colors.white, Color(0xFF8AE1FC),Colors.white])),
+            child: const LoadAssetSvg("nav/nav_create", width: 35, height: 35, color: Colors.white)));
+  }
 
-  // _showAddMenu() {
-  //   final RenderBox button = _menuKey.currentContext.findRenderObject();
-  //   final RenderBox overlay = Overlay.of(context).context.findRenderObject();
-  //   var a =
-  //       button.localToGlobal(Offset(button.size.width - 8.0, button.size.height - 12.0), ancestor: overlay);
-  //   var b = button.localToGlobal(button.size.bottomLeft(Offset(0, -12.0)), ancestor: overlay);
-  //   final RelativeRect position = RelativeRect.fromRect(
-  //     Rect.fromPoints(a, b),
-  //     Offset.zero & overlay.size,
-  //   );
-  //   final Color backgroundColor = ThemeUtils.getBackgroundColor(context);
-  //   final Color _iconColor = ThemeUtils.getIconColor(context);
-  //   showPopupWindow(
-  //       context: context,
-  //       fullWidth: false,
-  //       isShowBg: true,
-  //       position: position,
-  //       elevation: 0.0,
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.end,
-  //         children: <Widget>[
-  //           Padding(
-  //             padding: const EdgeInsets.only(right: 12.0),
-  //             child: LoadAssetIcon(
-  //               "jt",
-  //               width: 8.0,
-  //               height: 4.0,
-  //               color: ThemeUtils.getDarkColor(context, Colours.dark_bg_color),
-  //             ),
-  //           ),
-  //           SizedBox(
-  //             width: 120.0,
-  //             height: 40.0,
-  //             child: FlatButton.icon(
-  //                 textColor: Theme.of(context).textTheme.headline6.color,
-  //                 color: backgroundColor,
-  //                 onPressed: () {
-  //                   NavigatorUtils.goBack(context);
-  //                   _forwardFilterPage();
-  //                 },
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius:
-  //                       BorderRadius.only(topLeft: Radius.circular(8.0), topRight: Radius.circular(8.0)),
-  //                 ),
-  //                 icon: LoadAssetIcon(
-  //                   "filter",
-  //                   width: 16.0,
-  //                   height: 16.0,
-  //                   color: _iconColor,
-  //                 ),
-  //                 label: const Text("筛 选")),
-  //           ),
-  //           // Container(
-  //           //   width: 120.0,
-  //           //   height: 0.6,
-  //           //   color: Colours.line,
-  //           //   padding: EdgeInsets.symmetric(horizontal: 0),
-  //           // ),
-  //           // Gaps.vGap4,
-  //           SizedBox(
-  //             width: 120.0,
-  //             height: 40.0,
-  //             child: FlatButton.icon(
-  //                 textColor: Theme.of(context).textTheme.headline6.color,
-  //                 onPressed: () {
-  //                   NavigatorUtils.goBack(context);
-  //
-  //                   NavigatorUtils.push(context, Routes.create, transitionType: TransitionType.fadeIn);
-  //                   // NavigatorUtils.push(context, Routes.create,
-  //                   //     transitionType: TransitionType.fadeIn);
-  //                 },
-  //                 color: backgroundColor,
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.only(
-  //                       bottomLeft: const Radius.circular(8.0), bottomRight: const Radius.circular(8.0)),
-  //                 ),
-  //                 icon: LoadAssetIcon(
-  //                   "create",
-  //                   width: 16.0,
-  //                   height: 16.0,
-  //                   color: _iconColor,
-  //                 ),
-  //                 label: const Text("发 布")),
-  //           ),
-  //         ],
-  //       ));
-  // }
+  void _handleNavChanged(index) {
+    if (index != _currentNavIndex) {
+      setState(() {
+        _currentNavIndex = index;
+      });
+    }
+  }
 
   @override
   bool get wantKeepAlive => true;

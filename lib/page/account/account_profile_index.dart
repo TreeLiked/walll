@@ -207,7 +207,7 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
               size: 80,
               gender: Gender.female,
               borderColor: isDark ? darkBg : lightBg,
-              onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
                     return ImageHeroPage(url: widget.avatarUrl);
                   },

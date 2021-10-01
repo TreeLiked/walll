@@ -5,6 +5,7 @@ import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:wall/util/theme_util.dart';
 
 class ImageHeroPage extends StatelessWidget {
   final String url;
@@ -13,8 +14,9 @@ class ImageHeroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = ThemeUtil.isDark(context);
     return Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colours.darkScaffoldColor,
         body: Stack(
           children: [
             GestureDetector(

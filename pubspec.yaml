@@ -37,17 +37,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^1.0.0
-
   # - - - https://pub.dev/packages/xxx/ - - -
   # 网络请求
   dio: ^4.0.0
@@ -73,8 +62,6 @@ dev_dependencies:
   web_socket_channel: ^2.1.0
   # 事件总线
   event_bus: ^2.0.0
-  # model序列化
-  json_annotation: ^4.1.0
   # ws
   stomp_dart_client: ^0.4.3
 
@@ -112,6 +99,23 @@ dev_dependencies:
   flutter_svg: ^0.22.0
   # 下拉刷新
   pull_to_refresh: ^2.0.0
+  # 图像预览
+  photo_view: ^0.12.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^1.0.0
+
+
+  # model序列化
+  json_annotation: ^4.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -130,6 +134,7 @@ flutter:
     - assets/svg/
     - assets/svg/crm/
     - assets/svg/common/
+    - assets/svg/nav/
 
 
   # To add assets to your application, add an assets section, like this:

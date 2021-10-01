@@ -1,12 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:wall/constant/app_constant.dart';
 import 'package:wall/constant/asset_path_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/common/media.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
+import 'package:wall/page/gallery_photo_view_page.dart';
 import 'package:wall/util/asset_util.dart';
+import 'package:wall/util/bottom_sheet_util.dart';
 import 'package:wall/util/coll_util.dart';
+import 'package:wall/util/common_util.dart';
+import 'package:wall/util/navigator_util.dart';
+import 'package:wall/util/perm_util.dart';
+import 'package:wall/util/toast_util.dart';
 import 'package:wall/widget/common/image/imgae_container.dart';
 
 import '../../application.dart';
@@ -35,12 +42,78 @@ class TweetMediaWrapper extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.only(top: 10.0),
         child: picUrls!.length == 1
-            ? SingleImgWrapper(imageUrl: picUrls![0], sw: availSw, sh: sh, onTap: () => open(context, 0))
-            : MultiImgWrapper(imageUrls: picUrls!, sw: availSw, sh: sh, onTap: (idx) => open(context, idx)));
+            ? SingleImgWrapper(imageUrl: picUrls![0], sw: availSw, sh: sh, onTap: () => open(context, 0, 0))
+            : MultiImgWrapper(
+                imageUrls: picUrls!, sw: availSw, sh: sh, onTap: (idx) => open(context, idx, picUrls!.length)));
   }
 
-  void open(BuildContext context, final int index) {
-    // Util.openPhotoView(context, picUrls, index, tweetId);
+  void open(BuildContext context, final int index, final int total) {
+    openPhotoView(context, picUrls, index, tweetId);
+  }
+
+  void openPhotoView(BuildContext context, List<String>? urls, int initialIndex, int refId) {
+    if (CollUtil.isListEmpty(urls)) {
+      return;
+    }
+    List<PhotoWrapItem> items =
+        urls!.map((f) => PhotoWrapItem(index: initialIndex, url: Uri.decodeComponent(f))).toList();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => GalleryPhotoViewWrapper(
+                usePageViewWrapper: true,
+                galleryItems: items,
+                backgroundDecoration: const BoxDecoration(color: Colors.black),
+                loadingChild: const SpinKitRing(color: Colors.grey, size: 20.0, lineWidth: 2.5),
+                initialIndex: initialIndex,
+                fromNetwork: true,
+                onLongPress: (photoWrapItem) => _handleAndDisplayOptions(context, photoWrapItem, refId.toString())),
+            maintainState: false));
+  }
+
+  void _handleAndDisplayOptions(BuildContext context, PhotoWrapItem item, String refId) {
+    BottomSheetUtil.showBottomSheetView(context, [
+      BottomSheetItem(const Icon(Icons.file_download, color: Colors.green), '保存', () async {
+        Util.showDefaultLoadingWithBounds(context, text: "正在保存");
+        bool saveResult = false;
+        try {
+          bool hasPermission = await PermissionUtil.checkAndRequestStorage(context);
+          if (hasPermission) {
+            saveResult = await Util.downloadAndSaveImageFromUrl(item.url);
+          }
+        } catch (e, stack) {
+          saveResult = false;
+        } finally {
+          Navigator.pop(context);
+          if (saveResult) {
+            ToastUtil.showToast(context, '已保存到手机相册');
+            Navigator.pop(context);
+          } else {
+            ToastUtil.showToast(context, '保存失败');
+          }
+        }
+      }),
+      BottomSheetItem(
+          const Icon(
+            Icons.warning,
+            color: Colors.orange
+          ),
+          '图片违规', () {
+        Navigator.pop(context);
+        // NavigatorUtils.goReportPage(
+        //     context, ReportPage.REPORT_TWEET_IMAGE, widget.galleryItems[currentIndex].url, "图片举报");
+      }),
+      BottomSheetItem(
+          const Icon(
+              Icons.share,
+              color: Colors.lightBlueAccent
+          ),
+          '分享到...', () {
+        Navigator.pop(context);
+        ToastUtil.showToast(context, '暂时无法分享');
+      })
+    ]);
   }
 }
 

@@ -8,6 +8,10 @@ class ThemeUtil {
     return Theme.of(context).brightness == Brightness.dark;
   }
 
+  static bool isLight(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light;
+  }
+
   static bool isDarkNew() {
     return isDark(Application.context!);
   }

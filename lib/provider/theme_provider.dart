@@ -44,15 +44,14 @@ class ThemeProvider extends ChangeNotifier {
     return ThemeData(
         // errorColor: isDarkMode ? Colours.dark_red : Colours.red,
         brightness: isDarkMode ? Brightness.dark : Brightness.light,
-        // primaryColor: isDarkMode ? Colours.dark_app_main : Colours.app_main,
+        primaryColor: isDarkMode ? Colours.mainColorDark : Colours.mainColor,
         primaryIconTheme: IconThemeData(color: isDarkMode ? Colors.grey : Colors.black),
         // Tab指示器颜色
         indicatorColor: isDarkMode ? Colours.darkIndicatorColor : Colours.lightIndicatorColor,
         // 页面背景色
         scaffoldBackgroundColor: isDarkMode ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
         // 主要用于Material背景色
-        // canvasColor: Colors.transparent,
-        // canvasColor: isDarkMode ? Colours.dark_material_bg : ThemeConstant.lightBG,
+        canvasColor: isDarkMode ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
 
         // 文字选择色（输入框复制粘贴菜单）
         textTheme: TextTheme(

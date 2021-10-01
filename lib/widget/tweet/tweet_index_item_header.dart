@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:wall/config/routes/routes.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
-import 'package:wall/constant/size_constant.dart';
 import 'package:wall/constant/text_constant.dart';
 import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/model/biz/tweet/tweet_account.dart';
@@ -25,13 +24,17 @@ class TweetIndexItemHeader extends StatelessWidget {
   final bool myNickClickable;
 
   const TweetIndexItemHeader(this.account, this.anonymous, this.tweetSent,
-      {this.canClick = true, this.official = false, this.myNickClickable = true});
+      {this.canClick = true,
+      this.official = false,
+      this.myNickClickable = true});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(child: _profileContainer(context), margin: const EdgeInsets.only(right: 10.0)),
+        Container(
+            child: _profileContainer(context),
+            margin: const EdgeInsets.only(right: 10.0)),
         Expanded(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,10 +49,9 @@ class TweetIndexItemHeader extends StatelessWidget {
               ],
             ),
             Gaps.vGap3,
-            _signatureContainer(context),
+            // _signatureContainer(context),
+            Container(child: _timeContainer(context))
           ],
-
-          // Container(child: _timeContainer(context))
         ))
       ],
     );
@@ -60,8 +62,11 @@ class TweetIndexItemHeader extends StatelessWidget {
       NavigatorUtils.push(
           context,
           Routes.accountProfile +
-              FluroConvertUtils.packConvertArgs(
-                  {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+              FluroConvertUtils.packConvertArgs({
+                'nick': account.nick!,
+                'accId': account.id!,
+                'avatarUrl': account.avatarUrl!
+              }));
     }
   }
 
@@ -72,8 +77,10 @@ class TweetIndexItemHeader extends StatelessWidget {
     return RealRichText([
       TextSpan(
           text: account.nick!,
-          style:
-              const TextStyle(fontSize: 15.5, fontWeight: FontWeight.bold, color: Colours.emphasizeFontColor),
+          style: TextStyle(
+              fontSize: 15.5,
+              fontWeight: FontWeight.bold,
+              color: Colours.getEmphasizedTextColor(context)),
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               if (anonymous || !myNickClickable) {
@@ -81,24 +88,17 @@ class TweetIndexItemHeader extends StatelessWidget {
               }
               goAccountDetail(context, account, true);
             }),
-      TextSpan(
-        text: ' · ' + TimeUtil.getShortTime(tweetSent),
-        style: const TextStyle(fontSize: 14, color: Colours.secondaryFontColor),
-      )
+      // TextSpan(
+      //   text: ' · ' + TimeUtil.getShortTime(tweetSent),
+      //   style: const TextStyle(fontSize: 14, color: Colours.secondaryFontColor),
+      // )
     ]);
   }
 
   Widget _timeContainer(BuildContext context) {
-    if (tweetSent == null) {
-      return Container(height: 0);
-    }
-    return Text("时间");
-    // return Text(
-    //   TimeUtil.getShortTime(tweetSent) ?? "未知",
-    //   maxLines: 2,
-    //   softWrap: true,
-    //   style: MyDefaultTextStyle.getTweetTimeStyle(context),
-    // );
+    return Text(TimeUtil.getShortTime(tweetSent),
+        style:
+            const TextStyle(fontSize: 14, color: Colours.secondaryFontColor));
   }
 
   Widget _signatureContainer(BuildContext context) {
@@ -112,14 +112,18 @@ class TweetIndexItemHeader extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         softWrap: false,
-        style: const TextStyle(color: Colours.secondaryFontColor, fontSize: 13.5));
+        style:
+            const TextStyle(color: Colours.secondaryFontColor, fontSize: 13.5));
   }
 
   Widget _profileContainer(BuildContext context) {
-    Gender gender = anonymous ? Gender.unknown : Gender.parseGender(account.gender!);
+    Gender gender =
+        anonymous ? Gender.unknown : Gender.parseGender(account.gender!);
     return AccountAvatar(
         anonymous: anonymous,
-        onTap: () => anonymous || !myNickClickable ? null : goAccountDetail2(context, account, true),
+        onTap: () => anonymous || !myNickClickable
+            ? null
+            : goAccountDetail2(context, account, true),
         avatarUrl: account.avatarUrl!,
         size: 45,
         gender: gender);
@@ -153,8 +157,11 @@ class TweetIndexItemHeader extends StatelessWidget {
     NavigatorUtils.push(
         context,
         Routes.accountProfile +
-            FluroConvertUtils.packConvertArgs(
-                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}),
+            FluroConvertUtils.packConvertArgs({
+              'nick': account.nick!,
+              'accId': account.id!,
+              'avatarUrl': account.avatarUrl!
+            }),
         transitionType: TransitionType.fadeIn);
   }
 }

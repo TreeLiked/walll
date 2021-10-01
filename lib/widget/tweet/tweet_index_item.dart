@@ -100,7 +100,7 @@ class TweetIndexItem extends StatelessWidget {
                     // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
                     Gaps.vGap8,
 
-                    TweetPraiseWrapper(tweet, prefixIcon: true),
+                    // TweetPraiseWrapper(tweet, prefixIcon: true),
                     // TweetCampusWrapper(
                     //   tweet.id,
                     //   tweet.account.institute,

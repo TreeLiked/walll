@@ -11,7 +11,7 @@ class ImageContainer extends StatelessWidget {
   final double? maxHeight;
   final EdgeInsetsGeometry? padding;
   final Widget? errorWidget;
-  final Function? callback;
+  final GestureTapCallback? callback;
   final bool round;
 
   const ImageContainer(
@@ -36,7 +36,7 @@ class ImageContainer extends StatelessWidget {
         width: width,
         height: height,
         child: GestureDetector(
-            onTap: callback == null ? null : callback!(),
+            onTap:  callback,
             child: round
                 ? ClipRRect(
                     child: CachedNetworkImage(

@@ -52,6 +52,6 @@ class TweetBodyWrapper extends StatelessWidget {
             fontSize: fontSize,
             fontWeight: FontWeight.w400,
             height: height,
-            color: isDark ? Colors.white : Colors.black));
+            color: Colours.getEmphasizedTextColor(context)));
   }
 }

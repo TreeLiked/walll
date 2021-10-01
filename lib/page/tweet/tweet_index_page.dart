@@ -21,7 +21,8 @@ class TweetIndexTabView extends StatefulWidget {
 }
 
 class _TweetIndexTabViewState extends State<TweetIndexTabView> {
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
 //  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
 
@@ -33,8 +34,10 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
 
   int _currentPage = 1;
 
-  Widget loadingIconStatic =
-      SizedBox(width: 25.0, height: 25.0, child: const CupertinoActivityIndicator(animating: false));
+  Widget loadingIconStatic = SizedBox(
+      width: 25.0,
+      height: 25.0,
+      child: const CupertinoActivityIndicator(animating: false));
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +52,7 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
             onPointerDown: (_) {
               // closeReplyInput();
             },
-            child: Scrollbar(
-         controller: _scrollController,
-                child: SmartRefresher(
+            child: SmartRefresher(
               enablePullUp: tweets != null && tweets.length > 0,
               enablePullDown: true,
               primary: false,
@@ -75,14 +76,12 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
                 noDataText: '到底了哦',
                 idleText: '继续上滑',
               ),
-              child:
-                  tweets == null
-                      ? Align(
-                          alignment: Alignment.topCenter,
-                          child: Text('正在加载...'),
-                        )
-                      :
-                  tweets.isEmpty
+              child: tweets == null
+                  ? Align(
+                      alignment: Alignment.topCenter,
+                      child: Text('正在加载...'),
+                    )
+                  : tweets.isEmpty
                       ? TweetNoDataView(onTapReload: () {
                           if (_refreshController != null) {
                             _refreshController.resetNoData();
@@ -132,7 +131,7 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
                           }),
               onRefresh: () => _onRefresh(context),
               onLoading: _onLoading,
-            )));
+            ));
       }),
     );
   }
@@ -174,6 +173,7 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
   }
 
   Future getData(int page) async {
-    return await (TweetApi.queryTweets(PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
+    return await (TweetApi.queryTweets(
+        PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
   }
 }
