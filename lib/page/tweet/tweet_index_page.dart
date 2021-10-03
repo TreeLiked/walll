@@ -91,6 +91,7 @@ class _TweetIndexTabViewState extends State<TweetIndexTabView> {
                       : ListView.builder(
                           primary: true,
                           itemCount: tweets.length,
+                          addAutomaticKeepAlives: true,
                           itemBuilder: (context, index) {
                             return TweetIndexItem(
                               tweets[index],

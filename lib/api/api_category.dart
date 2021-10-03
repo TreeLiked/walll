@@ -27,7 +27,7 @@ class Api {
   static const String API_TWEET_QUERY_SIN = "/tweet/listSingle.json";
   static const String API_TWEET_QUERY = "/tweet/list.json";
   static const String apiGetTweet = "/tweet/listUni.json";
-  static const String API_TWEET_QUERY_SELF = "/tweet/account/pushed.json";
+  static const String querySelfTweet = "/tweet/account/pushed.json";
   static const String API_TWEET_QUERY_PUBLIC = "/tweet/account/publicPushed.json";
   static const String API_TWEET_MEDIA_UPLOAD_REQUEST = "/tweet/media/generate.json";
 

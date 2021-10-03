@@ -10,6 +10,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:wall/config/routes/route_handlers.dart';
 import 'package:wall/config/routes/router_init.dart';
+import 'package:wall/config/routes/setting_router.dart';
 import 'package:wall/page/login/login_page.dart';
 import 'package:wall/page/splash_page.dart';
 import 'package:wall/widget/common/widget_not_found.dart';
@@ -100,6 +101,7 @@ class Routes {
 
     // _listRouter.add(SettingRouter());
     _listRouter.add(LoginRouter());
+    _listRouter.add(SettingRouter());
     // _listRouter.add(SquareRouter());
     // _listRouter.add(NotificationRouter());
     // _listRouter.add(CircleRouter());

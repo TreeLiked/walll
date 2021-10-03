@@ -20,6 +20,7 @@ import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
+import 'package:wall/page/account/account_profile_index.dart';
 import 'package:wall/page/tweet/tweet_index_page.dart';
 import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/msg_provider.dart';
@@ -33,6 +34,8 @@ import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/umeng_util.dart';
 import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/common/account_avatar_2.dart';
+
+import 'account/account_my_index.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,21 +66,18 @@ class _HomePageState extends State<HomePage>
   double startY = -1;
   double lastY = -1;
 
-  // menu float choice
-  GlobalKey _menuKey = GlobalKey();
 
   bool isDark = false;
 
-  int count = 1;
 
   late TabController _tabController;
 
-  int _currentTabIndex = 0;
-  bool _displayCreate = true;
 
   late BuildContext _myContext;
 
   int _currentNavIndex = 0;
+
+  final List<Widget> _bottomNavPages = [];
 
   final Widget createWidgetLight = Transform.translate(
       offset: const Offset(0, 5),
@@ -95,12 +95,16 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
+
+    _bottomNavPages.add(TweetIndexTabView());
+    _bottomNavPages.add(TweetIndexTabView());
+    _bottomNavPages.add(TweetIndexTabView());
+    _bottomNavPages.add(TweetIndexTabView());
+    _bottomNavPages.add(AccountMyIndex());
+
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
     _tabController.addListener(() {
-      setState(() {
-        _currentTabIndex = _tabController.index;
-      });
       if (_tabController.index.toDouble() == _tabController.animation!.value) {
         bool _dc = true;
         switch (_tabController.index) {
@@ -114,11 +118,7 @@ class _HomePageState extends State<HomePage>
             _dc = false;
             break;
         }
-        if (_displayCreate != _dc) {
-          setState(() {
-            _displayCreate = _dc;
-          });
-        }
+
       }
     });
 
@@ -247,112 +247,98 @@ class _HomePageState extends State<HomePage>
 
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
-        appBar: PreferredSize(
-          child: AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
-          preferredSize: Size.zero,
-        ),
-        body: SafeArea(
-            bottom: false,
-            child: Stack(children: <Widget>[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      // height: 100,
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      width: double.infinity,
-                      // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned(
-                            left: prefix0.ScreenUtil().setWidth(10.0),
-                            child: Consumer<AccountLocalProvider>(
-                              builder: (_, model, __) {
-                                var acc = model.account;
-                                return InkWell(
-                                    child: AccountAvatar(avatarUrl: acc!.avatarUrl!, size: 35.0, cache: true));
-                                // return IconButton(
-                                //     iconSize: 35,
-                                //     onPressed: () {
-                                //       BottomSheetUtil.showBottomSheet(context, 0.7, PersonalCenter());
-                                //       UMengUtil.userGoPage(UMengUtil.PAGE_PC);
-                                //     },
-                                //     icon: AccountAvatar(
-                                //         avatarUrl: acc.avatarUrl, size: 50.0, whitePadding: true, cache: true));
-                              },
-                            ),
-                          ),
-                          Container(
-                            width: double.maxFinite,
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 0),
-                              child: TabBar(
-                                labelStyle:
-                                    TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.amber[600]),
-                                unselectedLabelStyle:
-                                    TextStyle(fontSize: 14, color: isDark ? Colors.white24 : Colors.black),
-                                indicatorSize: TabBarIndicatorSize.label,
-                                indicator: const UnderlineTabIndicator(
-                                    insets: EdgeInsets.symmetric(horizontal: 10.0),
-                                    borderSide: BorderSide(color: Colours.mainColor, width: 4.0)),
-                                controller: _tabController,
-                                labelColor: isDark ? Colors.white : Colors.black,
-                                isScrollable: true,
-                                onTap: (index) {
-                                  if (index == _currentTabIndex) {
-                                    if (index == 0) {
-                                      if (msgProvider.tweetNewCnt > 0) {
-                                        // PageSharedWidget.tabIndexRefreshController.requestRefresh();
-                                        Provider.of<MsgProvider>(context, listen: false).updateTweetNewCnt(0);
-                                      }
-                                      // PageSharedWidget.homepageScrollController.animateTo(0.0,
-                                      //     duration: Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
-                                      return;
-                                    }
-                                  }
-                                  _tabController.animateTo(index);
-                                  setState(() {
-                                    _currentTabIndex = index;
-//                              _displayCreate = _currentTabIndex == 0;
-                                  });
-                                },
-                                tabs: const [
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Text('推荐',
-                                        style:
-                                            TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Text('热榜',
-                                        style:
-                                            TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-                                  )
-                                  // Tab(
-                                  //     child: Text('热门',
-                                  //         style: TextStyle(
-                                  //             color: _getTabColor(1),
-                                  //             fontWeight: FontWeight.w500,
-                                  //             letterSpacing: 1.1))),
-                                  // Tab(child: Text('圈子', style: pfStyle.copyWith(color: _getTabColor(2)))),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                        child: TabBarView(controller: _tabController, children: [
-                      TweetIndexTabView(),
-                      TweetIndexTabView(),
-                      // CircleMainNew()
-                    ]))
-                  ])
-            ])),
+        // appBar: PreferredSize(
+        //   child: AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
+        //   preferredSize: Size.zero,
+        // ),
+        // body: SafeArea(
+        //     bottom: false,
+        //     child: Stack(children: <Widget>[
+        //       Column(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           children: <Widget>[
+        //             Container(
+        //               // height: 100,
+        //               padding: const EdgeInsets.only(bottom: 5.0),
+        //               width: double.infinity,
+        //               // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
+        //               child: Stack(
+        //                 children: <Widget>[
+        //                   Positioned(
+        //                     left: prefix0.ScreenUtil().setWidth(10.0),
+        //                     child: Consumer<AccountLocalProvider>(
+        //                       builder: (_, model, __) {
+        //                         var acc = model.account;
+        //                         return InkWell(
+        //                             child: AccountAvatar(avatarUrl: acc!.avatarUrl!, size: 35.0, cache: true));
+        //                         // return IconButton(
+        //                         //     iconSize: 35,
+        //                         //     onPressed: () {
+        //                         //       BottomSheetUtil.showBottomSheet(context, 0.7, PersonalCenter());
+        //                         //       UMengUtil.userGoPage(UMengUtil.PAGE_PC);
+        //                         //     },
+        //                         //     icon: AccountAvatar(
+        //                         //         avatarUrl: acc.avatarUrl, size: 50.0, whitePadding: true, cache: true));
+        //                       },
+        //                     ),
+        //                   ),
+        //                   Container(
+        //                     width: double.maxFinite,
+        //                     alignment: Alignment.center,
+        //                     child: Padding(
+        //                       padding: EdgeInsets.symmetric(horizontal: 0),
+        //                       child: TabBar(
+        //                         labelStyle:
+        //                             TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.amber[600]),
+        //                         unselectedLabelStyle:
+        //                             TextStyle(fontSize: 14, color: isDark ? Colors.white24 : Colors.black),
+        //                         indicatorSize: TabBarIndicatorSize.label,
+        //                         indicator: const UnderlineTabIndicator(
+        //                             insets: EdgeInsets.symmetric(horizontal: 10.0),
+        //                             borderSide: BorderSide(color: Colours.mainColor, width: 4.0)),
+        //                         controller: _tabController,
+        //                         labelColor: isDark ? Colors.white : Colors.black,
+        //                         isScrollable: true,
+        //                         onTap: (index) {
+        //
+        //                         },
+        //                         tabs: const [
+        //                           Padding(
+        //                             padding: const EdgeInsets.only(bottom: 8.0),
+        //                             child: Text('推荐',
+        //                                 style:
+        //                                     TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
+        //                           ),
+        //                           Padding(
+        //                             padding: const EdgeInsets.only(bottom: 8.0),
+        //                             child: Text('热榜',
+        //                                 style:
+        //                                     TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
+        //                           )
+        //                           // Tab(
+        //                           //     child: Text('热门',
+        //                           //         style: TextStyle(
+        //                           //             color: _getTabColor(1),
+        //                           //             fontWeight: FontWeight.w500,
+        //                           //             letterSpacing: 1.1))),
+        //                           // Tab(child: Text('圈子', style: pfStyle.copyWith(color: _getTabColor(2)))),
+        //                         ],
+        //                       ),
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             Expanded(
+        //                 child: TabBarView(controller: _tabController, children: [
+        //               TweetIndexTabView(),
+        //               TweetIndexTabView(),
+        //               // CircleMainNew()
+        //             ]))
+        //           ])
+        //     ])),
+        body: _bottomNavPages[_currentNavIndex],
         resizeToAvoidBottomInset: false,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: MediaQuery.removePadding(

@@ -128,10 +128,21 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
     return Scaffold(
       body: Stack(children: [
         NestedScrollView(
-            physics: NeverScrollableScrollPhysics(),
+            // physics: const BouncingScrollPhysics(),
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return [
                 _mySliverAppBar(),
+                SliverList(
+                  ///懒加载代理
+                  delegate: SliverChildBuilderDelegate((BuildContext context, num index) {
+                    ///子Item的布局
+                    return Container(
+                      height: 44,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text("item- $index"),
+                    );
+                  }, childCount: 100), //子Item的个数
+                ),
                 // SliverPersistentHeader(
                 //     delegate: StickyRowDelegate(
                 //   children: [Text('123')],
@@ -166,10 +177,10 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
             // body: Gaps.empty,
             body: CustomScrollView(
               slivers: [
-                SliverToBoxAdapter(child: Container(
+                SliverToBoxAdapter(
+                    child: Container(
                   // margin: const EdgeInsets.only(top: 300.0),
-                  child:
-                  Column(
+                  child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -180,14 +191,10 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colours.emphasizeFontColor)),
+                                fontSize: 22.0, fontWeight: FontWeight.bold, color: Colours.emphasizeFontColor)),
                         Gaps.vGap10,
-                        Text("计算机工程学院 软件161 23",
-                            style: TextStyle(fontSize: 14, color: Colours.secondaryFontColor)),
-                      ]
-                  ),
+                        Text("计算机工程学院 软件161 23", style: TextStyle(fontSize: 14, color: Colours.secondaryFontColor)),
+                      ]),
                   // AccountAvatar2(avatarUrl: widget.avatarUrl)
                   // child: ListView.builder(
                   //   itemBuilder: (BuildContext context, int index) {
@@ -199,22 +206,21 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
                   // ),
                 ))
               ],
-            )
-    ),
-        Positioned(
-            child: AccountAvatar2(
-              avatarUrl: widget.avatarUrl,
-              size: 80,
-              gender: Gender.female,
-              borderColor: isDark ? darkBg : lightBg,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return ImageHeroPage(url: widget.avatarUrl);
-                  },
-                  fullscreenDialog: true)),
-            ),
-            left: (Application.screenWidth! - 84) / 2,
-            top: 265)
+            )),
+        // Positioned(
+        //     child: AccountAvatar2(
+        //       avatarUrl: widget.avatarUrl,
+        //       size: 80,
+        //       gender: Gender.female,
+        //       borderColor: isDark ? darkBg : lightBg,
+        //       onTap: () => Navigator.of(context).push(MaterialPageRoute(
+        //           builder: (context) {
+        //             return ImageHeroPage(url: widget.avatarUrl);
+        //           },
+        //           fullscreenDialog: true)),
+        //     ),
+        //     left: (Application.screenWidth! - 84) / 2,
+        //     top: 265)
       ]),
     );
   }
@@ -222,9 +228,9 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
   _mySliverAppBar() {
     return SliverAppBar(
         expandedHeight: 250,
-        pinned: true,
-        snap: false,
-        floating: false,
+        pinned: false,
+        snap: true,
+        floating: true,
         collapsedHeight: 250,
         flexibleSpace: FlexibleSpaceBar(
           background: Stack(children: <Widget>[

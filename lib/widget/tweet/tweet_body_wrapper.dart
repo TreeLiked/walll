@@ -46,6 +46,7 @@ class TweetBodyWrapper extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
+                    Gaps.hGap4,
                     Text("更多", style: TextStyle(color: Colours.secondaryFontColor, fontSize: fontSize))
                   ])),
         style: TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/widget/common/button/my_text_btn.dart';
 import 'package:wall/widget/common/v_empty_view.dart';
@@ -10,14 +11,12 @@ class BaseDialog extends StatelessWidget {
       required this.title,
       this.leftBtnItem,
       required this.rightBtnItem,
-      this.onPressed,
       this.showCancel = true,
       this.hiddenTitle = false,
       required this.child})
       : super(key: key);
 
   late final String title;
-  final VoidCallback? onPressed;
   late final Widget child;
   final bool hiddenTitle;
   final bool showCancel;
@@ -38,11 +37,11 @@ class BaseDialog extends StatelessWidget {
         curve: Curves.easeInCubic,
         child: Container(
             decoration: BoxDecoration(
-              // color: ThemeUtils.getDialogBackgroundColor(context),
+              color: Colours.getScaffoldColor(context),
               borderRadius: BorderRadius.circular(8.0),
             ),
             width: 270.0,
-            padding: const EdgeInsets.only(top: 24.0),
+            padding: const EdgeInsets.only(top: 15.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -52,7 +51,7 @@ class BaseDialog extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
                       hiddenTitle ? "" : title,
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

@@ -78,11 +78,13 @@ class RealRichText extends Text {
   Widget build(BuildContext context) {
     final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
     TextStyle? effectiveTextStyle = style;
-    if (style == null || style!.inherit)
+    if (style == null || style!.inherit) {
       effectiveTextStyle = defaultTextStyle.style.merge(style);
-    if (MediaQuery.boldTextOverride(context))
+    }
+    if (MediaQuery.boldTextOverride(context)) {
       effectiveTextStyle =
-          effectiveTextStyle!.merge(TextStyle(fontWeight: FontWeight.bold));
+          effectiveTextStyle!.merge(const TextStyle(fontWeight: FontWeight.bold));
+    }
 
     TextSpan textSpan = TextSpan(
         style: effectiveTextStyle,

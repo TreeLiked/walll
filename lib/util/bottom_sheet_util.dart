@@ -70,7 +70,8 @@ class BottomSheetUtil {
                     // height: 350,
                     // constraints: BoxConstraints(maxHeight: 500),
                     decoration: BoxDecoration(
-                        color: ThemeUtil.isLight(context) ? const Color(0xffEBECED) : const Color(0xFF151515),
+                        color: Colours.getScaffoldColor(context),
+                        // color: ThemeUtil.isLight(context) ? const Color(0xffEBECED) : const Color(0xFF151515),
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(14))),
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
@@ -133,8 +134,8 @@ class BottomSheetUtil {
                 Container(
                     height: Application.screenHeight! * heightFactor,
                     decoration: BoxDecoration(
-                        color: ThemeUtil.isLight(context) ? const Color(0xffEBECED) : const Color(0xFF151515),
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(14))),
+                        color: Colours.getScaffoldColor(context),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(14))),
                     child: Stack(
                       children: <Widget>[
                         topLine
@@ -142,12 +143,10 @@ class BottomSheetUtil {
                                 left: (Application.screenWidth! - 50) / 2,
                                 top: 10.0,
                                 child: Container(
-                                  child: Container(
-                                      height: 5.0,
-                                      width: 50.0,
-                                      decoration: BoxDecoration(
-                                          color: Color(0xffaeb4bd), borderRadius: BorderRadius.circular(73.0))),
-                                ),
+                                    height: 5.0,
+                                    width: 50.0,
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xffaeb4bd), borderRadius: BorderRadius.circular(73.0))),
                               )
                             : (topWidget ?? Gaps.empty),
                         SafeArea(

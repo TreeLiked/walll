@@ -40,32 +40,16 @@ class TweetApi {
 //     return null;
 //   }
 //
-//   static Future<List<BaseTweet>> querySelfTweets(PageParam pageParam, String passiveAccountId,
-//       {bool needAnonymous = true}) async {
-//     String requestUrl = Api.API_BASE_INF_URL + Api.API_TWEET_QUERY_SELF;
-//     Response response;
-//     var param = {
-//       'currentPage': pageParam.currentPage,
-//       'pageSize': pageParam.pageSize,
-//     };
-//     try {
-//       response = await httpUtil.dio.get(requestUrl, queryParameters: param);
-//       Map<String, dynamic> json = Api.convertResponse(response.data);
-//       dynamic pageData = json["data"];
-//       if (pageData == null) {
-//         return new List<BaseTweet>();
-//       }
-//       List<dynamic> tweetData = pageData["data"];
-//       if (CollectionUtil.isListEmpty(tweetData)) {
-//         return new List<BaseTweet>();
-//       }
-//       List<BaseTweet> tweetList = tweetData.map((m) => BaseTweet.fromJson(m)).toList();
-//       return tweetList;
-//     } on DioError catch (e) {
-//       Api.formatError(e);
-//     }
-//     return null;
-//   }
+  static Future<List<BaseTweet>> querySelfTweets(PageParam pageParam, String passiveAccountId,
+      {bool needAnonymous = true}) async {
+    Result res = await httpUtil.get(Api.apiBaseAlUrl + Api.querySelfTweet, data: pageParam.toJson());
+    List<dynamic> list;
+    if (res.isSuccess && (list = res.oriData['data']) != null) {
+      // 这边是分页结果
+      return list.map((m) => BaseTweet.fromJson(m)).toList();
+    }
+    return [];
+  }
 //
 //   static Future<List<BaseTweet>> queryOtherTweets(PageParam pageParam, String passiveAccountId) async {
 //     String requestUrl = Api.API_BASE_INF_URL + Api.API_TWEET_QUERY_PUBLIC;

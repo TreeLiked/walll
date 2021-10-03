@@ -142,7 +142,6 @@ class HttpUtil {
       response = await dio.get(url, cancelToken: cancelToken, queryParameters: data);
       var responseContent = response.data;
       if(responseContent is Map) {
-        LogUtil.d(responseContent);
         Map<String, dynamic> json = response.data;
         return Result.fromJson(json);
       } else {
