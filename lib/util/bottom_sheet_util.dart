@@ -178,7 +178,7 @@ class BottomSheetUtil {
               Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                      color: ThemeUtil.isLight(context) ? Colors.white : const Color(0xFF262626),
+                      color: ThemeUtil.isLight(context) ? const Color(0xFFF6F6F6) : const Color(0xFF262626),
                       borderRadius: BorderRadius.circular(10.0)),
                   child: item.icon),
               Gaps.vGap10,

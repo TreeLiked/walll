@@ -5,18 +5,19 @@ import 'package:wall/util/str_util.dart';
 class Gender {
   final String name;
   final String zhTag;
+  final bool hasGender;
 
-  const Gender({required this.name, required this.zhTag});
+  const Gender({required this.name, required this.zhTag, required this.hasGender});
 
-  static const male = Gender(name: 'MALE', zhTag: '男');
-  static const female = Gender(name: 'FEMALE', zhTag: '女');
-  static const unknown = Gender(name: 'UNKNOWN', zhTag: '未知');
+  static const male = Gender(name: 'MALE', zhTag: '男', hasGender: true);
+  static const female = Gender(name: 'FEMALE', zhTag: '女', hasGender: true);
+  static const unknown = Gender(name: 'UNKNOWN', zhTag: '未知',hasGender: false);
 
-  static Gender parseGender(String str) {
+  static Gender parseGender(String? str) {
     if (StrUtil.isEmpty(str)) {
       return Gender.unknown;
     }
-    str = str.toUpperCase();
+    str = str!.toUpperCase();
     if (str == male.name) {
       return male;
     }

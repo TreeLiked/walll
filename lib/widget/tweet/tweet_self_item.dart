@@ -124,7 +124,7 @@ class TweetSelfItem extends StatelessWidget {
       return Gaps.empty;
     }
     if (StrUtil.isEmpty(tweet.body)) {
-      return TweetMediaWrapper(tweet.id!, medias: tweet.medias, tweet: tweet);
+      return TweetMediaWrapper(tweet: tweet);
     }
     String str = "[图片]";
     if (list.length > 1) {

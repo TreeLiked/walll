@@ -1,12 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart' as su;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:wall/api/device_api.dart';
+import 'package:wall/application.dart';
+import 'package:wall/config/routes/login_router.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/size_constant.dart';
+import 'package:wall/util/http_util.dart';
 import 'package:wall/util/perm_util.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -14,13 +19,10 @@ import 'package:wall/util/toast_util.dart';
 import 'package:dio/dio.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-
-
 import 'coll_util.dart';
 import 'navigator_util.dart';
 
 class Util {
-
   static void displayDialog(
     BuildContext context,
     Widget dialog, {
@@ -59,8 +61,8 @@ class Util {
             type: MaterialType.transparency,
             child: Center(
                 child: SizedBox(
-              width: ScreenUtil().setWidth(100),
-              height: ScreenUtil().setWidth(100),
+              width: su.ScreenUtil().setWidth(100),
+              height: su.ScreenUtil().setWidth(100),
               child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7),
@@ -79,7 +81,7 @@ class Util {
 
   static List<Widget> _renderLoadingList(BuildContext context, double size, String text) {
     List<Widget> list = [];
-    list.add(SpinKitSpinningLines(color: Colours.actionClickable, size: size,itemCount: 3));
+    list.add(SpinKitSpinningLines(color: Colours.actionClickable, size: size, itemCount: 3));
     if (!StrUtil.isEmpty(text)) {
       list.add(Padding(
           padding: const EdgeInsets.all(5.0),
@@ -90,27 +92,6 @@ class Util {
     }
     return list;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   static String getBadgeText(int count, {int maxCount = 99}) {
     if (count <= 0) {
@@ -130,7 +111,6 @@ class Util {
     return data > 0;
   }
 
-
   static Future<void> saveImage(BuildContext context, String url) async {
     showDefaultLoadingWithBounds(context, text: "正在保存");
     bool saveResult = false;
@@ -141,6 +121,7 @@ class Util {
       }
     } catch (e, stack) {
       saveResult = false;
+      LogUtil.d(e);
     } finally {
       Navigator.pop(context);
       if (saveResult) {
@@ -166,6 +147,28 @@ class Util {
     }
     return false;
   }
+
+  static void loginOut(BuildContext context) async {
+    Util.showDefaultLoading(context);
+
+    if (Application.getDeviceId != null) {
+      DeviceApi.removeDeviceInfo(Application.getAccountId, Application.getDeviceId);
+    }
+    Application.setLocalAccountToken(null);
+
+    Application.setAccount(null);
+    Application.setAccountId(null);
+
+    await SpUtil.clear();
+    // MessageUtil.close();
+
+    // Provider.of<MsgProvider>(context, listen: false).clear();
+
+    httpUtil.clearAuthToken();
+    httpUtil2.clearAuthToken();
+    NavigatorUtils.goBack(context);
+    NavigatorUtils.push(context, LoginRouter.loginIndex, clearStack: true);
+  }
 }
 
 Future<T?>? showElasticDialog<T>({
@@ -176,8 +179,7 @@ Future<T?>? showElasticDialog<T>({
   final ThemeData theme = Theme.of(context);
   return showGeneralDialog(
     context: context,
-    pageBuilder:
-        (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
+    pageBuilder: (BuildContext buildContext, Animation<double> animation, Animation<double> secondaryAnimation) {
       final Widget pageChild = Builder(builder: builder);
       return SafeArea(
         child: Builder(builder: (BuildContext context) {
@@ -192,6 +194,7 @@ Future<T?>? showElasticDialog<T>({
     transitionBuilder: _buildDialogTransitions,
   );
 }
+
 Widget _buildDialogTransitions(
     BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
   return FadeTransition(

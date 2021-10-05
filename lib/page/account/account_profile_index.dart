@@ -265,9 +265,11 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
           collapseMode: CollapseMode.none,
         ),
         actions: const [Icon(Icons.settings, color: Colors.white, size: 25), Gaps.hGap10],
-        leading: InkWell(
-            child: const Icon(Icons.close, color: Colors.white, size: 25),
-            onTap: () => NavigatorUtils.goBack(context)));
+        // leading: InkWell(
+        //     child: const Icon(Icons.close, color: Colors.white, size: 25),
+        //     onTap: () => NavigatorUtils.goBack(context)
+        // )
+    );
   }
 
   _getHeader(context) {

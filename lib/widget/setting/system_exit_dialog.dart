@@ -1,4 +1,4 @@
-import 'package:flustars/flustars.dart' as prefix0;
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:wall/api/device_api.dart';
 import 'package:wall/application.dart';
@@ -45,7 +45,7 @@ class _ExitDialog extends State<SystemExitDialog> {
             Application.setAccount(null);
             Application.setAccountId(null);
 
-            await prefix0.SpUtil.clear();
+            await SpUtil.clear();
             // MessageUtil.close();
 
             // Provider.of<MsgProvider>(context, listen: false).clear();

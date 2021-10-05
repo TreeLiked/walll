@@ -7,6 +7,7 @@ import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_account.dart';
+import 'package:wall/page/tweet/tweet_detail_page.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -14,6 +15,7 @@ import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/tweet/tweet_body_wrapper.dart';
 import 'package:fluro/fluro.dart';
 import 'package:wall/widget/tweet/tweet_index_item_header.dart';
+import 'package:wall/widget/tweet/tweet_interact_wrapper.dart';
 import 'package:wall/widget/tweet/tweet_media_wrapper.dart';
 import 'package:wall/widget/tweet/tweet_praise_wrapper.dart';
 
@@ -69,11 +71,7 @@ class TweetIndexItem extends StatelessWidget {
   Widget build(BuildContext context) {
     this.context = context;
     isDark = ThemeUtil.isDark(context);
-    return cardContainer2(context);
-  }
-
-  Widget cardContainer2(BuildContext context) {
-    Widget wd = Container(
+    return Container(
         padding: EdgeInsets.only(bottom: 0.0, top: indexInList == 0 ? 12.0 : 10.0, left: 10.0, right: 15.0),
         // color: isDark ? Colours.dark_bg_color : Colors.white,
         child: GestureDetector(
@@ -95,8 +93,9 @@ class TweetIndexItem extends StatelessWidget {
 //                    TweetTypeWrapper(tweet.type),
 
                     // Gaps.vGap2,
-                    TweetBodyWrapper(tweet.body, maxLine: 3, fontSize: 15, height: 1.6),
-                    TweetMediaWrapper(tweet.id!, medias: tweet.medias, tweet: tweet),
+                    TweetBodyWrapper(tweet.body, maxLine: 5, fontSize: 15, height: 1.6),
+                    TweetMediaWrapper(tweet: tweet),
+                    TweetInteractWrapper(tweet),
                     // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
                     Gaps.vGap8,
 
@@ -133,7 +132,6 @@ class TweetIndexItem extends StatelessWidget {
             ],
           ),
         ));
-    return wd;
   }
 
   Widget _profileContainer() {
@@ -146,16 +144,11 @@ class TweetIndexItem extends StatelessWidget {
   }
 
   void _forwardDetail(BuildContext context) {
-    // TODO 跳转详情
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => TweetDetail(
-    //             this.tweet,
-    //             newLink: !displayLink,
-    //             onDelete: onDetailDelete,
-    //           )),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => TweetDetailPage(tweetId: tweet.id!, tweet: tweet, onDelete: onDetailDelete)),
+    );
   }
 
   void goAccountDetail(BuildContext context, Account account, bool up) {

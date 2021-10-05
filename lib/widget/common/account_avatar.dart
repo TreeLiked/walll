@@ -14,6 +14,7 @@ class AccountAvatar extends StatelessWidget {
   final bool cache;
   final Gender gender;
   final bool anonymous;
+  final bool displayGender;
 
   const AccountAvatar(
       {Key? key,
@@ -23,7 +24,8 @@ class AccountAvatar extends StatelessWidget {
       this.cache = true,
       this.gender = Gender.unknown,
       this.whitePadding = false,
-      this.anonymous = false})
+      this.anonymous = false,
+      this.displayGender = true})
       : super(key: key);
 
   @override
@@ -67,9 +69,9 @@ class AccountAvatar extends StatelessWidget {
                                   width: double.infinity,
                                   height: double.infinity,
                                   fit: BoxFit.cover,
-                                  placeholder: (ctx, url) => LoadAssetSvg(AssetPathCst.svgMaleAvatarPath,
-                                      width: size, height: size)))))),
-      (Gender.male == gender || Gender.female == gender) && !anonymous
+                                  placeholder: (ctx, url) =>
+                                      LoadAssetSvg(AssetPathCst.svgMaleAvatarPath, width: size, height: size)))))),
+      gender.hasGender && !anonymous && displayGender
           ? Positioned(
               bottom: 0,
               right: 0,

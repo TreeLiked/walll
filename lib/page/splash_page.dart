@@ -34,7 +34,8 @@ import 'package:wall/util/umeng_util.dart';
 
 import '../application.dart';
 
-class SplashPage extends StatefulWidget {
+class
+SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override

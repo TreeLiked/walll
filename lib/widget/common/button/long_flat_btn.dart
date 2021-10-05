@@ -5,14 +5,19 @@ import 'package:wall/util/theme_util.dart';
 class LongFlatButton extends StatelessWidget {
   VoidCallback? onPressed;
   late final bool enabled;
+  late final bool needGradient;
+  final Color? bgColor;
   late final Text text;
 
   LongFlatButton({
     Key? key,
     required this.text,
     this.enabled = false,
+    this.needGradient = true,
+    this.bgColor,
     this.onPressed,
-  }) : super(key: key);
+  })  : assert(needGradient ^ (bgColor != null)),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class LongFlatButton extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
-          gradient: enabled
+          gradient: enabled && needGradient
               ? LinearGradient(
                   colors: isDark
                       ? [const Color(0xaa4facfe), const Color(0xaa00f2fe)]
@@ -31,7 +36,9 @@ class LongFlatButton extends StatelessWidget {
                   end: Alignment.centerRight,
                 )
               : null,
-          color: enabled ? null : (isDark ? Colours.borderColorFirstDark : Colours.borderColorSecond),
+          color: enabled
+              ? (needGradient ? null : bgColor!)
+              : (isDark ? Colours.borderColorFirstDark : Colours.borderColorSecond),
         ),
         child: TextButton(
             child: text,

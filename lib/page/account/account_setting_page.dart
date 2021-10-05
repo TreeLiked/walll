@@ -13,10 +13,10 @@ import 'package:wall/util/asset_util.dart';
 import 'package:wall/util/bottom_sheet_util.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/util/navigator_util.dart';
-import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/common/container/center_row_text.dart';
 import 'package:wall/widget/common/container/shadow_container.dart';
 import 'package:wall/widget/common/custom_app_bar.dart';
+import 'package:wall/widget/common/dialog/bottom_cancel_confirm.dart';
 import 'package:wall/widget/common/real_rich_text.dart';
 import 'package:wall/widget/setting/setting_row_item.dart';
 import 'package:wall/widget/setting/system_exit_dialog.dart';
@@ -124,8 +124,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             Gaps.line,
             InkWell(
                 onTap: () async {
-                  await showElasticDialog(
-                      context: context, barrierDismissible: false, builder: (_) => const SystemExitDialog());
+                  BottomSheetUtil.showBottomSheet(
+                      context,
+                      0.3,
+                      BottomCancelConfirmDialog(
+                        content: '确认退出登录吗',
+                        onCancel: () => NavigatorUtils.goBack(context),
+                        confirmBgColor: Colors.orangeAccent,
+                        onConfirm: () {
+                          Util.loginOut(context);
+                        },
+                      ));
+                  // showElasticDialog(
+                  //     context: context, barrierDismissible: true, builder: (_) => const SystemExitDialog()
+                  // );
                 },
                 // onTap: () => showGeneralDialog(
                 //     context: context, barrierDismissible: false,

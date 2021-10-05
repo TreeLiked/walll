@@ -22,12 +22,15 @@ class TweetMediaWrapper extends StatelessWidget {
   static double availSw = Application.screenWidth! - 25;
   static double sh = Application.screenHeight!;
 
-  final List<Media>? medias;
-  late final List<String>? picUrls;
-  final int tweetId;
   final BaseTweet tweet;
 
-  TweetMediaWrapper(this.tweetId, {Key? key, required this.medias, required this.tweet}) : super(key: key) {
+  late int tweetId;
+  late List<Media>? medias;
+  late final List<String>? picUrls;
+
+  TweetMediaWrapper({Key? key, required this.tweet}) : super(key: key) {
+    tweetId = tweet.id!;
+    medias = tweet.medias;
     if (medias != null) {
       List<Media> temp = List.from(medias!)..retainWhere((media) => media.mediaType == Media.typeImage);
       picUrls = temp.map((f) => f.url!).toList();
@@ -94,22 +97,12 @@ class TweetMediaWrapper extends StatelessWidget {
           }
         }
       }),
-      BottomSheetItem(
-          const Icon(
-            Icons.warning,
-            color: Colors.orange
-          ),
-          '图片违规', () {
+      BottomSheetItem(const Icon(Icons.warning, color: Colors.orange), '图片违规', () {
         Navigator.pop(context);
         // NavigatorUtils.goReportPage(
         //     context, ReportPage.REPORT_TWEET_IMAGE, widget.galleryItems[currentIndex].url, "图片举报");
       }),
-      BottomSheetItem(
-          const Icon(
-              Icons.share,
-              color: Colors.lightBlueAccent
-          ),
-          '分享到...', () {
+      BottomSheetItem(const Icon(Icons.share, color: Colors.lightBlueAccent), '分享到...', () {
         Navigator.pop(context);
         ToastUtil.showToast(context, '暂时无法分享');
       })
@@ -118,6 +111,7 @@ class TweetMediaWrapper extends StatelessWidget {
 }
 
 class SingleImgWrapper extends StatelessWidget {
+
   final String imageUrl;
   final double sw;
   final double sh;
@@ -131,8 +125,9 @@ class SingleImgWrapper extends StatelessWidget {
     String imageUrlFull = "$imageUrl${AppCst.thumbnailSuffix}";
     return GestureDetector(
         onTap: onTap == null ? null : () => onTap!(),
-        child: ConstrainedBox(
+        child: Container(
             constraints: BoxConstraints(maxWidth: sw * 0.6, maxHeight: sh * 0.25),
+            margin: const EdgeInsets.only(bottom: 10.0),
             child: ClipRRect(
                 child: CachedNetworkImage(
                     filterQuality: FilterQuality.high,

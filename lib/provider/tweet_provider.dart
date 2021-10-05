@@ -94,6 +94,7 @@ class TweetProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+    print('12321321321-------------------');
   }
 
   void update(List<BaseTweet> tweets, {bool append = true, bool clear = false}) {

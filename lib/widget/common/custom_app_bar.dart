@@ -63,7 +63,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               tooltip: '返回',
               padding: const EdgeInsets.all(12.0),
-              icon: LoadAssetSvg(backSvgPath, width: 20, height: 20, color: isDark ? Colors.white : Colors.black))
+              icon: LoadAssetSvg(backSvgPath, width: 15, height: 15, color: isDark ? Colors.white : Colors.black))
           : Gaps.empty,
       Positioned(
           right: 8.0,
@@ -81,5 +81,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(48.0);
+  Size get preferredSize => const Size.fromHeight(48.0);
 }

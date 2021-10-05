@@ -24,7 +24,7 @@ class Api {
   // tweet
   static const String API_TWEET_CREATE = "/tweet/add.do";
   static const String API_TWEET_DELETE = apiBaseAlUrl + "/tweet/d.do";
-  static const String API_TWEET_QUERY_SIN = "/tweet/listSingle.json";
+  static const String getSingleTweet = "/tweet/listSingle.json";
   static const String API_TWEET_QUERY = "/tweet/list.json";
   static const String apiGetTweet = "/tweet/listUni.json";
   static const String querySelfTweet = "/tweet/account/pushed.json";
@@ -32,7 +32,7 @@ class Api {
   static const String API_TWEET_MEDIA_UPLOAD_REQUEST = "/tweet/media/generate.json";
 
   // tweet operation
-  static const String API_TWEET_OPERATION = "/tweet/opt/opt.do";
+  static const String operateTweetInteract = "/tweet/opt/opt.do";
   static const String API_TWEET_OPT_QUERY_SINGLE = "/tweet/opt/querySingle.json";
 
   // tweet praise query

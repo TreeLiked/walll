@@ -70,7 +70,7 @@ class _AccountHisTweetPageState extends State<AccountHisTweetPage>
         footer: ClassicalFooter(
             textColor: Colors.grey,
             extent: 40.0,
-            noMoreText: '- 我是有底线的 -',
+            noMoreText: '没有更多动态了哦 ～',
             loadedText: '加载完成',
             loadFailedText: '加载失败',
             loadingText: '正在加载...',

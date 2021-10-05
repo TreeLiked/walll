@@ -3,8 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wall/util/bottom_sheet_util.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/widget/common/button/my_text_btn.dart';
+import 'package:wall/widget/common/dialog/bottom_cancel_confirm.dart';
 import 'package:wall/widget/common/dialog/simple_cancel_confirm_dialog.dart';
 
 import 'navigator_util.dart';
@@ -61,6 +63,8 @@ class PermissionUtil {
   static Future<bool> checkAndRequestStorage(BuildContext context,
       {bool showTipIfDetermined = false, int probability = 10}) async {
     bool hasPermission = await Permission.storage.isGranted;
+    print(await Permission.storage.status);
+    print("---------------------------------");
     if (!hasPermission) {
       if (await Permission.storage.isDenied) {
         return Permission.storage.request().isGranted;
@@ -72,18 +76,24 @@ class PermissionUtil {
     return true;
   }
 
-
   static void openDialog(BuildContext context, title, content) {
-    Util.displayDialog(
+    // Util.displayDialog(
+    //     context,
+    //     SimpleCancelConfirmDialog(
+    //       title,
+    //       content,
+    //       MyTextButton(text: const Text("知道了"), enabled: true, onPressed: () => NavigatorUtils.goBack(context)),
+    //       MyTextButton(text: const Text("去设置"), enabled: true, onPressed: () async => await openAppSettings()),
+    //     ),
+    //     barrierDismissible: false);
+    BottomSheetUtil.showBottomSheet(
         context,
-        SimpleCancelConfirmDialog(
-          title,
-          content,
-          MyTextButton(
-              text: const Text("知道了"), enabled: true, onPressed: () => NavigatorUtils.goBack(context)),
-          MyTextButton(
-              text: const Text("去设置"), enabled: true, onPressed: () async => await openAppSettings()),
-        ),
-        barrierDismissible: false);
+        0.4,
+        BottomCancelConfirmDialog(
+            content: content,
+            title: title,
+            confirmText: '去设置',
+            onCancel: () => NavigatorUtils.goBack(context),
+            onConfirm: () async => await openAppSettings()));
   }
 }

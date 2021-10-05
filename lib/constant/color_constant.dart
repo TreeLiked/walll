@@ -49,4 +49,8 @@ class Colours {
   static Color getEmphasizedTextColor(BuildContext context) {
     return ThemeUtil.isDark(context) ? emphasizeFontColorDark : emphasizeFontColor;
   }
+
+  static Color getFirstBorderColor(BuildContext context) {
+    return ThemeUtil.isDark(context) ? borderColorFirstDark : borderColorFirst;
+  }
 }

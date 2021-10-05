@@ -15,6 +15,7 @@ import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/theme_util.dart';
 import 'package:wall/widget/common/account_avatar_2.dart';
+import 'package:wall/widget/common/container/center_row_text.dart';
 import 'package:wall/widget/common/real_rich_text.dart';
 
 class AccountMyIndex extends StatefulWidget {
@@ -35,6 +36,7 @@ class _AccountMyIndexState extends State<AccountMyIndex>
   late TabController _tabController;
 
   late BuildContext _context;
+
   @override
   void initState() {
     _tabController = TabController(vsync: this, length: 2);
@@ -165,44 +167,42 @@ class _AccountMyIndexState extends State<AccountMyIndex>
                       borderRadius: BorderRadius.circular(25),
                     ),
                     // height: Application.screenHeight!-300,
-                    child: Column(children: [
+                    child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                       Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          width: Application.screenWidth,
                           child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(user.signature ?? "",
-                                    softWrap: true,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 13.5, color: Colours.secondaryFontColor)),
-                                Gaps.vGap4,
-                                Gaps.line,
-                                Gaps.vGap10,
+                                CenterRowWidget(
+                                    child: Text(user.signature ?? "",
+                                        softWrap: true,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(fontSize: 13, color: Colours.secondaryFontColor))),
+                                Gaps.vGap20,
                                 TabBar(
-                                    labelStyle: const TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.w500, color: Colors.orange),
-                                    unselectedLabelStyle:
-                                        TextStyle(fontSize: 14, color: _isDark ? Colors.white24 : Colors.black),
+                                    labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                    unselectedLabelStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w400),
+                                    unselectedLabelColor: _isDark ? Colors.white24 : Colors.grey,
                                     indicatorSize: TabBarIndicatorSize.label,
                                     indicator: const UnderlineTabIndicator(
                                         insets: EdgeInsets.only(right: 15.0, left: 0.0),
                                         borderSide: BorderSide(color: Colors.orange, width: 3.0)),
                                     controller: _tabController,
-                                    labelColor: _isDark ? Colors.white : Colors.black,
                                     isScrollable: true,
                                     labelPadding: const EdgeInsets.only(right: 15),
                                     onTap: (index) {},
                                     tabs: const [
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 3.0),
-                                        child: Text('动态', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                                        child: Text('动态'),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 3.0),
-                                        child: Text('足迹', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+                                        child: Text('足迹'),
                                       )
                                     ]),
                                 Gaps.vGap5
