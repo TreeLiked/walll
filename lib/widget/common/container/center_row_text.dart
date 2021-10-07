@@ -8,6 +8,6 @@ class CenterRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(margin: margin, alignment: Alignment.center, child: child);
+    return Container(margin: margin, alignment: Alignment.topCenter, child: child);
   }
 }

@@ -72,7 +72,7 @@ class TweetIndexItem extends StatelessWidget {
     this.context = context;
     isDark = ThemeUtil.isDark(context);
     return Container(
-        padding: EdgeInsets.only(bottom: 0.0, top: indexInList == 0 ? 12.0 : 10.0, left: 10.0, right: 15.0),
+        padding: EdgeInsets.only(bottom: 0.0, top: 10.0, left: 10.0, right: 15.0),
         // color: isDark ? Colours.dark_bg_color : Colors.white,
         child: GestureDetector(
           onTap: () => _forwardDetail(context),
@@ -89,16 +89,10 @@ class TweetIndexItem extends StatelessWidget {
                   children: <Widget>[
                     TweetIndexItemHeader(tweet.account!, tweet.anonymous!, tweet.sentTime!,
                         myNickClickable: myNickClickable, official: false),
-                    Gaps.vGap10,
-//                    TweetTypeWrapper(tweet.type),
-
-                    // Gaps.vGap2,
                     TweetBodyWrapper(tweet.body, maxLine: 5, fontSize: 15, height: 1.6),
                     TweetMediaWrapper(tweet: tweet),
                     TweetInteractWrapper(tweet),
                     // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
-                    Gaps.vGap8,
-
                     // TweetPraiseWrapper(tweet, prefixIcon: true),
                     // TweetCampusWrapper(
                     //   tweet.id,

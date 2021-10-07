@@ -25,4 +25,8 @@ class AppCst {
   /// 首页最大展示的点赞数量
   static const int indexMaxDisplayPraiseSize = 10;
 
+  /// 推文创建页面
+  static const int tweetCreateMaxStrLen = 512;
+  static const double tweetCreateImageMaxSizeTotal = 30;
+
 }

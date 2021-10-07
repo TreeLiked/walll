@@ -19,7 +19,7 @@ import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/umeng_util.dart';
 import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/common/account_avatar_2.dart';
-import 'package:wall/widget/common/sticky_row_delegate.dart';
+import 'package:wall/widget/common/sliver/sticky_row_delegate.dart';
 
 import '../../application.dart';
 

@@ -116,7 +116,7 @@ class TweetDetailItemHeader extends StatelessWidget {
   Widget _typeContainer(BuildContext context) {
     TweetTypeEntity en = TweetTypeUtil.parseType(tweet.type);
     String zhTag = en.zhTag;
-    return Text('#$zhTag', style: TextStyle(fontSize: 14, color: en.color, fontWeight: FontWeight.w500));
+    return Text('# $zhTag', style: TextStyle(fontSize: 14, color: en.color, fontWeight: FontWeight.w500));
   }
 
   void goAccountDetail(BuildContext context, TweetAccount account, bool up) {

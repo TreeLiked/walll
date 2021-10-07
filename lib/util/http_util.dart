@@ -204,7 +204,7 @@ class HttpUtil {
   }
 
   static dynamic requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) async {
-    String requestId = Uuid().v1().substring(0, 8);
+    String requestId = const Uuid().v1().substring(0, 8);
     LogUtil.e('--> Request  to [ $requestId ] -->  ${options.uri}', tag: _tag);
     options.extra.addAll({"RequestId": requestId});
     return handler.next(options);

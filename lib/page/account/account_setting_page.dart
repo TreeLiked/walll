@@ -145,7 +145,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                 //     secondaryAnimation) { return const SystemExitDialog(); }),
                 child: Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                     alignment: Alignment.center,
                     child: const Text('退出登录',
                         style: TextStyle(color: Colors.orange, fontSize: 14.5, fontWeight: FontWeight.bold))))

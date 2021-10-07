@@ -95,6 +95,8 @@ dependencies:
   image_cropper: ^1.4.1
   # 图片保存
   image_gallery_saver: ^1.7.0
+  # 透明图片
+  transparent_image: ^2.0.0
   # svg
   flutter_svg: ^0.22.0
   # 下拉刷新
@@ -102,6 +104,8 @@ dependencies:
   flutter_easyrefresh: ^2.2.1
   # 图像预览
   photo_view: ^0.12.0
+  # flare动画
+  flare_flutter: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -129,6 +133,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/flrs/
     - assets/images/
     - assets/icons/
     - assets/icons/common/

@@ -8,6 +8,7 @@ class LongFlatButton extends StatelessWidget {
   late final bool needGradient;
   final Color? bgColor;
   late final Text text;
+  final double radius;
 
   LongFlatButton({
     Key? key,
@@ -16,6 +17,7 @@ class LongFlatButton extends StatelessWidget {
     this.needGradient = true,
     this.bgColor,
     this.onPressed,
+    this.radius = 6.0
   })  : assert(needGradient ^ (bgColor != null)),
         super(key: key);
 
@@ -26,7 +28,7 @@ class LongFlatButton extends StatelessWidget {
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6.0),
+          borderRadius: BorderRadius.circular(radius),
           gradient: enabled && needGradient
               ? LinearGradient(
                   colors: isDark

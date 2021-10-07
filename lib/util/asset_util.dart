@@ -117,6 +117,7 @@ class LoadAssetSvg extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       svgName.startsWith("assets") ? svgName : 'assets/svg/$svgName.$format',
+      key: key,
       width: width,
       height: height,
       fit: fit,

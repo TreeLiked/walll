@@ -1,15 +1,15 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:wall/config/routes/routes.dart';
+import 'package:wall/model/biz/tweet/tweet_account.dart';
+import 'package:wall/util/fluro_convert_utils.dart';
 
 import '../application.dart';
 
 /// fluro的路由跳转工具类
 class NavigatorUtils {
   static push(BuildContext context, String path,
-      {bool replace = false,
-      bool clearStack = false,
-      TransitionType transitionType = TransitionType.native}) {
+      {bool replace = false, bool clearStack = false, TransitionType transitionType = TransitionType.native}) {
     FocusScope.of(context).unfocus();
     Application.router!.navigateTo(
       context,
@@ -24,8 +24,7 @@ class NavigatorUtils {
       {bool replace = false, bool clearStack = false}) {
     FocusScope.of(context).unfocus();
     Application.router!
-        .navigateTo(context, path,
-            replace: replace, clearStack: clearStack, transition: TransitionType.native)
+        .navigateTo(context, path, replace: replace, clearStack: clearStack, transition: TransitionType.native)
         .then((result) {
       if (result == null) {
         return;
@@ -73,16 +72,13 @@ class NavigatorUtils {
 //               {'nick': account.nick, 'accId': account.id, 'avatarUrl': account.avatarUrl}));
 // }
 //
-// static void goAccountProfile2(BuildContext context, Account account) {
-//   if (account == null) {
-//     return;
-//   }
-//   push(
-//       context,
-//       Routes.accountProfile +
-//           Utils.packConvertArgs(
-//               {'nick': account.nick, 'accId': account.id, 'avatarUrl': account.avatarUrl}));
-// }
+  static void goAccountProfile(BuildContext context, TweetAccount account) {
+    push(
+        context,
+        Routes.accountProfile +
+            FluroConvertUtils.packConvertArgs(
+                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+  }
 //
 // static void goAccountProfile3(BuildContext context, CircleAccount account) {
 //   if (account == null) {

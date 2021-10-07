@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:wall/constant/asset_path_constant.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/util/asset_util.dart';
+import 'package:wall/util/theme_util.dart';
 
 class AccountAvatar extends StatelessWidget {
   final double size;
@@ -54,16 +56,18 @@ class AccountAvatar extends StatelessWidget {
               child: GestureDetector(
                   onTap: onTap,
                   child: anonymous
-                      ? const LoadAssetSvg(AssetPathCst.svgAnonymousAvatarPath,
-                          width: double.infinity, height: double.infinity)
+                      ? LoadAssetSvg(AssetPathCst.svgAnonymousAvatarPath,
+                          color: ThemeUtil.isDark(context) ? Colors.white30 : Colors.black,
+                          width: double.infinity,
+                          height: double.infinity)
                       : ClipOval(
                           child: !cache
-                              ? FadeInImage.assetNetwork(
+                              ? FadeInImage.memoryNetwork(
                                   image: avatarUrl,
                                   width: double.infinity,
                                   height: double.infinity,
                                   fit: BoxFit.cover,
-                                  placeholder: AssetPathCst.svgMaleAvatarPath)
+                                  placeholder: kTransparentImage)
                               : CachedNetworkImage(
                                   imageUrl: avatarUrl,
                                   width: double.infinity,

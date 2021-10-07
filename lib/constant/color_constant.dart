@@ -29,6 +29,8 @@ class Colours {
   static const Color lightScaffoldColor = Color(0xFFFFFFFF);
   static const Color darkScaffoldColor = Color(0xFF121212);
 
+  static const Color lighterGrey = Color(0xFFFAF9FA);
+
   static const Color lightIndicatorColor = Colors.amber;
   static const Color darkIndicatorColor = Colors.amber;
 

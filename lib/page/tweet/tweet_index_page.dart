@@ -1,180 +1,192 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:wall/api/tweet_api.dart';
 import 'package:wall/application.dart';
-import 'package:wall/model/biz/common/page_param.dart';
-import 'package:wall/model/biz/tweet/tweet.dart';
+import 'package:wall/constant/color_constant.dart';
+import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
+import 'package:wall/page/tweet/tweet_index_live_tab.dart';
+import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/msg_provider.dart';
 import 'package:wall/provider/tweet_provider.dart';
-import 'package:wall/util/coll_util.dart';
-import 'package:wall/widget/tweet/tweet_index_item.dart';
-import 'package:wall/widget/tweet/tweet_no_data_view.dart';
+import 'package:wall/util/perm_util.dart';
+import 'package:wall/util/theme_util.dart';
+import 'package:wall/util/umeng_util.dart';
 
-class TweetIndexTabView extends StatefulWidget {
+class TweetIndexPage extends StatefulWidget {
+  final ScrollController scrollController;
+
+  const TweetIndexPage({Key? key, required this.scrollController}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _TweetIndexTabViewState();
+    return _TweetIndexPageState();
   }
 }
 
-class _TweetIndexTabViewState extends State<TweetIndexTabView> {
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+class _TweetIndexPageState extends State<TweetIndexPage>
+    with AutomaticKeepAliveClientMixin<TweetIndexPage>, SingleTickerProviderStateMixin {
+  bool isDark = false;
 
-//  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
+  late TabController _tabController;
 
-  ScrollController _scrollController = ScrollController();
+  late BuildContext _myContext;
 
-  // PersistentBottomSheetController _bottomSheetController;
+  int _currentNavIndex = 0;
 
-  late TweetProvider tweetProvider;
+  @override
+  void initState() {
+    super.initState();
 
-  int _currentPage = 1;
+    _tabController = TabController(vsync: this, length: 2);
+    _tabController.addListener(() {
+      _handleNavChanged(_tabController.index);
+    });
 
-  Widget loadingIconStatic = SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CupertinoActivityIndicator(animating: false));
+    UMengUtil.userGoPage(UMengUtil.pageTweetIndex);
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      Future.delayed(const Duration(seconds: 3)).then((value) {
+        PermissionUtil.checkAndRequestNotification(context, showTipIfDetermined: true, probability: 39);
+      });
+    });
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   Map<String, String> headers = {
+    //     SharedConstant.AUTH_HEADER_VALUE: Application.getLocalAccountToken,
+    //     SharedConstant.ORG_ID_HEADER_VALUE: Application.getOrgId.toString()
+    //   };
+    //   MessageUtil.setStompClient = StompClient(
+    //       config: StompConfig(
+    //           // url: 'ws://192.168.31.235:8088/wallServer',
+    //           url: Api.API_BASE_WS,
+    //           onConnect: (client, frame) {
+    //             LogUtil.e('------------wall server connecting------------', tag: _tag);
+    //             // 个人频道订阅
+    //             client.subscribe(
+    //                 destination: '/user/queue/myself',
+    //                 headers: headers,
+    //                 callback: (resp) {
+    //                   Map<String, dynamic> jsonData = json.decode(resp.body);
+    //                   ImDTO dto = ImDTO.fromJson(jsonData);
+    //                   MessageUtil.handleInstantMessage(dto, context: context);
+    //                 });
+    //             // 大学内频道订阅
+    //             client.subscribe(
+    //                 destination: '/topic/org' + Application.getOrgId.toString(),
+    //                 headers: headers,
+    //                 callback: (resp) {
+    //                   Map<String, dynamic> jsonData = json.decode(resp.body);
+    //                   ImDTO dto = ImDTO.fromJson(jsonData);
+    //                   MessageUtil.handleInstantMessage(dto, context: context);
+    //                 });
+    //           },
+    //           onWebSocketError: (dynamic error) => ToastUtil.showToast(context, "连接服务器失败"),
+    //           stompConnectHeaders: headers,
+    //           webSocketConnectHeaders: headers));
+    //   MessageUtil.stompClient.activate();
+
+    // final channel = await IOWebSocketChannel.connect(Api.API_BASE_WS,
+    //     headers: headers);
+    //
+    // // channel.sink.add('received!');
+    // // channel.sink.addStream(Stream.value(""));
+    //
+    // channel.stream.listen((message) {
+    //   print("接收到---" + message);
+    //   // channel.sink.close(status.goingAway);
+    // });
+    // });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  //设定Widget的偏移量
+  Offset floatingOffset = Offset(20, Application.screenHeight! - 180);
+  double middle = Application.screenWidth! / 2;
+  bool stickLeft = false;
 
   @override
   Widget build(BuildContext context) {
-    tweetProvider = Provider.of<TweetProvider>(context, listen: false);
-    return Scaffold(
-      // bottomSheet: Container(
-      //   child: Text("12333213"),
-      // ),
-      body: Consumer<TweetProvider>(builder: (context, provider, _) {
-        var tweets = provider.displayTweets;
-        return Listener(
-            onPointerDown: (_) {
-              // closeReplyInput();
-            },
-            child: SmartRefresher(
-              enablePullUp: tweets != null && tweets.length > 0,
-              enablePullDown: true,
-              primary: false,
-              scrollController: _scrollController,
-              controller: _refreshController,
-              cacheExtent: 20,
-              header: ClassicHeader(
-                idleText: '',
-                releaseText: '',
-                refreshingText: '',
-                completeText: '',
-                refreshStyle: RefreshStyle.Follow,
-                idleIcon: loadingIconStatic,
-                releaseIcon: loadingIconStatic,
-                completeDuration: Duration(milliseconds: 0),
-                completeIcon: null,
-              ),
-              footer: ClassicFooter(
-                loadingText: '正在加载...',
-                canLoadingText: '释放以加载更多',
-                noDataText: '到底了哦',
-                idleText: '继续上滑',
-              ),
-              child: tweets == null
-                  ? Align(
-                      alignment: Alignment.topCenter,
-                      child: Text('正在加载...'),
-                    )
-                  : tweets.isEmpty
-                      ? TweetNoDataView(onTapReload: () {
-                          if (_refreshController != null) {
-                            _refreshController.resetNoData();
-                            _refreshController.requestRefresh();
-                          }
-                        })
-                      : ListView.builder(
-                          primary: true,
-                          itemCount: tweets.length,
-                          addAutomaticKeepAlives: true,
-                          itemBuilder: (context, index) {
-                            return TweetIndexItem(
-                              tweets[index],
-                              displayExtra: true,
-                              displayPraise: true,
-                              displayComment: true,
-                              displayLink: true,
-                              canPraise: true,
-                              indexInList: index,
-                              // onClickComment:
-                              //     (TweetReply subReply, String targetNick, String targetAccountId) {
-                              //   _bottomSheetController =
-                              //       Scaffold.of(context).showBottomSheet((context) => Container(
-                              //               child: TweetIndexCommentWrapper(
-                              //             // 如果是子回复 ，reply不为空
-                              //             replyType: subReply == null ? 1 : 2,
-                              //             showAnonymous: subReply == null,
-                              //             hintText: targetNick != null ? '回复: $targetNick' : '评论',
-                              //             onSend: (String value, bool anonymous) async {
-                              //               TweetReply reply = TRUtil.assembleReply(
-                              //                   tweets[index], value, anonymous, true,
-                              //                   subReply: subReply);
-                              //
-                              //               await TRUtil.publicReply(context, reply,
-                              //                   (bool success, TweetReply newReply) {
-                              //                 if (success) {
-                              //                   closeReplyInput();
-                              //                   final _tweetProvider = Provider.of<TweetProvider>(context, listen: false);
-                              //                   _tweetProvider.updateReply(context, newReply);
-                              //                 } else {
-                              //                   ToastUtil.showToast(context, "评论失败，请稍后再试");
-                              //                 }
-                              //               });
-                              //             },
-                              //           )));
-                              // },
-                            );
-                          }),
-              onRefresh: () => _onRefresh(context),
-              onLoading: _onLoading,
-            ));
-      }),
-    );
+    super.build(context);
+    _myContext = context;
+    isDark = ThemeUtil.isDark(context);
+
+    return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
+      return Scaffold(
+          appBar: PreferredSize(
+            child:
+                AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
+            preferredSize: Size.zero,
+          ),
+          body: SafeArea(
+              bottom: false,
+              child: Stack(children: <Widget>[
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          // height: 100,
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          width: double.infinity,
+                          child: Stack(children: <Widget>[
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                child: TabBar(
+                                    labelStyle: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.amber[600],
+                                        letterSpacing: 1.1),
+                                    unselectedLabelStyle: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colours.secondaryFontColor,
+                                        letterSpacing: 1.1),
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    indicator: const UnderlineTabIndicator(
+                                        insets: EdgeInsets.symmetric(horizontal: 10.0),
+                                        borderSide: BorderSide(color: Colours.mainColor, width: 2.5)),
+                                    controller: _tabController,
+                                    labelColor: Colours.getEmphasizedTextColor(context),
+                                    isScrollable: true,
+                                    labelPadding: const EdgeInsets.only(left: 10.0, right: 6.0),
+                                    tabs: const [
+                                      Padding(padding: EdgeInsets.only(bottom: 6.0), child: Text('最新')),
+                                      Padding(padding: EdgeInsets.only(bottom: 6.0), child: Text('热门'))
+                                    ]))
+                          ])),
+                      Expanded(
+                          child: TabBarView(controller: _tabController, children: [
+                        TweetIndexLiveTab(scrollController: widget.scrollController),
+                        TweetIndexHotTab()
+                      ]))
+                    ])
+              ])));
+    });
   }
 
-  // void closeReplyInput() {
-  //   if (_bottomSheetController != null) {
-  //     _bottomSheetController.close();
-  //   }
-  // }
-
-  Future<void> _onRefresh(BuildContext context) async {
-    _refreshController.resetNoData();
-    _currentPage = 1;
-    List<BaseTweet> temp = await getData(_currentPage);
-    tweetProvider.update(temp, clear: true, append: false);
-    Provider.of<MsgProvider>(context, listen: false).updateTweetNewCnt(0);
-    if (temp == null) {
-      _refreshController.refreshFailed();
+  void _handleNavChanged(index) {
+    if (index != _currentNavIndex) {
+      setState(() {
+        _currentNavIndex = index;
+      });
     } else {
-      _refreshController.refreshCompleted();
+      if (index == 0) {
+        _goTopForTweet();
+      }
     }
   }
 
-  void initData() async {
-    List<BaseTweet> temp = await getData(1);
-    tweetProvider.update(temp, clear: true, append: false);
-    _refreshController.refreshCompleted();
+  _goTopForTweet() {
+    widget.scrollController.animateTo(.0, duration: const Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
   }
 
-  Future<void> _onLoading() async {
-    List<BaseTweet> temp = await getData(++_currentPage);
-    tweetProvider.update(temp, append: true, clear: false);
-    if (CollUtil.isListEmpty(temp)) {
-      _currentPage--;
-      _refreshController.loadNoData();
-    } else {
-      _refreshController.loadComplete();
-    }
-  }
-
-  Future getData(int page) async {
-    return await (TweetApi.queryTweets(
-        PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
-  }
+  @override
+  bool get wantKeepAlive => true;
 }

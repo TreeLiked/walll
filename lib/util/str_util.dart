@@ -3,7 +3,7 @@ class StrUtil {
     return val == null || val.isEmpty || val.trim().isEmpty;
   }
 
-  static bool notEmpty(String val) {
+  static bool notEmpty(String? val) {
     return !isEmpty(val);
   }
 

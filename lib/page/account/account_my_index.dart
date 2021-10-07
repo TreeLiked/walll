@@ -185,8 +185,9 @@ class _AccountMyIndexState extends State<AccountMyIndex>
                                 Gaps.vGap20,
                                 TabBar(
                                     labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                    labelColor: Colours.getEmphasizedTextColor(context),
                                     unselectedLabelStyle: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w400),
-                                    unselectedLabelColor: _isDark ? Colors.white24 : Colors.grey,
+                                    unselectedLabelColor: Colours.secondaryFontColor,
                                     indicatorSize: TabBarIndicatorSize.label,
                                     indicator: const UnderlineTabIndicator(
                                         insets: EdgeInsets.only(right: 15.0, left: 0.0),
@@ -222,7 +223,7 @@ class _AccountMyIndexState extends State<AccountMyIndex>
       delegate: SliverChildBuilderDelegate((BuildContext context, num index) {
         ///子Item的布局
         return Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.grey,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0))),
           height: 44,

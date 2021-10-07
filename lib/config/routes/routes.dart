@@ -13,6 +13,7 @@ import 'package:wall/config/routes/router_init.dart';
 import 'package:wall/config/routes/setting_router.dart';
 import 'package:wall/page/login/login_page.dart';
 import 'package:wall/page/splash_page.dart';
+import 'package:wall/page/tweet/tweet_create_page.dart';
 import 'package:wall/widget/common/widget_not_found.dart';
 
 import 'login_router.dart';
@@ -80,9 +81,11 @@ class Routes {
     router.define(home, handler: homeHandler);
     // router.define(square, handler: squareHandler, transitionType: TransitionType.fadeIn);
     //
-    // router.define(create, handler: createHandler);
+    router.define(tweetCreate, handler: Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      return const TweetCreatePage();
+    }));
     // router.define(notification, handler: notificationHandler);
-    router.define(accountProfile, handler: accountProfileHandler,transitionType: TransitionType.fadeIn);
+    router.define(accountProfile, handler: accountProfileHandler, transitionType: TransitionType.fadeIn);
     //
     // router.define(inputTextPage, handler: inputPageHandler);
     // router.define(reportPage, handler: reportHandler);

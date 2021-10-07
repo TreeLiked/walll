@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'package:wall/constant/asset_path_constant.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
@@ -32,8 +33,7 @@ class AccountAvatar2 extends StatelessWidget {
     double genderFloatSize = size / 3.3;
     return Stack(children: [
       Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: borderColor, width: borderWidth), shape: BoxShape.circle),
+          decoration: BoxDecoration(border: Border.all(color: borderColor, width: borderWidth), shape: BoxShape.circle),
           width: size,
           height: size,
           child: Padding(
@@ -44,21 +44,20 @@ class AccountAvatar2 extends StatelessWidget {
                     tag: "IMAGE_HERO",
                     child: ClipOval(
                         child: !cache
-                            ? FadeInImage.assetNetwork(
-                            image: avatarUrl,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            placeholder: AssetPathCst.svgMaleAvatarPath)
+                            ? FadeInImage.memoryNetwork(
+                                image: avatarUrl,
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                                placeholder: kTransparentImage)
                             : CachedNetworkImage(
-                            imageUrl: avatarUrl,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            placeholder: (ctx, url) => LoadAssetSvg(AssetPathCst.svgMaleAvatarPath,
-                                width: size, height: size))),
-                  )
-              ))),
+                                imageUrl: avatarUrl,
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                                placeholder: (ctx, url) =>
+                                    LoadAssetSvg(AssetPathCst.svgMaleAvatarPath, width: size, height: size))),
+                  )))),
       (Gender.male == gender || Gender.female == gender)
           ? Positioned(
               bottom: 0,

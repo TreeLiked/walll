@@ -5,8 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:flustars/flustars.dart';
 import 'package:wall/api/api_category.dart';
 import 'package:wall/application.dart';
+import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
+import 'package:wall/model/biz/tweet/tweet_account.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/util/coll_util.dart';
 import 'package:wall/util/http_util.dart';
@@ -88,19 +90,10 @@ class TweetApi {
 //     return null;
 //   }
 //
-//   static Future<Map<String, dynamic>> pushTweet(BaseTweet tweet) async {
-//     Result r;
-//     try {
-//       Response response =
-//           await httpUtil.dio.post(Api.apiBaseAlUrl + Api.API_TWEET_CREATE, data: tweet.toJson());
-//       return Api.convertResponse(response.data);
-//     } on DioError catch (e) {
-//       String error = Api.formatError(e);
-//
-//       r = Api.genErrorResult(error);
-//     }
-//     return r.toJson();
-//   }
+  static Future<Result> pushTweet(BaseTweet tweet) async {
+    return await httpUtil.post(Api.apiBaseAlUrl + Api.tweetCreate, data: tweet.toJson());
+  }
+
 //
 //   static Future<Map<String, dynamic>> requestUploadMediaLink(List<String> fileSuffixes, String type) async {
 //     StringBuffer buffer = new StringBuffer();
@@ -125,12 +118,13 @@ class TweetApi {
 //     return Result.fromJson(json);
 //   }
 //
-  static Future<void> operateTweet(int tweetId, String type, bool positive) async {
+  static Future<Result> operateTweet(int tweetId, String type, bool positive) async {
     String accId = Application.getAccountId!;
 
-    httpUtil.post(Api.apiBaseAlUrl + Api.operateTweetInteract + '?acId=' + accId,
+    return httpUtil.post(Api.apiBaseAlUrl + Api.operateTweetInteract + '?acId=' + accId,
         data: {'tweetId': tweetId, 'accountId': accId, 'type': type, 'valid': positive});
   }
+
 //
 //   static Future<List<TweetReply>> queryTweetReply(int tweetId, bool needSub) async {
 //     String url = Api.apiBaseAlUrl + Api.API_TWEET_REPLY_QUERY + '?id=$tweetId&needSub=$needSub';
@@ -149,6 +143,18 @@ class TweetApi {
 //     }
 //     return null;
 //   }
+
+  static Future<List<TweetAccount>> queryTweetPraise(int page, int size, int tweetId) async {
+    String url = Api.apiBaseAlUrl + Api.getTweetPraise;
+    Result res = await httpUtil.get(url, data: {"currentPage": page, "pageSize": size, "tweetId": tweetId});
+    List<dynamic> list;
+    if (res.isSuccess && (list = res.oriData) != null) {
+      // 这边是分页结果
+      return list.map((m) => TweetAccount.fromJson(m)).toList();
+    }
+    return [];
+  }
+
 //
 //   static Future<Result> delTweetReply(int replyId) async {
 //     String url = Api.apiBaseAlUrl + Api.API_TWEET_REPLY_DELETE + "?id=$replyId";

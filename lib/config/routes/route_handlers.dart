@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:wall/page/account/account_profile_index.dart';
 import 'package:wall/page/home_page.dart';
+import 'package:wall/page/tweet/tweet_create_page.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
 
 // var indexHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -20,15 +21,9 @@ var homeHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<
 //   return TweetDetail(null);
 // });
 //
-// var createHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-//   String type = params['type'].first;
-//   print(params['circleId'].first);
-//   return CreatePage(
-//       type: type,
-//       title: FluroConvertUtils.fluroCnParamsDecode(params['title'].first),
-//       hintText: FluroConvertUtils.fluroCnParamsDecode(params['hintText'].first),
-//       circleId: int.parse(FluroConvertUtils.fluroCnParamsDecode(params['circleId'].first)));
-// });
+var tweetCreateHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return TweetCreatePage();
+});
 //
 // var notificationHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
 //   return NotificationIndexPage();

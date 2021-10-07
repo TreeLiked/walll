@@ -22,7 +22,7 @@ class Api {
   static const String apiBaseTrUrl = (devMem ? apiBaseTrDev : apiBaseTr) + "/trms/api";
 
   // tweet
-  static const String API_TWEET_CREATE = "/tweet/add.do";
+  static const String tweetCreate = "/tweet/add.do";
   static const String API_TWEET_DELETE = apiBaseAlUrl + "/tweet/d.do";
   static const String getSingleTweet = "/tweet/listSingle.json";
   static const String API_TWEET_QUERY = "/tweet/list.json";
@@ -36,7 +36,7 @@ class Api {
   static const String API_TWEET_OPT_QUERY_SINGLE = "/tweet/opt/querySingle.json";
 
   // tweet praise query
-  static const String API_TWEET_PRAISE_QUERY = "/tweet/praise/list.json";
+  static const String getTweetPraise = "/tweet/opt/getPraise.json";
   static const String API_TWEET_HOT_QUERY = "/tweet/listHot.json";
 
   // tweet reply

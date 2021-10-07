@@ -60,7 +60,6 @@ class TweetSelfItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _buildHeader(),
-                    Gaps.vGap10,
 //                    TweetTypeWrapper(tweet.type),
 
                     // Gaps.vGap2,

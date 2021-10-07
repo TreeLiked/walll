@@ -45,6 +45,9 @@ class TweetTypeUtil {
     return "https://iutr-media.oss-cn-hangzhou.aliyuncs.com/almond-donuts/default/tweet-type-covers/${isDark ? 'TYPE_COVER_DARK' : 'TYPE_COVER'}.jpg";
   }
 
+  static Map<dynamic, TweetTypeEntity> getPushableTweetTypeMap() {
+    return Map.fromIterable(tweetTypeMap.keys.where((k) => tweetTypeMap[k]!.pushable), value: (k) => tweetTypeMap[k]!);
+  }
 
 // static Map getAllTweetTypeMap() {
 //   return Map.from(tweetTypeMap);
@@ -124,10 +127,10 @@ class TweetTypeEntity {
 
   static const questionConsult = TweetTypeEntity(
       iconData: Icons.local_library,
-      iconColor: Color(0xffFF82AB),
+      iconColor: Color(0xffFF82A9),
       name: "QUESTION_CONSULT",
       intro: "咨询一下，你就知道",
-      color: Color(0xffFF82AB),
+      color: Color(0xffFF82A9),
       typeImage: "https://tva1.sinaimg.cn/large/007S8ZIlgy1gjbz0jt9h9j31910u0k49.jpg",
       zhTag: "咨询");
 
@@ -162,20 +165,20 @@ class TweetTypeEntity {
 
   static const share = TweetTypeEntity(
       iconData: Icons.star,
-      iconColor: Color(0xffCCBB60),
+      iconColor: Color(0xff8AE1FC),
       intro: "快乐就要分享，分享了就更快乐",
       name: "SHARE",
       typeImage: "https://tva1.sinaimg.cn/large/007S8ZIlgy1gjbz0jt9h9j31910u0k49.jpg",
-      color: Color(0xffCCBB60),
+      color: Color(0xff8AE1FC),
       zhTag: "分享");
 
   static const lostAndFound = TweetTypeEntity(
       iconData: Icons.local_florist,
-      iconColor: Color(0xffCDB5CD),
+      iconColor: Color(0xff4E8098),
       intro: "你不等我回家，我还能去哪",
       name: "LOST_AND_FOUND",
       typeImage: "https://tva1.sinaimg.cn/large/007S8ZIlgy1gjbz0jt9h9j31910u0k49.jpg",
-      color: Color(0xffCDB5CD),
+      color: Color(0xff4E8098),
       zhTag: "失物招领");
 
   static const helpAndReward = TweetTypeEntity(

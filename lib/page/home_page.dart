@@ -21,6 +21,8 @@ import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
 import 'package:wall/page/account/account_profile_index.dart';
+import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
+import 'package:wall/page/tweet/tweet_index_live_tab.dart';
 import 'package:wall/page/tweet/tweet_index_page.dart';
 import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/msg_provider.dart';
@@ -66,12 +68,9 @@ class _HomePageState extends State<HomePage>
   double startY = -1;
   double lastY = -1;
 
-
   bool isDark = false;
 
-
   late TabController _tabController;
-
 
   late BuildContext _myContext;
 
@@ -93,13 +92,16 @@ class _HomePageState extends State<HomePage>
                   colors: [Color(0xFFFFFFFF), Color(0xFF00f2fe), Color(0xFFFFFFFF)])),
           child: const LoadAssetSvg("nav/nav_create", width: 35, height: 35, color: Colors.white)));
 
+  late ScrollController _tweetIndexController;
+
   @override
   void initState() {
+    _tweetIndexController = ScrollController();
 
-    _bottomNavPages.add(TweetIndexTabView());
-    _bottomNavPages.add(TweetIndexTabView());
-    _bottomNavPages.add(TweetIndexTabView());
-    _bottomNavPages.add(TweetIndexTabView());
+    _bottomNavPages.add(TweetIndexPage(scrollController: _tweetIndexController));
+    _bottomNavPages.add(TweetIndexHotTab());
+    _bottomNavPages.add(TweetIndexHotTab());
+    _bottomNavPages.add(TweetIndexHotTab());
     _bottomNavPages.add(AccountMyIndex());
 
     super.initState();
@@ -118,7 +120,6 @@ class _HomePageState extends State<HomePage>
             _dc = false;
             break;
         }
-
       }
     });
 
@@ -332,8 +333,8 @@ class _HomePageState extends State<HomePage>
         //             ),
         //             Expanded(
         //                 child: TabBarView(controller: _tabController, children: [
-        //               TweetIndexTabView(),
-        //               TweetIndexTabView(),
+        //               TweetIndexLiveTab(),
+        //               TweetIndexLiveTab(),
         //               // CircleMainNew()
         //             ]))
         //           ])
@@ -369,7 +370,7 @@ class _HomePageState extends State<HomePage>
                     icon: _getIcon("nav_my", false), label: '我的', activeIcon: _getIcon("nav_my", true)),
               ],
               currentIndex: _currentNavIndex,
-              onTap: _handleNavChanged),
+              onTap: (index) => _handleNavChanged(context, index)),
         ),
       );
     });
@@ -394,15 +395,22 @@ class _HomePageState extends State<HomePage>
                 gradient: const LinearGradient(
                     begin: Alignment.bottomLeft,
                     end: Alignment.topRight,
-                    colors: [Colors.white, Color(0xFF8AE1FC),Colors.white])),
+                    colors: [Colors.white, Color(0xFF8AE1FC), Colors.white])),
             child: const LoadAssetSvg("nav/nav_create", width: 35, height: 35, color: Colors.white)));
   }
 
-  void _handleNavChanged(index) {
+  void _handleNavChanged(BuildContext context, int index) {
+    if (index == 2) {
+      NavigatorUtils.push(context, Routes.tweetCreate,transitionType: TransitionType.inFromBottom);
+      return;
+    }
     if (index != _currentNavIndex) {
       setState(() {
         _currentNavIndex = index;
       });
+    }
+    if (index == 0) {
+      _tweetIndexController.animateTo(.0, duration: const Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
     }
   }
 

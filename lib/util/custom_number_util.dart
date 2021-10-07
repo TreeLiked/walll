@@ -1,7 +1,18 @@
 class CustomNumberUtil {
-  static String calCount(int count) {
-    if (count < 1000) {
+  /// 获取返回的字符数量
+  static int calStrCountForNumber(int count) {
+    return calCount(count).length;
+  }
+
+  static String calCount(int count, {bool zeroEmpty = false}) {
+    if (count < 100) {
+      if (count == 0 && zeroEmpty) {
+        return "";
+      }
       return "$count";
+    }
+    if (count < 1000) {
+      return "${count ~/ 100}00+";
     }
     if (count < 10000) {
       return "${count ~/ 1000}k+";
