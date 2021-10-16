@@ -21,6 +21,8 @@ import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
 import 'package:wall/page/account/account_profile_index.dart';
+import 'package:wall/page/tweet/tweet_cate_page.dart';
+import 'package:wall/page/tweet/tweet_cate_tab.dart';
 import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
 import 'package:wall/page/tweet/tweet_index_live_tab.dart';
 import 'package:wall/page/tweet/tweet_index_page.dart';
@@ -99,10 +101,9 @@ class _HomePageState extends State<HomePage>
     _tweetIndexController = ScrollController();
 
     _bottomNavPages.add(TweetIndexPage(scrollController: _tweetIndexController));
+    _bottomNavPages.add(const TweetCatePage());
     _bottomNavPages.add(TweetIndexHotTab());
-    _bottomNavPages.add(TweetIndexHotTab());
-    _bottomNavPages.add(TweetIndexHotTab());
-    _bottomNavPages.add(AccountMyIndex());
+    _bottomNavPages.add(const AccountMyIndex());
 
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
@@ -248,6 +249,7 @@ class _HomePageState extends State<HomePage>
 
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
+        backgroundColor: Colours.lightScaffoldColor,
         // appBar: PreferredSize(
         //   child: AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
         //   preferredSize: Size.zero,
@@ -339,9 +341,23 @@ class _HomePageState extends State<HomePage>
         //             ]))
         //           ])
         //     ])),
+        floatingActionButton: FloatingActionButton(
+            child: Container(
+                width: 55,
+                height: 55,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                child: Icon(Icons.add, size: 28.0, color: isDark ? Colors.white : Colors.black)),
+            backgroundColor: Colours.getScaffoldColor(context),
+            // splashColor: Colors.white12,
+            elevation: 20.0,
+            highlightElevation: 10.0,
+            isExtended: true,
+            enableFeedback: true,
+            onPressed: () =>
+                NavigatorUtils.push(context, Routes.tweetCreate, transitionType: TransitionType.inFromBottom)),
         body: _bottomNavPages[_currentNavIndex],
         resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         bottomNavigationBar: MediaQuery.removePadding(
           context: context,
           // height: 83,
@@ -351,19 +367,20 @@ class _HomePageState extends State<HomePage>
               type: BottomNavigationBarType.fixed,
               elevation: 0,
               enableFeedback: true,
-              selectedLabelStyle: const TextStyle(fontSize: 11.5),
+              selectedLabelStyle: const TextStyle(fontSize: 11.5,fontWeight: FontWeight.bold),
               fixedColor: Colours.getEmphasizedTextColor(context),
               unselectedLabelStyle: const TextStyle(fontSize: 11.5),
               unselectedItemColor: Colours.greyText,
+
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                     icon: _getIcon("nav_index", false), label: '首页', activeIcon: _getIcon("nav_index", true)),
                 BottomNavigationBarItem(
                     icon: _getIcon("nav_cate", false), label: '分类', activeIcon: _getIcon("nav_cate", true)),
-                BottomNavigationBarItem(
-                    icon: isDark ? _getCreateWidgetDark() : createWidgetLight,
-                    label: '',
-                    activeIcon: isDark ? _getCreateWidgetDark() : createWidgetLight),
+                // BottomNavigationBarItem(
+                //     icon: isDark ? _getCreateWidgetDark() : createWidgetLight,
+                //     label: '',
+                //     activeIcon: isDark ? _getCreateWidgetDark() : createWidgetLight),
                 BottomNavigationBarItem(
                     icon: _getIcon("nav_noti", false), label: '消息', activeIcon: _getIcon("nav_noti", true)),
                 BottomNavigationBarItem(
@@ -377,10 +394,14 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _getIcon(String oriName, bool isSel) {
-    return LoadAssetSvg(
-        "nav/$oriName${isSel ? '_sel' : isDark ? '_unsel_dark' : '_unsel'}",
-        width: 30,
-        height: 30);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 3.0),
+      child: LoadAssetSvg(
+          "nav/$oriName${isSel ? '' : isDark ? '' : ''}",
+          width: 25,
+          color: isSel ? Colours.getEmphasizedTextColor(_myContext) : Colors.grey,
+          height: 25),
+    );
   }
 
   Widget _getCreateWidgetDark() {
@@ -400,10 +421,6 @@ class _HomePageState extends State<HomePage>
   }
 
   void _handleNavChanged(BuildContext context, int index) {
-    if (index == 2) {
-      NavigatorUtils.push(context, Routes.tweetCreate,transitionType: TransitionType.inFromBottom);
-      return;
-    }
     if (index != _currentNavIndex) {
       setState(() {
         _currentNavIndex = index;

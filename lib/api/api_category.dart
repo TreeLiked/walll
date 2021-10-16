@@ -78,7 +78,7 @@ class Api {
 
   static const String API_UPDATE_ACCOUNT_SETTING = apiBaseTrUrl + "/account/edit/setting.do";
 
-  static const String API_ACCOUNT_MOD_BASIC = apiBaseTrUrl + "/account/edit/basic.do";
+  static const String accountModifyBasic = apiBaseTrUrl + "/account/edit/basic.do";
 
   static const String apiCheckNickRepeat = apiBaseTrUrl + "/account/nickCheck.do";
 

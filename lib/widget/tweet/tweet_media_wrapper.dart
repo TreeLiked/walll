@@ -19,7 +19,7 @@ import 'package:wall/widget/common/image/imgae_container.dart';
 import '../../application.dart';
 
 class TweetMediaWrapper extends StatelessWidget {
-  static double availSw = Application.screenWidth! - 25;
+  static double availSw = Application.screenWidth! - 50;
   static double sh = Application.screenHeight!;
 
   final BaseTweet tweet;

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wall/api/tweet_api.dart';
 import 'package:wall/application.dart';
+import 'package:wall/constant/color_constant.dart';
 import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/provider/msg_provider.dart';
@@ -13,7 +14,6 @@ import 'package:wall/widget/tweet/tweet_index_item.dart';
 import 'package:wall/widget/tweet/tweet_no_data_view.dart';
 
 class TweetIndexLiveTab extends StatefulWidget {
-
   final ScrollController scrollController;
 
   const TweetIndexLiveTab({Key? key, required this.scrollController}) : super(key: key);
@@ -25,10 +25,9 @@ class TweetIndexLiveTab extends StatefulWidget {
 }
 
 class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
-  RefreshController _refreshController =   RefreshController(initialRefresh: false);
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
 //  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-
 
   // PersistentBottomSheetController _bottomSheetController;
 
@@ -36,18 +35,14 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
 
   int _currentPage = 1;
 
-  Widget loadingIconStatic = SizedBox(
-      width: 25.0,
-      height: 25.0,
-      child: const CupertinoActivityIndicator(animating: false));
+  Widget loadingIconStatic =
+      SizedBox(width: 25.0, height: 25.0, child: const CupertinoActivityIndicator(animating: false));
 
   @override
   Widget build(BuildContext context) {
     tweetProvider = Provider.of<TweetProvider>(context, listen: false);
     return Scaffold(
-      // bottomSheet: Container(
-      //   child: Text("12333213"),
-      // ),
+      backgroundColor: Colours.getTweetScaffoldColor(context),
       body: Consumer<TweetProvider>(builder: (context, provider, _) {
         var tweets = provider.displayTweets;
         return Listener(
@@ -79,10 +74,9 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
                 idleText: '继续上滑',
               ),
               child: tweets == null
-                  ? Align(
+                  ? const Align(
                       alignment: Alignment.topCenter,
-                      child: Text('正在加载...'),
-                    )
+                      child: Padding(padding: EdgeInsets.only(top: 30.0), child: CupertinoActivityIndicator()))
                   : tweets.isEmpty
                       ? TweetNoDataView(onTapReload: () {
                           if (_refreshController != null) {
@@ -176,7 +170,6 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
   }
 
   Future getData(int page) async {
-    return await (TweetApi.queryTweets(
-        PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
+    return await (TweetApi.queryTweets(PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
   }
 }

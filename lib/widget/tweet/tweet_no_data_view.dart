@@ -18,8 +18,8 @@ class TweetNoDataView extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(bottom: 15.0, top: ScreenUtil().setHeight(160)),
           color: Colors.transparent,
-          child: LoadAssetImage(ThemeUtil.isDark(context) ? "no_data_dark" : "no_data",
-              format: "png", width: MediaQuery.of(context).size.width * 0.4),
+          child: LoadAssetSvg(ThemeUtil.isDark(context) ? "common/no_data_dark" : "common/no_data", width: MediaQuery.of
+            (context).size.width * 0.35),
         ),
         // GestureDetector(
         //   onTap: () => onTapReload == null ? null : onTapReload(),

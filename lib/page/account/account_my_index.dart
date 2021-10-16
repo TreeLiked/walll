@@ -1,19 +1,29 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:wall/api/member_api.dart';
 import 'package:wall/application.dart';
 import 'package:wall/config/routes/setting_router.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/account/account.dart';
+import 'package:wall/model/biz/account/account_edit_param.dart';
+import 'package:wall/model/response/result.dart';
 import 'package:wall/page/account/account_my_index_footprint.dart';
 import 'package:wall/page/account/account_my_index_his_tweet.dart';
 import 'package:wall/provider/account_local_provider.dart';
+import 'package:wall/util/common_util.dart';
 import 'package:wall/util/navigator_util.dart';
+import 'package:wall/util/oss_util.dart';
+import 'package:wall/util/perm_util.dart';
 import 'package:wall/util/theme_util.dart';
+import 'package:wall/util/toast_util.dart';
 import 'package:wall/widget/common/account_avatar_2.dart';
 import 'package:wall/widget/common/container/center_row_text.dart';
 import 'package:wall/widget/common/real_rich_text.dart';
@@ -29,8 +39,8 @@ class AccountMyIndex extends StatefulWidget {
 
 class _AccountMyIndexState extends State<AccountMyIndex>
     with AutomaticKeepAliveClientMixin<AccountMyIndex>, SingleTickerProviderStateMixin {
-  String _followCountStr = "18";
-  String _fansCountStr = "3";
+  final String _followCountStr = "0";
+  final String _fansCountStr = "0";
 
   bool _isDark = false;
   late TabController _tabController;
@@ -119,7 +129,10 @@ class _AccountMyIndexState extends State<AccountMyIndex>
                                     ],
                                   ),
                                   Gaps.vGap30,
-                                  AccountAvatar2(avatarUrl: user.avatarUrl!, size: 70),
+                                  AccountAvatar2(
+                                      avatarUrl: user.avatarUrl!,
+                                      size: 70,
+                                      onTap: () => _updateAvatar(context, provider)),
                                   Gaps.vGap15,
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 3.0),
@@ -176,7 +189,7 @@ class _AccountMyIndexState extends State<AccountMyIndex>
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CenterRowWidget(
-                                    child: Text(user.signature ?? "",
+                                    child: Text(user.signature ?? "写个签名扒",
                                         softWrap: true,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -217,6 +230,62 @@ class _AccountMyIndexState extends State<AccountMyIndex>
         })));
   }
 
+  /// 更新头像
+  void _updateAvatar(BuildContext context, AccountLocalProvider provider) async {
+    bool hasP = await PermissionUtil.checkAndRequestPhotos(context);
+    if (!hasP) {
+      ToastUtil.showToast(context, '未获取相册权限');
+      return;
+    }
+    XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (_image == null) {
+      return;
+    }
+    File? file = await ImageCropper.cropImage(
+        sourcePath: _image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        cropStyle: CropStyle.circle,
+        androidUiSettings: const AndroidUiSettings(
+            toolbarTitle: '编辑',
+            toolbarColor: Colors.white,
+            toolbarWidgetColor: Colors.black,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: const IOSUiSettings(
+            title: '编辑',
+            hidesNavigationBar: true,
+            aspectRatioPickerButtonHidden: true,
+            doneButtonTitle: '完成',
+            cancelButtonTitle: '取消',
+            aspectRatioLockEnabled: true));
+    if (file == null) {
+      return;
+    }
+    Util.showDefaultLoadingWithBounds(context, text: '正在更新');
+    String? resultUrl = await OssUtil.uploadImage(file.path, file.readAsBytesSync(), OssUtil.destAvatar);
+    if (resultUrl == null) {
+      ToastUtil.showToast(context, '头像上传失败');
+      Navigator.pop(context);
+      return;
+    }
+    Result r = await MemberApi.modAccount(AccountEditParam(AccountEditKey.AVATAR, resultUrl));
+    if (!r.isSuccess) {
+      ToastUtil.showToast(context, '头像更新失败');
+      Navigator.pop(context);
+      return;
+    }
+    setState(() {
+      provider.account!.avatarUrl = resultUrl;
+    });
+    Navigator.pop(context);
+  }
+
   SliverList buildSliverList() {
     return SliverList(
       ///懒加载代理
@@ -227,7 +296,7 @@ class _AccountMyIndexState extends State<AccountMyIndex>
               color: Colors.grey,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0))),
           height: 44,
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           child: Text("item- $index"),
         );
       }, childCount: 100), //子Item的个数

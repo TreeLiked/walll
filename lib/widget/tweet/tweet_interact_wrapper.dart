@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wall/api/tweet_api.dart';
+import 'package:wall/application.dart';
+import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_type.dart';
@@ -9,7 +11,6 @@ import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/tweet_provider.dart';
 import 'package:wall/util/animation_util.dart';
 import 'package:wall/util/asset_util.dart';
-import 'package:wall/util/common_util.dart';
 import 'package:wall/util/custom_number_util.dart';
 import 'package:wall/util/toast_util.dart';
 
@@ -26,33 +27,32 @@ class TweetInteractWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(color: Colors.grey, fontSize: 16);
+    const style = TextStyle(color: Colours.tweetInterColor, fontSize: 13.5, fontWeight: FontWeight.bold);
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
+      width: Application.screenWidth!,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          // OptionItem(null, Text("${tweet.views == 0 ? 1 : calCount(tweet.views)}次浏览", style: style),
-          //     prefix: Gaps.empty),
-          // Text("浏览${tweet.views + 1}", style:  style.copyWith(fontSize: Dimens.font_sp12)),
+          OptionItem(null, Text("${tweet.views == 0 ? 1 : calCount(tweet.views)}", style: style),
+              prefix: Text("浏览", style: style.copyWith(fontSize: 13))),
+          tweet.enableReply!
+              ? OptionItem(null, Text("${tweet.replyCount == 0 ? '' : tweet.replyCount}", style: style),
+                  prefix: const LoadAssetSvg("common/comment", width: 18, height: 18, color: Colours.tweetInterColor),
+                  onTap: () => onClickComment != null && tweet.enableReply!
+                      ? onClickComment!(null, null, null)
+                      : HitTestBehavior.opaque)
+              : OptionItem(null, Text("评论关闭", style: style.copyWith(fontSize: 12.5)),
+                  prefix: null, onTap: () => HitTestBehavior.opaque),
           OptionItem(null, Text(tweet.praise == 0 ? '' : calCount(tweet.praise), style: style),
               prefix: LoadAssetSvg(
-                tweet.loved! ? "common/praise_full" : "common/praise_empty",
-                // key: _praiseIconKey,
-                width: 22,
-                height: 22,
-                color: (tweet.loved!) ? TweetTypeUtil.parseType(tweet.type).color : Colors.grey,
+                "common/praise_empty",
+                width: 20,
+                height: 20,
+                color: (tweet.loved!) ? TweetTypeUtil.parseType(tweet.type).color : Colours.tweetInterColor,
               ),
               onTap: (offset) => canPraise ? updatePraise(context, offset) : HitTestBehavior.opaque),
-          Gaps.hGap30,
-          tweet.enableReply!
-              ? OptionItem(null,
-                  Text(tweet.enableReply! ? "${tweet.replyCount == 0 ? '' : tweet.replyCount}" : "评论关闭", style: style),
-                  prefix: const LoadAssetSvg("common/comment", width: 21, height: 21, color: Colors.grey),
-                  onTap: () => onClickComment == null ? HitTestBehavior.opaque : onClickComment!(null, null, null))
-              : Text("评论关闭", style: style.copyWith(color: const Color(0xffCDAD00), fontSize: 13.5))
-//          OptionItem("tweet/comment",
-//              Text(tweet.enableReply ? "${tweet.replyCount == 0 ? '' : tweet.replyCount}" : "评论关闭")),
         ],
       ),
     );
@@ -70,10 +70,10 @@ class TweetInteractWrapper extends StatelessWidget {
     // RenderBox? renderBox = _praiseIconKey.currentContext!.findRenderObject() as RenderBox;
     // var offset = renderBox.localToGlobal(Offset.zero);
     // print(offset);
-    // if (tweet.loved!) {
-    AnimationUtil.showFavoriteAnimation(context, offset,size: 300);
-    Future.delayed(const Duration(milliseconds: 1500)).then((_) => Navigator.pop(context));
-    // }
+    if (tweet.loved!) {
+      AnimationUtil.showFavoriteAnimation(context, offset, size: 300);
+      Future.delayed(const Duration(milliseconds: 1600)).then((_) => Navigator.pop(context));
+    }
   }
 
   String calCount(int? count) {
@@ -92,7 +92,7 @@ class OptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+        behavior: HitTestBehavior.opaque,
         // onPanDown: (detail) {
         //   if (onTap == null) {
         //     return;
@@ -109,20 +109,24 @@ class OptionItem extends StatelessWidget {
           Offset globalPosition = box.localToGlobal(Offset.zero);
           onTap!(globalPosition);
         },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            iconName != null
-                ? LoadAssetSvg(
-                    iconName!,
-                    width: 20.0,
-                    height: 20.0,
-                    color: Colors.grey,
-                  )
-                : prefix!,
-            Gaps.hGap4,
-            text,
-          ],
+        child: Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              iconName != null
+                  ? LoadAssetSvg(
+                      iconName!,
+                      width: 20.0,
+                      height: 20.0,
+                      color: Colors.grey,
+                    )
+                  : prefix ?? Gaps.empty,
+              Gaps.hGap4,
+              text
+            ],
+          ),
         ));
   }
 }

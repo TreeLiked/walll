@@ -29,6 +29,11 @@ class Colours {
   static const Color lightScaffoldColor = Color(0xFFFFFFFF);
   static const Color darkScaffoldColor = Color(0xFF121212);
 
+  // 标签背景颜色
+  static const Color lightTagBgColor = Color(0xFFF6F7F9);
+  static const Color darkTagBgColor = Color(0xFF000000);
+
+  static const Color tweetInterColor = Color(0xFF676F81);
   static const Color lighterGrey = Color(0xFFFAF9FA);
 
   static const Color lightIndicatorColor = Colors.amber;
@@ -48,11 +53,20 @@ class Colours {
     return ThemeUtil.isDark(context) ? darkScaffoldColor : lightScaffoldColor;
   }
 
+
+  static Color getTweetScaffoldColor(BuildContext context) {
+    return ThemeUtil.isDark(context) ? darkScaffoldColor : const Color(0xFFF2F6F9);
+  }
+
   static Color getEmphasizedTextColor(BuildContext context) {
     return ThemeUtil.isDark(context) ? emphasizeFontColorDark : emphasizeFontColor;
   }
 
   static Color getFirstBorderColor(BuildContext context) {
     return ThemeUtil.isDark(context) ? borderColorFirstDark : borderColorFirst;
+  }
+
+  static Color getTagBgColor(BuildContext context) {
+    return ThemeUtil.isDark(context) ? darkTagBgColor : lightTagBgColor;
   }
 }

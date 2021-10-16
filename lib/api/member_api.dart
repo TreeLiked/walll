@@ -6,6 +6,7 @@ import 'package:wall/constant/app_constant.dart';
 import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/account/account_campus_profile.dart';
 import 'package:wall/model/biz/account/account_display_info.dart';
+import 'package:wall/model/biz/account/account_edit_param.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/util/http_util.dart';
 
@@ -45,21 +46,10 @@ class MemberApi {
     return AccountDisplayInfo.fromJson(res.oriData);
   }
 
-  //
-  // static Future<Result> modAccount(AccountEditParam param) async {
-  //   Response response;
-  //   try {
-  //     response = await httpUtil2.dio.post(Api.API_ACCOUNT_MOD_BASIC, data: param);
-  //     Map<String, dynamic> json = Api.convertResponse(response.data);
-  //     LogUtil.e(json, tag: _TAG);
-  //
-  //     return Result.fromJson(json);
-  //   } on DioError catch (e) {
-  //     Api.formatError(e);
-  //   }
-  //   return null;
-  // }
-  //
+  static Future<Result> modAccount(AccountEditParam param) async {
+    return await httpUtil2.post(Api.accountModifyBasic, data: param);
+  }
+
   static Future<Result> sendPhoneVerificationCode(String phone) async {
     return httpUtil2.get(Api.apiSendVerificationCode + "?p=$phone");
   }

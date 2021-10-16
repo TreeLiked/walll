@@ -14,6 +14,7 @@ import 'package:wall/util/theme_util.dart';
 import 'package:wall/widget/common/account_avatar.dart';
 import 'package:wall/widget/tweet/tweet_body_wrapper.dart';
 import 'package:fluro/fluro.dart';
+import 'package:wall/widget/tweet/tweet_campus_wrapper.dart';
 import 'package:wall/widget/tweet/tweet_index_item_header.dart';
 import 'package:wall/widget/tweet/tweet_interact_wrapper.dart';
 import 'package:wall/widget/tweet/tweet_media_wrapper.dart';
@@ -40,7 +41,7 @@ class TweetIndexItem extends StatelessWidget {
   final bool displayComment;
   final bool displayLink;
   final bool displayExtra;
-  final bool displayInstitute;
+  final bool displayCampus;
   final bool myNickClickable;
   final bool needLeftProfile;
   final bool displayType;
@@ -58,7 +59,7 @@ class TweetIndexItem extends StatelessWidget {
       this.displayPraise = false,
       this.displayLink = false,
       this.displayComment = false,
-      this.displayInstitute = false,
+      this.displayCampus = true,
       this.displayExtra = true,
       this.canPraise = false,
       this.myNickClickable = true,
@@ -72,8 +73,10 @@ class TweetIndexItem extends StatelessWidget {
     this.context = context;
     isDark = ThemeUtil.isDark(context);
     return Container(
-        padding: EdgeInsets.only(bottom: 0.0, top: 10.0, left: 10.0, right: 15.0),
-        // color: isDark ? Colours.dark_bg_color : Colors.white,
+        decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white, borderRadius: BorderRadius.circular(7.0)),
+        margin: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+        padding: const EdgeInsets.only(bottom: 10.0, top: 10.0, left: 10.0, right: 15.0),
         child: GestureDetector(
           onTap: () => _forwardDetail(context),
           behavior: HitTestBehavior.translucent,
@@ -87,10 +90,10 @@ class TweetIndexItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    TweetIndexItemHeader(tweet.account!, tweet.anonymous!, tweet.sentTime!,
-                        myNickClickable: myNickClickable, official: false),
+                    TweetIndexItemHeader(tweet, myNickClickable: myNickClickable, official: false,displayType: displayType),
                     TweetBodyWrapper(tweet.body, maxLine: 5, fontSize: 15, height: 1.6),
                     TweetMediaWrapper(tweet: tweet),
+                    TweetCampusWrapper(tweet: tweet, displayCampus: displayCampus),
                     TweetInteractWrapper(tweet),
                     // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
                     // TweetPraiseWrapper(tweet, prefixIcon: true),
@@ -117,9 +120,6 @@ class TweetIndexItem extends StatelessWidget {
 //                    )
 //                        : Gaps.empty,
 //                    displayComment ? Gaps.vGap25 : Gaps.vGap10,
-
-                    Gaps.line,
-                    Gaps.vGap5
                   ],
                 ),
               )

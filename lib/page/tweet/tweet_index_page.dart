@@ -118,6 +118,7 @@ class _TweetIndexPageState extends State<TweetIndexPage>
 
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
+        backgroundColor: Colours.lightScaffoldColor,
           appBar: PreferredSize(
             child:
                 AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
@@ -131,7 +132,7 @@ class _TweetIndexPageState extends State<TweetIndexPage>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                          // height: 100,
+                          color: Colours.getScaffoldColor(context),
                           padding: const EdgeInsets.only(bottom: 5.0),
                           width: double.infinity,
                           child: Stack(children: <Widget>[
@@ -140,12 +141,12 @@ class _TweetIndexPageState extends State<TweetIndexPage>
                                 child: TabBar(
                                     labelStyle: TextStyle(
                                         fontSize: 18,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
                                         color: Colors.amber[600],
                                         letterSpacing: 1.1),
                                     unselectedLabelStyle: const TextStyle(
                                         fontSize: 15,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
                                         color: Colours.secondaryFontColor,
                                         letterSpacing: 1.1),
                                     indicatorSize: TabBarIndicatorSize.label,

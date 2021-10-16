@@ -8,11 +8,7 @@ import 'package:wall/constant/shared_constant.dart';
 import 'package:wall/constant/size_constant.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  static const Map<Themes, String> themes = {
-    Themes.dark: "Dark",
-    Themes.light: "Light",
-    Themes.system: "System"
-  };
+  static const Map<Themes, String> themes = {Themes.dark: "Dark", Themes.light: "Light", Themes.system: "System"};
 
   void syncTheme() {
     String? themeStr = SpUtil.getString(SharedCst.theme);
@@ -52,11 +48,13 @@ class ThemeProvider extends ChangeNotifier {
         scaffoldBackgroundColor: isDarkMode ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
         // 主要用于Material背景色
         canvasColor: isDarkMode ? Colours.darkScaffoldColor : Colours.lightScaffoldColor,
-
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: isDarkMode ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
         // 文字选择色（输入框复制粘贴菜单）
         textTheme: TextTheme(
           // TextField输入文字颜色
-          bodyText2: TextStyle(color: isDarkMode ? Colors.white : Colours.emphasizeFontColor, fontSize: SizeCst.normalFontSize),
+          bodyText2: TextStyle(
+              color: isDarkMode ? Colors.white : Colours.emphasizeFontColor, fontSize: SizeCst.normalFontSize),
           // Text文字样式
           // subtitle1: isDarkMode ? TextStyles.textDark : TextStyles.text,
           // subtitle2: isDarkMode ? TextStyles.textDarkGray12 : TextStyles.textGray12,
