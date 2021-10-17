@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this
+
 import 'package:flutter/material.dart';
 
 class MsgProvider extends ChangeNotifier {
@@ -23,8 +25,8 @@ class MsgProvider extends ChangeNotifier {
     return getNonNullValue(cirInterCnt) + getNonNullValue(cirSysCnt);
   }
 
-  int getNonNullValue(int val) {
-    return val == null ? 0 : val;
+  int getNonNullValue(int? val) {
+    return val ?? 0;
   }
 
   void refresh() {

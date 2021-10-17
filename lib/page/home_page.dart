@@ -21,6 +21,7 @@ import 'package:wall/model/biz/common/page_param.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
 import 'package:wall/page/account/account_profile_index.dart';
+import 'package:wall/page/notification/notification_index_page.dart';
 import 'package:wall/page/tweet/tweet_cate_page.dart';
 import 'package:wall/page/tweet/tweet_cate_tab.dart';
 import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
@@ -32,6 +33,7 @@ import 'package:wall/provider/tweet_provider.dart';
 import 'package:wall/util/asset_util.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
+import 'package:wall/util/message_util.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/perm_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -72,13 +74,11 @@ class _HomePageState extends State<HomePage>
 
   bool isDark = false;
 
-  late TabController _tabController;
-
   late BuildContext _myContext;
 
   int _currentNavIndex = 0;
-
   final List<Widget> _bottomNavPages = [];
+  late PageController _pageController;
 
   final Widget createWidgetLight = Transform.translate(
       offset: const Offset(0, 5),
@@ -94,42 +94,22 @@ class _HomePageState extends State<HomePage>
                   colors: [Color(0xFFFFFFFF), Color(0xFF00f2fe), Color(0xFFFFFFFF)])),
           child: const LoadAssetSvg("nav/nav_create", width: 35, height: 35, color: Colors.white)));
 
-  late ScrollController _tweetIndexController;
+  final GlobalKey<TweetIndexPageState> tweetIndexKey = GlobalKey();
 
   @override
   void initState() {
-    _tweetIndexController = ScrollController();
-
-    _bottomNavPages.add(TweetIndexPage(scrollController: _tweetIndexController));
+    _bottomNavPages.add(TweetIndexPage(key: tweetIndexKey));
     _bottomNavPages.add(const TweetCatePage());
-    _bottomNavPages.add(TweetIndexHotTab());
-    _bottomNavPages.add(const AccountMyIndex());
-
+    _bottomNavPages.add(const NotificationIndexPage());
+    _bottomNavPages.add(const AccountMyIndexPage());
+    _pageController = PageController(initialPage: _currentNavIndex);
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
-    _tabController.addListener(() {
-      if (_tabController.index.toDouble() == _tabController.animation!.value) {
-        bool _dc = true;
-        switch (_tabController.index) {
-          case 0:
-            _dc = true;
-            break;
-          case 1:
-            _dc = true;
-            break;
-          case 2:
-            _dc = false;
-            break;
-        }
-      }
-    });
-
-    initMessageTotalCnt();
 
     UMengUtil.userGoPage(UMengUtil.pageTweetIndex);
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       Future.delayed(const Duration(seconds: 3)).then((value) {
+        initMessageTotalCnt();
         PermissionUtil.checkAndRequestNotification(context, showTipIfDetermined: true, probability: 39);
       });
     });
@@ -183,25 +163,12 @@ class _HomePageState extends State<HomePage>
   }
 
   void initMessageTotalCnt() async {
-    // MessageUtil.queryMessageCntTotal(context);
+    MessageUtil.queryMessageCntTotal(_myContext);
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> _onRefresh(BuildContext context) async {
-    print('On refresh');
-    _refreshController.resetNoData();
-    _currentPage = 1;
-    List<BaseTweet> temp = await getData(_currentPage);
-    tweetProvider.update(temp, clear: true, append: false);
-    if (temp == null) {
-      _refreshController.refreshFailed();
-    } else {
-      _refreshController.refreshCompleted();
-    }
   }
 
   void initData() async {
@@ -249,159 +216,100 @@ class _HomePageState extends State<HomePage>
 
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
-        backgroundColor: Colours.lightScaffoldColor,
-        // appBar: PreferredSize(
-        //   child: AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
-        //   preferredSize: Size.zero,
-        // ),
-        // body: SafeArea(
-        //     bottom: false,
-        //     child: Stack(children: <Widget>[
-        //       Column(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           crossAxisAlignment: CrossAxisAlignment.center,
-        //           children: <Widget>[
-        //             Container(
-        //               // height: 100,
-        //               padding: const EdgeInsets.only(bottom: 5.0),
-        //               width: double.infinity,
-        //               // color: isDark ? ColorConstant.MAIN_BG_DARK : ThemeConstant.lightBG,
-        //               child: Stack(
-        //                 children: <Widget>[
-        //                   Positioned(
-        //                     left: prefix0.ScreenUtil().setWidth(10.0),
-        //                     child: Consumer<AccountLocalProvider>(
-        //                       builder: (_, model, __) {
-        //                         var acc = model.account;
-        //                         return InkWell(
-        //                             child: AccountAvatar(avatarUrl: acc!.avatarUrl!, size: 35.0, cache: true));
-        //                         // return IconButton(
-        //                         //     iconSize: 35,
-        //                         //     onPressed: () {
-        //                         //       BottomSheetUtil.showBottomSheet(context, 0.7, PersonalCenter());
-        //                         //       UMengUtil.userGoPage(UMengUtil.PAGE_PC);
-        //                         //     },
-        //                         //     icon: AccountAvatar(
-        //                         //         avatarUrl: acc.avatarUrl, size: 50.0, whitePadding: true, cache: true));
-        //                       },
-        //                     ),
-        //                   ),
-        //                   Container(
-        //                     width: double.maxFinite,
-        //                     alignment: Alignment.center,
-        //                     child: Padding(
-        //                       padding: EdgeInsets.symmetric(horizontal: 0),
-        //                       child: TabBar(
-        //                         labelStyle:
-        //                             TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.amber[600]),
-        //                         unselectedLabelStyle:
-        //                             TextStyle(fontSize: 14, color: isDark ? Colors.white24 : Colors.black),
-        //                         indicatorSize: TabBarIndicatorSize.label,
-        //                         indicator: const UnderlineTabIndicator(
-        //                             insets: EdgeInsets.symmetric(horizontal: 10.0),
-        //                             borderSide: BorderSide(color: Colours.mainColor, width: 4.0)),
-        //                         controller: _tabController,
-        //                         labelColor: isDark ? Colors.white : Colors.black,
-        //                         isScrollable: true,
-        //                         onTap: (index) {
-        //
-        //                         },
-        //                         tabs: const [
-        //                           Padding(
-        //                             padding: const EdgeInsets.only(bottom: 8.0),
-        //                             child: Text('推荐',
-        //                                 style:
-        //                                     TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-        //                           ),
-        //                           Padding(
-        //                             padding: const EdgeInsets.only(bottom: 8.0),
-        //                             child: Text('热榜',
-        //                                 style:
-        //                                     TextStyle(fontSize: 17, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-        //                           )
-        //                           // Tab(
-        //                           //     child: Text('热门',
-        //                           //         style: TextStyle(
-        //                           //             color: _getTabColor(1),
-        //                           //             fontWeight: FontWeight.w500,
-        //                           //             letterSpacing: 1.1))),
-        //                           // Tab(child: Text('圈子', style: pfStyle.copyWith(color: _getTabColor(2)))),
-        //                         ],
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //             Expanded(
-        //                 child: TabBarView(controller: _tabController, children: [
-        //               TweetIndexLiveTab(),
-        //               TweetIndexLiveTab(),
-        //               // CircleMainNew()
-        //             ]))
-        //           ])
-        //     ])),
-        floatingActionButton: FloatingActionButton(
-            child: Container(
-                width: 55,
-                height: 55,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: Icon(Icons.add, size: 28.0, color: isDark ? Colors.white : Colors.black)),
-            backgroundColor: Colours.getScaffoldColor(context),
-            // splashColor: Colors.white12,
-            elevation: 20.0,
-            highlightElevation: 10.0,
-            isExtended: true,
-            enableFeedback: true,
-            onPressed: () =>
-                NavigatorUtils.push(context, Routes.tweetCreate, transitionType: TransitionType.inFromBottom)),
-        body: _bottomNavPages[_currentNavIndex],
-        resizeToAvoidBottomInset: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        bottomNavigationBar: MediaQuery.removePadding(
-          context: context,
-          // height: 83,
-          // padding: EdgeInsets.all(0.0),
-          child: BottomNavigationBar(
-              iconSize: 30,
-              type: BottomNavigationBarType.fixed,
-              elevation: 0,
-              enableFeedback: true,
-              selectedLabelStyle: const TextStyle(fontSize: 11.5,fontWeight: FontWeight.bold),
-              fixedColor: Colours.getEmphasizedTextColor(context),
-              unselectedLabelStyle: const TextStyle(fontSize: 11.5),
-              unselectedItemColor: Colours.greyText,
-
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: _getIcon("nav_index", false), label: '首页', activeIcon: _getIcon("nav_index", true)),
-                BottomNavigationBarItem(
-                    icon: _getIcon("nav_cate", false), label: '分类', activeIcon: _getIcon("nav_cate", true)),
-                // BottomNavigationBarItem(
-                //     icon: isDark ? _getCreateWidgetDark() : createWidgetLight,
-                //     label: '',
-                //     activeIcon: isDark ? _getCreateWidgetDark() : createWidgetLight),
-                BottomNavigationBarItem(
-                    icon: _getIcon("nav_noti", false), label: '消息', activeIcon: _getIcon("nav_noti", true)),
-                BottomNavigationBarItem(
-                    icon: _getIcon("nav_my", false), label: '我的', activeIcon: _getIcon("nav_my", true)),
-              ],
-              currentIndex: _currentNavIndex,
-              onTap: (index) => _handleNavChanged(context, index)),
-        ),
-      );
+          backgroundColor: Colours.lightScaffoldColor,
+          floatingActionButton: _currentNavIndex == 0 || _currentNavIndex == 1
+              ? FloatingActionButton(
+                  child: Container(
+                      width: 55,
+                      height: 55,
+                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                      child: Icon(Icons.add, size: 28.0, color: isDark ? Colors.white : Colors.black)),
+                  backgroundColor: Colours.getScaffoldColor(context),
+                  elevation: 20.0,
+                  highlightElevation: 10.0,
+                  isExtended: true,
+                  enableFeedback: true,
+                  onPressed: () =>
+                      NavigatorUtils.push(context, Routes.tweetCreate, transitionType: TransitionType.inFromBottom))
+              : null,
+          body: PageView(
+              children: _bottomNavPages, controller: _pageController, physics: const NeverScrollableScrollPhysics()),
+          resizeToAvoidBottomInset: false,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          bottomNavigationBar: MediaQuery.removePadding(
+              context: context,
+              child: Consumer<MsgProvider>(builder: (_, msgProvider, __) {
+                return BottomNavigationBar(
+                    iconSize: 30,
+                    type: BottomNavigationBarType.fixed,
+                    elevation: 0,
+                    enableFeedback: true,
+                    selectedLabelStyle: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold),
+                    fixedColor: Colours.getEmphasizedTextColor(context),
+                    unselectedLabelStyle: const TextStyle(fontSize: 11.5),
+                    unselectedItemColor: Colours.greyText,
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                          icon: _getIcon("nav_index", false, 0, msgProvider),
+                          label: '首页',
+                          activeIcon: _getIcon("nav_index", true, 0, msgProvider)),
+                      BottomNavigationBarItem(
+                          icon: _getIcon("nav_cate", false, 1, msgProvider),
+                          label: '分类',
+                          activeIcon: _getIcon("nav_cate", true, 1, msgProvider)),
+                      // BottomNavigationBarItem(
+                      //     icon: isDark ? _getCreateWidgetDark() : createWidgetLight,
+                      //     label: '',
+                      //     activeIcon: isDark ? _getCreateWidgetDark() : createWidgetLight),
+                      BottomNavigationBarItem(
+                          icon: _getIcon("nav_noti", false, 2, msgProvider),
+                          label: '消息',
+                          activeIcon: _getIcon("nav_noti", true, 2, msgProvider)),
+                      BottomNavigationBarItem(
+                          icon: _getIcon("nav_my", false, 3, msgProvider),
+                          label: '我的',
+                          activeIcon: _getIcon("nav_my", true, 3, msgProvider)),
+                    ],
+                    currentIndex: _currentNavIndex,
+                    onTap: (index) => _handleNavChanged(context, index));
+              })));
     });
   }
 
-  Widget _getIcon(String oriName, bool isSel) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 3.0),
-      child: LoadAssetSvg(
-          "nav/$oriName${isSel ? '' : isDark ? '' : ''}",
-          width: 25,
-          color: isSel ? Colours.getEmphasizedTextColor(_myContext) : Colors.grey,
-          height: 25),
-    );
+  Widget _getIcon(String oriName, bool isSel, int index, MsgProvider provider) {
+    if (index == 1 || index == 3) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 3.0),
+        child: LoadAssetSvg(
+            "nav/$oriName",
+            width: 25,
+            color: isSel ? Colours.getEmphasizedTextColor(_myContext) : Colors.grey,
+            height: 25),
+      );
+    } else if (index == 0) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 3.0),
+        child: LoadAssetSvg(
+            "nav/$oriName",
+            width: 25,
+            color: isSel ? Colours.getEmphasizedTextColor(_myContext) : Colors.grey,
+            height: 25),
+      );
+    } else if (index == 2) {
+      return Badge(
+          elevation: 0,
+          shape: BadgeShape.circle,
+          showBadge: Util.badgeHasData(provider.totalCnt),
+          badgeColor: Colors.red,
+          animationType: BadgeAnimationType.fade,
+          badgeContent: Util.getRpWidget(provider.totalCnt, fontSize: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 3.0),
+            child: LoadAssetSvg("nav/$oriName",
+                width: 25, color: isSel ? Colours.getEmphasizedTextColor(_myContext) : Colors.grey, height: 25),
+          ));
+    }
+    return Gaps.empty;
   }
 
   Widget _getCreateWidgetDark() {
@@ -424,10 +332,14 @@ class _HomePageState extends State<HomePage>
     if (index != _currentNavIndex) {
       setState(() {
         _currentNavIndex = index;
+        _pageController.jumpToPage(index);
       });
-    }
-    if (index == 0) {
-      _tweetIndexController.animateTo(.0, duration: const Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
+    } else {
+      if (index == 0) {
+        if (tweetIndexKey.currentState != null) {
+          tweetIndexKey.currentState!.goTopForTweet(null);
+        }
+      }
     }
   }
 

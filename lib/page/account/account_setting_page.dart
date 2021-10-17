@@ -87,7 +87,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(centerTitle: '设置'),
+        appBar: const CustomAppBar(title: '设置',),
         body: Consumer<AccountLocalProvider>(builder: (_, provider, __) {
           return SingleChildScrollView(
               child: Column(children: <Widget>[

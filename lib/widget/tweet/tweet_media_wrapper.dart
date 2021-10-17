@@ -154,11 +154,20 @@ class MultiImgWrapper extends StatelessWidget {
     List<String> imageUrlsFull = imageUrls.map((f) => "$f${AppCst.thumbnailSuffix}").toList();
     int total = imageUrlsFull.length;
 
-    List<Widget> list = [];
-    for (int i = 0; i < total; i++) {
-      list.add(_imgContainer(imageUrlsFull[i], i, total, context));
-    }
-    return Wrap(children: list);
+    return Semantics(
+        child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: imageUrlsFull.length,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 1),
+            itemBuilder: (context, index) => _imgContainer(imageUrlsFull[index], index, total, context)));
+    // List<Widget> list = [];
+    // for (int i = 0; i < total; i++) {
+    //   list.add(_imgContainer(imageUrlsFull[i], i, total, context));
+    // }
+    // return Wrap(children: list);
   }
 
   Widget _imgContainer(String url, int index, int totalSize, BuildContext context) {
@@ -182,7 +191,7 @@ class MultiImgWrapper extends StatelessWidget {
         url: url,
         width: perW,
         height: perW,
-        padding: EdgeInsets.only(right: curRightPadding, bottom: _imgRightPadding),
+        padding: EdgeInsets.only(right: 0, bottom: 0),
         callback: onTap == null ? null : () => onTap!(index));
   }
 }

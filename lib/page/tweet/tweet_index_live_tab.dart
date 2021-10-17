@@ -14,29 +14,25 @@ import 'package:wall/widget/tweet/tweet_index_item.dart';
 import 'package:wall/widget/tweet/tweet_no_data_view.dart';
 
 class TweetIndexLiveTab extends StatefulWidget {
-  final ScrollController scrollController;
-
-  const TweetIndexLiveTab({Key? key, required this.scrollController}) : super(key: key);
+  const TweetIndexLiveTab({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _TweetIndexLiveTabState();
+    return TweetIndexLiveTabState();
   }
 }
 
-class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
-
-//  List<TabIconData> tabIconsList = TabIconData.tabIconsList;
-
-  // PersistentBottomSheetController _bottomSheetController;
+class TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   late TweetProvider tweetProvider;
 
   int _currentPage = 1;
 
-  Widget loadingIconStatic =
-      SizedBox(width: 25.0, height: 25.0, child: const CupertinoActivityIndicator(animating: false));
+  final Widget loadingIconStatic =
+      const SizedBox(width: 25.0, height: 25.0, child: CupertinoActivityIndicator(animating: false));
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +41,11 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
       backgroundColor: Colours.getTweetScaffoldColor(context),
       body: Consumer<TweetProvider>(builder: (context, provider, _) {
         var tweets = provider.displayTweets;
-        return Listener(
-            onPointerDown: (_) {
-              // closeReplyInput();
-            },
-            child: SmartRefresher(
+        return SmartRefresher(
               enablePullUp: tweets != null && tweets.isNotEmpty,
               enablePullDown: true,
               primary: false,
-              scrollController: widget.scrollController,
+              scrollController: _scrollController,
               controller: _refreshController,
               cacheExtent: 20,
               header: ClassicHeader(
@@ -128,7 +120,7 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
                           }),
               onRefresh: () => _onRefresh(context),
               onLoading: _onLoading,
-            ));
+            );
       }),
     );
   }
@@ -171,5 +163,9 @@ class _TweetIndexLiveTabState extends State<TweetIndexLiveTab> {
 
   Future getData(int page) async {
     return await (TweetApi.queryTweets(PageParam(page, pageSize: 10, orgId: Application.getOrgId)));
+  }
+
+  void goTop() {
+    _scrollController.animateTo(.0, duration: const Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
   }
 }

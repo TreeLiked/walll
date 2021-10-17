@@ -161,15 +161,15 @@ class _TweetDetailPageState extends State<TweetDetailPage>
 
     if (tweet == null) {
       return Scaffold(
-          body: Column(
-        children: <Widget>[
-          Container(
-            height: 80,
-            alignment: Alignment.topCenter,
-            child: const SpinKitDancingSquare(color: Colors.lightGreen, size: 20),
-          )
-        ],
-      ));
+          body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => _sliverBuilderEmpty(context, innerBoxIsScrolled),
+              body: Column(children: [
+                Container(
+                  height: 80,
+                  alignment: Alignment.topCenter,
+                  child: const SpinKitDancingSquare(color: Colors.lightGreen, size: 20),
+                )
+              ])));
     }
 
     return Scaffold(
@@ -368,6 +368,25 @@ class _TweetDetailPageState extends State<TweetDetailPage>
                   );
                 })),
       )
+    ];
+  }
+
+  List<Widget> _sliverBuilderEmpty(BuildContext context, bool innerBoxIsScrolled) {
+    return <Widget>[
+      SliverAppBar(
+          backgroundColor: Colours.getScaffoldColor(context),
+          centerTitle: true,
+          leading: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(Icons.arrow_back, color: Colours.getEmphasizedTextColor(context), size: 20)),
+          //标题居中
+          title: Text('动态详情',
+              style:
+                  TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colours.getEmphasizedTextColor(context))),
+          elevation: 0.2,
+          floating: true,
+          pinned: true,
+          snap: false)
     ];
   }
 

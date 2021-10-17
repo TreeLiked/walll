@@ -8,6 +8,7 @@
  */
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart' hide Router;
+import 'package:wall/config/routes/noti_router.dart';
 import 'package:wall/config/routes/route_handlers.dart';
 import 'package:wall/config/routes/router_init.dart';
 import 'package:wall/config/routes/setting_router.dart';
@@ -105,8 +106,8 @@ class Routes {
     // _listRouter.add(SettingRouter());
     _listRouter.add(LoginRouter());
     _listRouter.add(SettingRouter());
+    _listRouter.add(NotificationRouter());
     // _listRouter.add(SquareRouter());
-    // _listRouter.add(NotificationRouter());
     // _listRouter.add(CircleRouter());
 
     /// 初始化路由

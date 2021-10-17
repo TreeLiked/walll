@@ -109,10 +109,10 @@ class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
               anonymous: false,
               cache: false,
               gender: Gender.parseGender(acc.gender),
-              onTap: () => NavigatorUtils.goAccountProfile(context, acc)),
+              onTap: () => NavigatorUtils.goAccountProfileByTweetAcc(context, acc)),
           contentPadding: const EdgeInsets.only(right: 10.0),
           title: GestureDetector(
-            onTap: () => NavigatorUtils.goAccountProfile(context, acc),
+            onTap: () => NavigatorUtils.goAccountProfileByTweetAcc(context, acc),
             child: Text(acc.nick ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

@@ -109,24 +109,17 @@ class OptionItem extends StatelessWidget {
           Offset globalPosition = box.localToGlobal(Offset.zero);
           onTap!(globalPosition);
         },
-        child: Expanded(
-          flex: 1,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              iconName != null
-                  ? LoadAssetSvg(
-                      iconName!,
-                      width: 20.0,
-                      height: 20.0,
-                      color: Colors.grey,
-                    )
-                  : prefix ?? Gaps.empty,
-              Gaps.hGap4,
-              text
-            ],
-          ),
-        ));
+        child: Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[
+          iconName != null
+              ? LoadAssetSvg(
+                  iconName!,
+                  width: 20.0,
+                  height: 20.0,
+                  color: Colors.grey,
+                )
+              : prefix ?? Gaps.empty,
+          Gaps.hGap4,
+          text
+        ]));
   }
 }

@@ -12,72 +12,62 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actionColor,
       this.background,
       this.title = "",
-      this.centerTitle = "",
+      this.centerTitle = true,
       this.actionName = "",
       this.actionWidget,
       this.backSvgPath = "common/arrow_left",
-      this.onPressed,
+      this.actionOnPressed,
       this.isBack = true})
       : super(key: key);
 
-  final Color? actionColor;
-  final Color? background;
   final String title;
-  final String centerTitle;
-  final String backSvgPath;
-  final String actionName;
-  final VoidCallback? onPressed;
-  final Widget? actionWidget;
+  final bool centerTitle;
+  final Color? background;
+
   final bool isBack;
+  final String backSvgPath;
+
+  final Color? actionColor;
+  final String? actionName;
+  final Widget? actionWidget;
+  final VoidCallback? actionOnPressed;
 
   @override
   Widget build(BuildContext context) {
     bool isDark = ThemeUtil.isDark(context);
 
-    return SafeArea(
-        child: Stack(alignment: Alignment.centerLeft, children: <Widget>[
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            alignment: centerTitle.isEmpty ? Alignment.centerLeft : Alignment.center,
-            width: double.infinity,
-            child: Text(title.isEmpty ? centerTitle : title,
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    letterSpacing: 1.1,
-                    color: Colours.getEmphasizedTextColor(context))),
-            padding: const EdgeInsets.symmetric(horizontal: 48.0),
-          )
-        ],
-      ),
-      isBack
-          ? IconButton(
+    return AppBar(
+      backgroundColor: background ?? Colours.getScaffoldColor(context),
+      title: Text(title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colours.getBlackOrWhite(context))),
+      centerTitle: centerTitle,
+      leading: !isBack
+          ? Gaps.empty
+          : IconButton(
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 Navigator.maybePop(context);
               },
-              tooltip: '返回',
               padding: const EdgeInsets.all(12.0),
-              icon: LoadAssetSvg(backSvgPath, width: 15, height: 15, color: isDark ? Colors.white : Colors.black))
-          : Gaps.empty,
-      Positioned(
-          right: 8.0,
-          child: actionWidget ??
-              (actionName.isEmpty
-                  ? Gaps.empty
-                  : TextButton(
-                      child: Text(
-                        actionName,
-                        key: const Key('actionName'),
-                        style: TextStyle(fontSize: 13.5, color: onPressed == null ? Colors.grey : Colours.mainColor),
-                      ),
-                      onPressed: onPressed)))
-    ]));
+              icon: LoadAssetSvg(backSvgPath, width: 15, height: 15, color: isDark ? Colors.white : Colors.black)),
+      actions: _renderWidgets(),
+    );
+  }
+
+  _renderWidgets() {
+    if (actionName != null) {
+      return [
+        TextButton(
+            child: Text(actionName!,
+                key: const Key('actionName'),
+                style: TextStyle(
+                    fontSize: 14, color: actionOnPressed == null ? Colors.grey : actionColor ?? Colours.mainColor)),
+            onPressed: actionOnPressed)
+      ];
+    } else if (actionWidget != null) {
+      return [actionWidget];
+    }
+    return [];
   }
 
   @override

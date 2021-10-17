@@ -28,17 +28,17 @@ import 'package:wall/widget/common/account_avatar_2.dart';
 import 'package:wall/widget/common/container/center_row_text.dart';
 import 'package:wall/widget/common/real_rich_text.dart';
 
-class AccountMyIndex extends StatefulWidget {
-  const AccountMyIndex({Key? key}) : super(key: key);
+class AccountMyIndexPage extends StatefulWidget {
+  const AccountMyIndexPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _AccountMyIndexState();
+    return _AccountMyIndexPageState();
   }
 }
 
-class _AccountMyIndexState extends State<AccountMyIndex>
-    with AutomaticKeepAliveClientMixin<AccountMyIndex>, SingleTickerProviderStateMixin {
+class _AccountMyIndexPageState extends State<AccountMyIndexPage>
+    with AutomaticKeepAliveClientMixin<AccountMyIndexPage>, SingleTickerProviderStateMixin {
   final String _followCountStr = "0";
   final String _fansCountStr = "0";
 

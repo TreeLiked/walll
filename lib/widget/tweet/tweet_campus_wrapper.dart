@@ -5,6 +5,7 @@ import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_type.dart';
 import 'package:wall/util/asset_util.dart';
 import 'package:wall/util/str_util.dart';
+import 'package:wall/util/theme_util.dart';
 import 'package:wall/widget/common/square_tag.dart';
 import 'package:wall/widget/square_lined_tag.dart';
 
@@ -36,7 +37,7 @@ class TweetCampusWrapper extends StatelessWidget {
           horizontalPadding: 8.0,
           verticalPadding: 5.0,
           roundRadius: 6.0,
-          prefixIcon: Icon(Icons.camera, color: Colors.black, size: 14.0),
+          prefixIcon: Icon(Icons.camera, color: Colours.getBlackOrWhite(context), size: 14.0),
           child: Text(t,
               style:
                   TextStyle(color: Colours.getEmphasizedTextColor(context), fontSize: 11, fontWeight: FontWeight.w400)),

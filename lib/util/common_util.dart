@@ -104,7 +104,7 @@ class Util {
   }
 
   static Text getRpWidget(int cnt, {int maxCount = 99, Color textColor = Colors.white, double fontSize = 12.0}) {
-    return Text('${getBadgeText(cnt, maxCount: maxCount)}', style: TextStyle(color: textColor, fontSize: fontSize));
+    return Text(getBadgeText(cnt, maxCount: maxCount), style: TextStyle(color: textColor, fontSize: fontSize));
   }
 
   static bool badgeHasData(int data) {
@@ -168,6 +168,11 @@ class Util {
     httpUtil2.clearAuthToken();
     NavigatorUtils.goBack(context);
     NavigatorUtils.push(context, LoginRouter.loginIndex, clearStack: true);
+  }
+
+  static String getEnumValue(a, {bool toUpperCase = true}) {
+    String val = a.toString().substring(a.toString().indexOf('.') + 1);
+    return toUpperCase ? val.toUpperCase() : val;
   }
 }
 

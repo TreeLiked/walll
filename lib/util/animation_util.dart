@@ -7,6 +7,7 @@ import 'package:wall/application.dart';
 class AnimationUtil {
   static void showFavoriteAnimation(BuildContext context, Offset offset, {double size = 30, Key? key}) {
     print(offset);
+    print(Application.screenWidth);
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -19,17 +20,17 @@ class AnimationUtil {
                   child: Stack(children: [
                 Positioned(
                     child: Container(
-                        alignment: Alignment.center,
+                        alignment: Alignment.topLeft,
                         width: 200,
                         height: 100,
                         child: const FlareActor(
                           "assets/flrs/firework1.flr",
-                          alignment: Alignment.center,
+                          alignment: Alignment.topLeft,
                           animation: "Play",
                           fit: BoxFit.fitWidth,
                         )),
-                    left: -(200 - offset.dx - 30) / 2,
-                    top: offset.dy - 85)
+                    left: offset.dx - 100,
+                    top: offset.dy -80)
               ])));
         });
   }

@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:wall/config/routes/routes.dart';
+import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/tweet/tweet_account.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
 
@@ -61,18 +62,15 @@ class NavigatorUtils {
         '${Routes.webViewPage}?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(url)}&source=$source');
   }
 
-// static void goAccountProfile(BuildContext context, SimpleAccount account) {
-//   if (account == null) {
-//     return;
-//   }
-//   push(
-//       context,
-//       Routes.accountProfile +
-//           Utils.packConvertArgs(
-//               {'nick': account.nick, 'accId': account.id, 'avatarUrl': account.avatarUrl}));
-// }
-//
-  static void goAccountProfile(BuildContext context, TweetAccount account) {
+static void goAccountProfileByAcc(BuildContext context, Account account) {
+  push(
+      context,
+      Routes.accountProfile +
+          FluroConvertUtils.packConvertArgs(
+              {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+}
+
+  static void goAccountProfileByTweetAcc(BuildContext context, TweetAccount account) {
     push(
         context,
         Routes.accountProfile +

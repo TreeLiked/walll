@@ -69,4 +69,12 @@ class Colours {
   static Color getTagBgColor(BuildContext context) {
     return ThemeUtil.isDark(context) ? darkTagBgColor : lightTagBgColor;
   }
+
+  static Color getBlackOrWhite(BuildContext context) {
+    return ThemeUtil.isDark(context) ? Colors.white : Colors.black;
+  }
+
+  static Color getReversedBlackOrWhite(BuildContext context) {
+    return ThemeUtil.isDark(context) ? Colors.black : Colors.white;
+  }
 }

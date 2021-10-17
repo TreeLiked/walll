@@ -105,22 +105,22 @@ class Api {
   static const String removeDeviceInfo = apiBaseAlUrl + "/device/signOut.do";
 
   // notification message
-  static const String API_MSG_LIST_INTERACTION = apiBaseAlUrl + "/message/listInteractions.json";
-  static const String API_MSG_LIST_SYSTEM = apiBaseAlUrl + "/message/listSystems.json";
+  static const String listInteractionMsg = apiBaseAlUrl + "/message/listInteractions.json";
+  static const String listSystemMsg = apiBaseAlUrl + "/message/listSystems.json";
   static const String API_MSG_LIST_CIRCLE_SYSTEM = apiBaseAlUrl + "/message/listCircleSystems.json";
-  static const String API_MSG_READ_ALL_INTERACTION = apiBaseAlUrl + "/message/interactionsAllRead.do";
+  static const String readAllInteractionMsg = apiBaseAlUrl + "/message/interactionsAllRead.do";
   static const String API_MSG_READ_ALL_SYSTEM = apiBaseAlUrl + "/message/systemsAllRead.do";
-  static const String API_MSG_READ_THIS = apiBaseAlUrl + "/message/read.do";
-  static const String API_MSG_IGNORE_THIS = apiBaseAlUrl + "/message/ignored.do";
+  static const String readThisMsg = apiBaseAlUrl + "/message/read.do";
+  static const String ignoreThisMsg = apiBaseAlUrl + "/message/ignored.do";
 
-  static const String API_MSG_INTERACTION_CNT = apiBaseAlUrl + "/message/interactionAlertCount.json";
-  static const String API_NEW_TWEET_CNT = apiBaseAlUrl + "/message/listNewTweetCount.json";
-  static const String API_MSG_SYSTEM_CNT = apiBaseAlUrl + "/message/systemAlertCount.json";
-  static const String API_MSG_CNT = apiBaseAlUrl + "/message/alertCnt.json";
-  static const String API_MSG_CNT_BATCH = apiBaseAlUrl + "/message/batchAlertCnt.json";
+  static const String getInteractionMsgCnt = apiBaseAlUrl + "/message/interactionAlertCount.json";
+  static const String newTweetCnt = apiBaseAlUrl + "/message/listNewTweetCount.json";
+  static const String getSystemMsgCnt = apiBaseAlUrl + "/message/systemAlertCount.json";
+  static const String getMsgCnt = apiBaseAlUrl + "/message/alertCnt.json";
+  static const String batchGetMsgCnt = apiBaseAlUrl + "/message/batchAlertCnt.json";
 
-  static const String API_MSG_LATEST = apiBaseAlUrl + "/message/latest.json";
-  static const String API_MSG_LATEST_BATCH = apiBaseAlUrl + "/message/batchLatest.json";
+  static const String getLatestMsg = apiBaseAlUrl + "/message/latest.json";
+  static const String batchGetLatestMsg = apiBaseAlUrl + "/message/batchLatest.json";
 
   // subscribe
   static const String API_TWEET_TYPE_SUBSCRIBE = apiBaseAlUrl + "/tt/s/s.action";

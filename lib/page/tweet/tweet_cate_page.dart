@@ -89,11 +89,11 @@ class _TweetCatePageState extends State<TweetCatePage>
             fontSize: 14, fontWeight: FontWeight.bold, color: Colours.secondaryFontColor, letterSpacing: 1.1),
         indicatorSize: TabBarIndicatorSize.label,
         indicator: UnderlineTabIndicator(
-            insets: const EdgeInsets.only(left: 6.0, right: 6.0, bottom: 3.0),
+            insets: const EdgeInsets.only(left: 6.0, right: 6.0, bottom: 7.0),
             borderSide: BorderSide(color: typeEntityList[_currentNavIndex].color, width: 2.5)),
         labelColor: Colours.getEmphasizedTextColor(context),
         isScrollable: true,
-        labelPadding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        labelPadding: const EdgeInsets.only(left: 10.0, right: 10.0,top: 0, bottom: 10),
         controller: _tabController,
         tabs: typeEntityList.map((e) => _buildSingleTab(e)).toList());
   }

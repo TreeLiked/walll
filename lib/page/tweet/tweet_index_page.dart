@@ -2,38 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wall/application.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
 import 'package:wall/page/tweet/tweet_index_live_tab.dart';
-import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/msg_provider.dart';
-import 'package:wall/provider/tweet_provider.dart';
 import 'package:wall/util/perm_util.dart';
 import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/umeng_util.dart';
 
 class TweetIndexPage extends StatefulWidget {
-  final ScrollController scrollController;
-
-  const TweetIndexPage({Key? key, required this.scrollController}) : super(key: key);
+  const TweetIndexPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _TweetIndexPageState();
+    return TweetIndexPageState();
   }
 }
 
-class _TweetIndexPageState extends State<TweetIndexPage>
+class TweetIndexPageState extends State<TweetIndexPage>
     with AutomaticKeepAliveClientMixin<TweetIndexPage>, SingleTickerProviderStateMixin {
   bool isDark = false;
+  int _currentNavIndex = 0;
 
   late TabController _tabController;
 
-  late BuildContext _myContext;
-
-  int _currentNavIndex = 0;
+  final GlobalKey<TweetIndexLiveTabState> _tweetLiveTakKey = GlobalKey();
 
   @override
   void initState() {
@@ -41,7 +35,7 @@ class _TweetIndexPageState extends State<TweetIndexPage>
 
     _tabController = TabController(vsync: this, length: 2);
     _tabController.addListener(() {
-      _handleNavChanged(_tabController.index);
+      _handleTabChanged(_tabController.index);
     });
 
     UMengUtil.userGoPage(UMengUtil.pageTweetIndex);
@@ -105,20 +99,14 @@ class _TweetIndexPageState extends State<TweetIndexPage>
     super.dispose();
   }
 
-  //设定Widget的偏移量
-  Offset floatingOffset = Offset(20, Application.screenHeight! - 180);
-  double middle = Application.screenWidth! / 2;
-  bool stickLeft = false;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    _myContext = context;
     isDark = ThemeUtil.isDark(context);
 
     return Consumer<MsgProvider>(builder: (_, msgProvider, __) {
       return Scaffold(
-        backgroundColor: Colours.lightScaffoldColor,
+          backgroundColor: Colours.lightScaffoldColor,
           appBar: PreferredSize(
             child:
                 AppBar(elevation: 0, backgroundColor: isDark ? Colours.darkScaffoldColor : Colours.lightScaffoldColor),
@@ -163,29 +151,31 @@ class _TweetIndexPageState extends State<TweetIndexPage>
                                     ]))
                           ])),
                       Expanded(
-                          child: TabBarView(controller: _tabController, children: [
-                        TweetIndexLiveTab(scrollController: widget.scrollController),
-                        TweetIndexHotTab()
-                      ]))
+                          child: TabBarView(
+                              controller: _tabController,
+                              children: [TweetIndexLiveTab(key: _tweetLiveTakKey), TweetIndexHotTab()]))
                     ])
               ])));
     });
   }
 
-  void _handleNavChanged(index) {
+  void _handleTabChanged(index) {
     if (index != _currentNavIndex) {
       setState(() {
         _currentNavIndex = index;
       });
     } else {
-      if (index == 0) {
-        _goTopForTweet();
-      }
+      goTopForTweet(index);
     }
   }
 
-  _goTopForTweet() {
-    widget.scrollController.animateTo(.0, duration: const Duration(milliseconds: 1688), curve: Curves.easeInOutQuint);
+  goTopForTweet(idx) {
+    idx ??= _currentNavIndex;
+    if (idx == 0) {
+      if (_tweetLiveTakKey.currentState != null) {
+        _tweetLiveTakKey.currentState!.goTop();
+      }
+    } else if (idx == 1) {}
   }
 
   @override
