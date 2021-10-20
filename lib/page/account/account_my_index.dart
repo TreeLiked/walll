@@ -18,6 +18,7 @@ import 'package:wall/model/response/result.dart';
 import 'package:wall/page/account/account_my_index_footprint.dart';
 import 'package:wall/page/account/account_my_index_his_tweet.dart';
 import 'package:wall/provider/account_local_provider.dart';
+import 'package:wall/util/account_profille_util.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/oss_util.dart';
@@ -116,11 +117,12 @@ class _AccountMyIndexPageState extends State<AccountMyIndexPage>
                                       const SizedBox(width: 20, height: 0),
                                       Expanded(
                                           child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(user.nick!,
-                                            style: const TextStyle(
-                                                color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.w500)),
-                                      )),
+                                              alignment: Alignment.center,
+                                              child: Text(user.nick!,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16.0,
+                                                      fontWeight: FontWeight.w500)))),
                                       SizedBox(
                                           width: 20,
                                           child: InkWell(
@@ -141,16 +143,15 @@ class _AccountMyIndexPageState extends State<AccountMyIndexPage>
                                     decoration:
                                         BoxDecoration(borderRadius: BorderRadius.circular(6.0), color: Colors.white),
                                     child: InkWell(
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(Icons.edit, size: 13.0, color: Colors.black),
-                                          Gaps.hGap2,
-                                          Text('编辑', style: TextStyle(color: Colors.black, fontSize: 13.0))
-                                        ],
-                                      ),
-                                    ),
+                                        child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: const [
+                                              Icon(Icons.edit, size: 13.0, color: Colors.black),
+                                              Gaps.hGap2,
+                                              Text('编辑', style: TextStyle(color: Colors.black, fontSize: 13.0))
+                                            ]),
+                                        onTap: () => NavigatorUtils.push(context, SettingRouter.profileEditPage)),
                                   ),
                                   Gaps.vGap30,
                                   RealRichText([
@@ -232,58 +233,13 @@ class _AccountMyIndexPageState extends State<AccountMyIndexPage>
 
   /// 更新头像
   void _updateAvatar(BuildContext context, AccountLocalProvider provider) async {
-    bool hasP = await PermissionUtil.checkAndRequestPhotos(context);
-    if (!hasP) {
-      ToastUtil.showToast(context, '未获取相册权限');
-      return;
-    }
-    XFile? _image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (_image == null) {
-      return;
-    }
-    File? file = await ImageCropper.cropImage(
-        sourcePath: _image.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        cropStyle: CropStyle.circle,
-        androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: '编辑',
-            toolbarColor: Colors.white,
-            toolbarWidgetColor: Colors.black,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: const IOSUiSettings(
-            title: '编辑',
-            hidesNavigationBar: true,
-            aspectRatioPickerButtonHidden: true,
-            doneButtonTitle: '完成',
-            cancelButtonTitle: '取消',
-            aspectRatioLockEnabled: true));
-    if (file == null) {
-      return;
-    }
-    Util.showDefaultLoadingWithBounds(context, text: '正在更新');
-    String? resultUrl = await OssUtil.uploadImage(file.path, file.readAsBytesSync(), OssUtil.destAvatar);
+    String? resultUrl = await AccountProfileUtil.updateAvatar(context);
     if (resultUrl == null) {
-      ToastUtil.showToast(context, '头像上传失败');
-      Navigator.pop(context);
-      return;
-    }
-    Result r = await MemberApi.modAccount(AccountEditParam(AccountEditKey.AVATAR, resultUrl));
-    if (!r.isSuccess) {
-      ToastUtil.showToast(context, '头像更新失败');
-      Navigator.pop(context);
       return;
     }
     setState(() {
       provider.account!.avatarUrl = resultUrl;
     });
-    Navigator.pop(context);
   }
 
   SliverList buildSliverList() {

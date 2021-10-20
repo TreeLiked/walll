@@ -11,10 +11,20 @@ class BottomCancelConfirmDialog extends StatelessWidget {
   final Color? confirmBgColor;
   final VoidCallback? onCancel;
   final VoidCallback? onConfirm;
+  final bool average;
+  final Widget? cancelItem;
 
   const BottomCancelConfirmDialog(
-      {Key? key, this.title, required this.content, this.confirmText = "确认", this.cancelText = '取消', this.onCancel, this
-          .onConfirm, this.confirmBgColor})
+      {Key? key,
+      this.title,
+      required this.content,
+      this.confirmText = "确认",
+      this.cancelText = '取消',
+      this.onCancel,
+      this.onConfirm,
+      this.confirmBgColor,
+      this.average = false,
+      this.cancelItem})
       : super(key: key);
 
   @override
@@ -34,13 +44,15 @@ class BottomCancelConfirmDialog extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  flex: 1,
-                  child: LongFlatButton(
-                      text:  Text(cancelText, style: const TextStyle(color: Colours.secondaryFontColor)),
-                      enabled: true,
-                      needGradient: false,
-                      onPressed: onCancel,
-                      bgColor: Colours.getFirstBorderColor(context))),
+                  flex: average ? 3 : 1,
+                  child: average
+                      ? cancelItem!
+                      : LongFlatButton(
+                          text: Text(cancelText, style: const TextStyle(color: Colours.secondaryFontColor)),
+                          enabled: true,
+                          needGradient: false,
+                          onPressed: onCancel,
+                          bgColor: Colours.getFirstBorderColor(context))),
               Gaps.hGap30,
               Expanded(
                   flex: 3,

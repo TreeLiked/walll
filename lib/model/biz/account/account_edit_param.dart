@@ -13,23 +13,23 @@ class AccountEditParam {
 }
 
 class AccountEditKey {
-  static const String AVATAR = "AVATAR";
-  static const String NICK = "NICK";
-  static const String SIGNATURE = "SIGNATURE";
-  static const String NAME = "NAME";
-  static const String MOBILE = "MOBILE";
-  static const String EMAIL = "EMAIL";
-  static const String GENDER = "GENDER";
-  static const String PROVINCE = "PROVINCE";
-  static const String CITY = "CITY";
-  static const String DISTRICT = "DISTRICT";
-  static const String QQ = "QQ";
-  static const String WECHAT = "WECHAT";
-  static const String BIRTHDAY = "BIRTHDAY";
+  static const String avatar = "AVATAR";
+  static const String nick = "NICK";
+  static const String signature = "SIGNATURE";
+  static const String name = "NAME";
+  static const String mobile = "MOBILE";
+  static const String email = "EMAIL";
+  static const String gender = "GENDER";
+  static const String province = "PROVINCE";
+  static const String city = "CITY";
+  static const String district = "DISTRICT";
+  static const String qq = "QQ";
+  static const String weChat = "WECHAT";
+  static const String birthday = "BIRTHDAY";
 
-  static const String INSTITUTE = "INSTITUTE";
-  static const String GRADE = "GRADE";
-  static const String MAJOR = "MAJOR";
-  static const String CLA = "CLA";
-  static const String STU_ID = "STU_ID";
+  static const String institute = "INSTITUTE";
+  static const String grade = "GRADE";
+  static const String major = "MAJOR";
+  static const String cal = "CLA";
+  static const String stuId = "STU_ID";
 }

@@ -297,7 +297,7 @@ class _HomePageState extends State<HomePage>
       );
     } else if (index == 2) {
       return Badge(
-          elevation: 0,
+          elevation: 1,
           shape: BadgeShape.circle,
           showBadge: Util.badgeHasData(provider.totalCnt),
           badgeColor: Colors.red,
