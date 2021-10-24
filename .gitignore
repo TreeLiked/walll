@@ -58,3 +58,4 @@ gen
 /android/.idea
 
 /test
+/lib/constant/app_constant.dart
