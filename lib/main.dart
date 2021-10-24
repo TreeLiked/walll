@@ -306,6 +306,22 @@ class _WallAppState extends State<WallApp> {
           debugShowCheckedModeBanner: false,
           theme: provider.getTheme(),
           darkTheme: provider.getTheme(isDarkMode: true),
+          builder: (context, child) => Scaffold(
+              body: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                      FocusManager.instance.primaryFocus!.unfocus();
+                    }
+                  },
+                  // onTap: () {
+                  //   FocusScopeNode currentFocus = FocusScope.of(context);
+                  //   if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                  //     FocusManager.instance.primaryFocus!.unfocus();
+                  //   }
+                  // },
+                  child: child)),
           home: const SplashPage(),
 //            home: SplashPage(),
           onGenerateRoute: Application.router!.generator,

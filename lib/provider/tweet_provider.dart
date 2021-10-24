@@ -60,6 +60,9 @@ class TweetProvider extends ChangeNotifier {
       ToastUtil.showToast(context, '回复失败，请稍后重试');
       return;
     }
+    print(tr.toJson());
+    print("--------------------");
+
     BaseTweet? targetTweet = displayTweets!.firstWhereOrNull((tweet) => tweet.id == tr.tweetId);
     targetTweet!.replyCount = targetTweet.replyCount! + 1;
     if (tr.type == 1) {
@@ -69,6 +72,7 @@ class TweetProvider extends ChangeNotifier {
     } else {
       // 子回复
       int parentId = tr.parentId!;
+      targetTweet.dirReplies ??= [];
       TweetReply tr2 = targetTweet.dirReplies!.firstWhere((dirReply) => dirReply.id == parentId);
       tr2.children ??= [];
       tr2.children!.add(tr);

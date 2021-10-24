@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wall/api/tweet_api.dart';
 import 'package:wall/application.dart';
 import 'package:wall/model/biz/common/page_param.dart';
@@ -20,10 +21,10 @@ class AccountHisTweetPage extends StatefulWidget {
 
 class _AccountHisTweetPageState extends State<AccountHisTweetPage>
     with AutomaticKeepAliveClientMixin<AccountHisTweetPage>, SingleTickerProviderStateMixin {
-  late EasyRefreshController _easyRefreshController;
+  late RefreshController _refreshController;
   late Function _getPushedTask;
 
-  final List<BaseTweet> _accountTweets = [];
+  List<BaseTweet> _accountTweets = [];
   int _currentPage = 1;
 
   Future<List<BaseTweet>> _getTweets(BuildContext context) async {
@@ -42,13 +43,13 @@ class _AccountHisTweetPageState extends State<AccountHisTweetPage>
   @override
   void initState() {
     super.initState();
-    _easyRefreshController = EasyRefreshController();
+    _refreshController = RefreshController();
     _getPushedTask = _getTweets;
   }
 
   @override
   void dispose() {
-    _easyRefreshController.dispose();
+    _refreshController.dispose();
     super.dispose();
   }
 
@@ -56,36 +57,38 @@ class _AccountHisTweetPageState extends State<AccountHisTweetPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Scaffold(
-      body:
-          CustomSliverFutureBuilder(futureFunc: _getPushedTask, builder: (context, data) => _buildBody(context, data)),
-    );
+    return
+          CustomSliverFutureBuilder(futureFunc: _getPushedTask, builder: (context, data) => _buildBody(context, data));
   }
 
   _buildBody(BuildContext context, dynamic data) {
-    return EasyRefresh(
-        controller: _easyRefreshController,
-        enableControlFinishLoad: true,
-        // footer: Emp(backgroundColor: Colors.lightBlueAccent),
-        footer: ClassicalFooter(
-            textColor: Colors.grey,
-            extent: 40.0,
-            noMoreText: '没有更多动态了哦 ～',
-            loadedText: '加载完成',
-            loadFailedText: '加载失败',
-            loadingText: '正在加载...',
-            loadText: '上滑加载',
-            loadReadyText: '释放加载',
-            showInfo: false,
-            enableHapticFeedback: true,
-            enableInfiniteLoad: true),
-        onLoad: _loadMoreData,
+    return SmartRefresher(
+        controller: _refreshController,
+        enablePullUp: true,
+        enablePullDown: true,
+        header: ClassicHeader(
+            iconPos: IconPosition.top,
+            refreshingText: '正在刷新',
+            releaseText: '释放以刷新',
+            idleText: '继续下滑',
+            failedText: '刷新失败',
+            completeText: '刷新完成',
+            outerBuilder: (child) {
+              return SizedBox(width: 80.0, child: Center(child: child));
+            }),
+        footer: const ClassicFooter(
+            loadingText: '正在加载更多...', canLoadingText: '释放以加载更多', noDataText: '- 我是有底线的 -', idleText: '继续上滑'),
+        onRefresh: _refresh,
+        onLoading: _loadMoreData,
         child: !CollUtil.isListEmpty(_accountTweets)
             ? ListView.builder(
                 itemCount: _accountTweets.length,
-                shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return TweetSelfItem(_accountTweets[index], indexInList: index);
+                  return TweetSelfItem(_accountTweets[index], indexInList: index, onDelete: (tweetId) {
+                    setState(() {
+                      _accountTweets.removeWhere((tweet) => tweet.id == tweetId);
+                    });
+                  });
                 })
             : const Center(
                 child: Padding(
@@ -98,7 +101,29 @@ class _AccountHisTweetPageState extends State<AccountHisTweetPage>
 
   Future<void> _loadMoreData() async {
     List<BaseTweet> tweets = await _getTweets(context);
-    _easyRefreshController.finishLoad(success: true, noMore: CollUtil.isListEmpty(tweets));
+    if (CollUtil.isListEmpty(tweets)) {
+      _refreshController.loadNoData();
+    } else {
+      _refreshController.loadComplete();
+    }
+  }
+
+  Future<void> _refresh() async {
+    _currentPage = 1;
+    List<BaseTweet> tweets =
+        await TweetApi.querySelfTweets(PageParam(1, pageSize: 5), Application.getAccountId!, needAnonymous: true);
+    if (CollUtil.isListNotEmpty(tweets)) {
+      setState(() {
+        _currentPage++;
+        _accountTweets = [];
+        _accountTweets.addAll(tweets);
+      });
+    } else {
+      setState(() {
+        _accountTweets = [];
+      });
+    }
+    _refreshController.refreshCompleted();
   }
 
   @override

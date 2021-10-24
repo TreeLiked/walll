@@ -11,10 +11,12 @@ class SettingRowItem extends StatelessWidget {
       this.content = "",
       this.prefixWidget,
       this.textAlign = TextAlign.start,
+      this.onLongPress,
       this.maxLines = 1})
       : super(key: key);
 
   final GestureTapCallback? onTap;
+  final GestureTapCallback? onLongPress;
   final String title;
   final String content;
   final TextAlign textAlign;
@@ -25,6 +27,7 @@ class SettingRowItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         // margin: const EdgeInsets.only(left: 15.0),
         padding: const EdgeInsets.fromLTRB(15, 15.0, 15.0, 15.0),

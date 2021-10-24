@@ -53,7 +53,6 @@ class TweetBodyWrapper extends StatelessWidget {
                       ])),
             style: TextStyle(
                 fontSize: fontSize,
-                fontWeight: FontWeight.w400,
                 height: height,
                 color: Colours.getEmphasizedTextColor(context))));
   }

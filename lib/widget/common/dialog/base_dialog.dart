@@ -25,22 +25,20 @@ class BaseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  AnimatedContainer(
+    return AnimatedContainer(
         alignment: Alignment.center,
         height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
         duration: const Duration(milliseconds: 120),
         curve: Curves.easeInCubic,
         child: Card(
-          child: Container(
-              decoration: BoxDecoration(
-                color: Colours.getScaffoldColor(context),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              width: 270.0,
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Colours.getScaffoldColor(context),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                width: 270.0,
+                padding: const EdgeInsets.only(top: 15.0),
+                child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                   Offstage(
                     offstage: hiddenTitle,
                     child: Padding(
@@ -54,26 +52,23 @@ class BaseDialog extends StatelessWidget {
                   Flexible(child: child),
                   Gaps.vGap8,
                   Gaps.line,
-                  Row(
-                    children: <Widget>[
-                      showCancel
-                          ? Expanded(
-                        child: SizedBox(height: 48.0, child: leftBtnItem),
-                      )
-                          : const VEmptyView(0),
-                      const SizedBox(
-                        height: 48.0,
-                        width: 0.6,
-                        child: VerticalDivider(),
-                      ),
-                      Expanded(
-                        child: SizedBox(height: 48.0, child: rightBtnItem),
-                      )
-                    ],
-                  )
-                ],
-              )),
-        ),
-      );
+                  Row(children: <Widget>[
+                    showCancel
+                        ? Expanded(
+                            child: SizedBox(height: 48.0, child: leftBtnItem),
+                          )
+                        : const VEmptyView(0),
+                    showCancel
+                        ? const SizedBox(
+                            height: 48.0,
+                            width: 0.6,
+                            child: VerticalDivider(),
+                          )
+                        : const VEmptyView(0),
+                    Expanded(
+                      child: SizedBox(height: 48.0, child: rightBtnItem),
+                    )
+                  ])
+                ]))));
   }
 }

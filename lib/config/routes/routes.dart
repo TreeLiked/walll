@@ -7,6 +7,7 @@
  * See LICENSE for distribution and usage details.
  */
 import 'package:fluro/fluro.dart';
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart' hide Router;
 import 'package:wall/config/routes/noti_router.dart';
 import 'package:wall/config/routes/route_handlers.dart';
@@ -15,6 +16,7 @@ import 'package:wall/config/routes/setting_router.dart';
 import 'package:wall/page/login/login_page.dart';
 import 'package:wall/page/splash_page.dart';
 import 'package:wall/page/tweet/tweet_create_page.dart';
+import 'package:wall/page/webview_page.dart';
 import 'package:wall/widget/common/widget_not_found.dart';
 
 import 'login_router.dart';
@@ -50,20 +52,19 @@ class Routes {
 
   static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
-      print("没有找到路由页面");
+      LogUtil.d("没有找到路由页面$params");
       return const WidgetNotFound();
     });
 
-    // router.define(webViewPage, handler: Handler(handlerFunc: (_, params) {
-    //   // TODO 这里跳转编码问题
-    //   String title = params['title']?.first;
-    //   String url = params['url']?.first;
-    //   String source = params['source']?.first;
-    //   return WebViewPage(title: title, url: url, source: source);
-    // }));
-    //
+    router.define(webViewPage, handler: Handler(handlerFunc: (_, params) {
+      String? title = params['title']?.first;
+      String? url = params['url']?.first;
+      String? source = params['source']?.first;
+      return WebViewPage(title: title ?? "网页", url: url!, source: source);
+    }));
+
     router.define(splash, handler: Handler(handlerFunc: (_, params) {
-      return SplashPage();
+      return const SplashPage();
     }));
     //
     // router.define(tweetDetail, handler: Handler(handlerFunc: (_, params) {

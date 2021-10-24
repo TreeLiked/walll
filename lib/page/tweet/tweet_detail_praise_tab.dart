@@ -20,11 +20,11 @@ class TweetDetailPraiseTab extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _TweetDetailPraiseTabState();
+    return TweetDetailPraiseTabState();
   }
 }
 
-class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
+class TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   List<TweetAccount>? _praiseList;
@@ -52,11 +52,10 @@ class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
               alignment: Alignment.topCenter,
               margin: const EdgeInsets.only(top: 60),
               child: _praiseList == null
-                  ? SpinKitDualRing(color: TweetTypeUtil.parseType(widget._tweet!.type).color, size: 13, lineWidth: 2)
+                  ? SpinKitDualRing(color: TweetTypeUtil.parseType(widget._tweet!.type).color, size: 16, lineWidth: 2)
                   : const Text('点个赞支持一下吧～', style: TextStyle(color: Colours.secondaryFontColor, fontSize: 13.0))));
     }
-    return Scaffold(
-        body: SmartRefresher(
+    return SmartRefresher(
             controller: _refreshController,
             enablePullDown: false,
             enablePullUp: true,
@@ -74,7 +73,7 @@ class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
               canLoadingText: '释放以加载更多',
               noDataText: '- 到底了哦 -',
               idleText: '继续上滑',
-            )));
+            ));
   }
 
   _loadData() async {
@@ -100,7 +99,7 @@ class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
   _renderPraiseItem(BuildContext context, int index, TweetAccount acc) {
     return Container(
       height: 40,
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 30),
       child: ListTile(
           leading: AccountAvatar(
               size: 40,
@@ -110,7 +109,7 @@ class _TweetDetailPraiseTabState extends State<TweetDetailPraiseTab> {
               cache: false,
               gender: Gender.parseGender(acc.gender),
               onTap: () => NavigatorUtils.goAccountProfileByTweetAcc(context, acc)),
-          contentPadding: const EdgeInsets.only(right: 10.0),
+          contentPadding: const EdgeInsets.only(right: 15.0),
           title: GestureDetector(
             onTap: () => NavigatorUtils.goAccountProfileByTweetAcc(context, acc),
             child: Text(acc.nick ?? "",

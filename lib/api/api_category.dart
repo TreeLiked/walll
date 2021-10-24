@@ -21,15 +21,19 @@ class Api {
   static const String apiBaseAlUrl = (devInf ? apiBaseAlDev : apiBaseAl) + "/iap/api";
   static const String apiBaseTrUrl = (devMem ? apiBaseTrDev : apiBaseTr) + "/trms/api";
 
+  // 分享页面
+  static const String sharePageUrl = "https://almond-donuts.iutr.tech/download.html";
+  static const String agreementUrl = "https://almond-donuts.iutr.tech/terms.html";
+
   // tweet
   static const String tweetCreate = "/tweet/add.do";
-  static const String API_TWEET_DELETE = apiBaseAlUrl + "/tweet/d.do";
+  static const String deleteTweet = apiBaseAlUrl + "/tweet/d.do";
   static const String getSingleTweet = "/tweet/listSingle.json";
   static const String API_TWEET_QUERY = "/tweet/list.json";
   static const String apiGetTweet = "/tweet/listUni.json";
   static const String querySelfTweet = "/tweet/account/pushed.json";
   static const String API_TWEET_QUERY_PUBLIC = "/tweet/account/publicPushed.json";
-  static const String API_TWEET_MEDIA_UPLOAD_REQUEST = "/tweet/media/generate.json";
+  // static const String API_TWEET_MEDIA_UPLOAD_REQUEST = "/tweet/media/generate.json";
 
   // tweet operation
   static const String operateTweetInteract = "/tweet/opt/opt.do";
@@ -40,26 +44,26 @@ class Api {
   static const String API_TWEET_HOT_QUERY = "/tweet/listHot.json";
 
   // tweet reply
-  static const String API_TWEET_REPLY_CREATE = "/tweet/reply/add.do";
-  static const String API_TWEET_REPLY_QUERY = "/tweet/reply/list.json";
-  static const String API_TWEET_REPLY_DELETE = "/tweet/reply/del.do";
+  static const String sendTweetReply = "/tweet/reply/add.do";
+  static const String queryTweetReply = "/tweet/reply/list.json";
+  static const String deleteTweetReply = "/tweet/reply/del.do";
 
   // circle relative start
-  static const String API_CIRCLE_INDEX_LIST = Api.apiBaseAlUrl + "/circle/list.json";
-  static const String API_CIRCLE_LIST_ME = Api.apiBaseAlUrl + "/circle/listM.json";
-  static const String API_CIRCLE_CREATE = Api.apiBaseAlUrl + "/circle/add.do";
-  static const String API_CIRCLE_QUERY_SINGLE = Api.apiBaseAlUrl + "/circle/listSingle.json";
-  static const String API_CIRCLE_QUERY_SINGLE_DETAIL = Api.apiBaseAlUrl + "/circle/listSingle.json";
-
-  static const String API_CIRCLE_APPLY_JOIN = Api.apiBaseAlUrl + "/circleacc/applyJoin.do";
-  static const String API_CIRCLE_APPLY_HANDLE = Api.apiBaseAlUrl + "/circleacc/handleApply.do";
-  static const String API_CIRCLE_ACCOUNT_LIST = Api.apiBaseAlUrl + "/circleacc/list.json";
-  static const String API_CIRCLE_ACCOUNT_SINGLE = Api.apiBaseAlUrl + "/circleacc/me.json";
-
-  static const String API_CIRCLE_UPDATE_ROLE = Api.apiBaseAlUrl + "/circleacc/updateUserRole.do";
-
-  static const String API_CIRCLE_TWEET_CRATE = Api.apiBaseAlUrl + "/circletweet/add.do";
-  static const String API_CIRCLE_TWEET_LIST = Api.apiBaseAlUrl + "/circletweet/list.json";
+  // static const String API_CIRCLE_INDEX_LIST = Api.apiBaseAlUrl + "/circle/list.json";
+  // static const String API_CIRCLE_LIST_ME = Api.apiBaseAlUrl + "/circle/listM.json";
+  // static const String API_CIRCLE_CREATE = Api.apiBaseAlUrl + "/circle/add.do";
+  // static const String API_CIRCLE_QUERY_SINGLE = Api.apiBaseAlUrl + "/circle/listSingle.json";
+  // static const String API_CIRCLE_QUERY_SINGLE_DETAIL = Api.apiBaseAlUrl + "/circle/listSingle.json";
+  //
+  // static const String API_CIRCLE_APPLY_JOIN = Api.apiBaseAlUrl + "/circleacc/applyJoin.do";
+  // static const String API_CIRCLE_APPLY_HANDLE = Api.apiBaseAlUrl + "/circleacc/handleApply.do";
+  // static const String API_CIRCLE_ACCOUNT_LIST = Api.apiBaseAlUrl + "/circleacc/list.json";
+  // static const String API_CIRCLE_ACCOUNT_SINGLE = Api.apiBaseAlUrl + "/circleacc/me.json";
+  //
+  // static const String API_CIRCLE_UPDATE_ROLE = Api.apiBaseAlUrl + "/circleacc/updateUserRole.do";
+  //
+  // static const String API_CIRCLE_TWEET_CRATE = Api.apiBaseAlUrl + "/circletweet/add.do";
+  // static const String API_CIRCLE_TWEET_LIST = Api.apiBaseAlUrl + "/circletweet/list.json";
 
   // sms
   static const String apiSendVerificationCode = apiBaseAlUrl + "/sms/send.do";

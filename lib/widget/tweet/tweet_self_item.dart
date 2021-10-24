@@ -1,39 +1,38 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:wall/api/tweet_api.dart';
 import 'package:wall/application.dart';
 import 'package:wall/config/routes/routes.dart';
-import 'package:wall/constant/asset_path_constant.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
+import 'package:wall/constant/text_constant.dart';
 import 'package:wall/model/biz/account/account.dart';
-import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/model/biz/common/media.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
 import 'package:wall/model/biz/tweet/tweet_account.dart';
+import 'package:wall/model/response/result.dart';
+import 'package:wall/page/tweet/tweet_detail_page.dart';
+import 'package:wall/util/bottom_sheet_util.dart';
 import 'package:wall/util/coll_util.dart';
+import 'package:wall/util/common_util.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
 import 'package:wall/util/time_util.dart';
-import 'package:wall/widget/common/account_avatar.dart';
+import 'package:wall/util/toast_util.dart';
 import 'package:wall/widget/tweet/tweet_body_wrapper.dart';
-import 'package:fluro/fluro.dart';
-import 'package:wall/widget/tweet/tweet_index_item_header.dart';
 import 'package:wall/widget/tweet/tweet_media_wrapper.dart';
-import 'package:wall/widget/tweet/tweet_praise_wrapper.dart';
 
 class TweetSelfItem extends StatelessWidget {
   final BaseTweet tweet;
+  final Function onDelete;
 
   late BuildContext context;
   late bool isDark;
-
   late int indexInList;
 
-  TweetSelfItem(
-    this.tweet, {
-    this.indexInList = -1,
-  }) {}
+  TweetSelfItem(this.tweet, {Key? key, this.indexInList = -1, required this.onDelete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,61 +46,21 @@ class TweetSelfItem extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 0.0, top: indexInList == 0 ? 12.0 : 10.0, left: 10.0, right: 15.0),
         // color: isDark ? Colours.dark_bg_color : Colors.white,
         child: GestureDetector(
-          onTap: () => _forwardDetail(context),
-          behavior: HitTestBehavior.translucent,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Flexible(
-                flex: 5,
-                fit: FlexFit.loose,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildHeader(),
-//                    TweetTypeWrapper(tweet.type),
-
-                    // Gaps.vGap2,
-                    TweetBodyWrapper(tweet.body, maxLine: 3, fontSize: 15, height: 1.6),
-                    // TweetMediaWrapper(tweet.id!, medias: tweet.medias, tweet: tweet),
-                    _buildMediaText(),
-                    // displayLink ? TweetLinkWrapper(tweet) : Gaps.empty,
-                    Gaps.vGap8,
-
-                    // TweetPraiseWrapper(tweet, prefixIcon: true),
-                    // TweetCampusWrapper(
-                    //   tweet.id,
-                    //   tweet.account.institute,
-                    //   tweet.account.cla,
-                    //   tweet.type,
-                    //   tweet.anonymous,
-                    //   displayType: displayType,
-                    // ),
-                    // displayExtra
-                    //     ? TweetCardExtraWrapper(
-                    //         displayPraise: displayPraise,
-                    //         displayComment: displayComment,
-                    //         tweet: tweet,
-                    //         canPraise: canPraise,
-                    //         onClickComment: onClickComment)
-                    //     : Gaps.empty,
-//                    displayComment && tweet.enableReply
-//                        ? TweetCommentWrapper(
-//                      tweet,
-//                      displayReplyContainerCallback: displayReplyContainerCallback,
-//                    )
-//                        : Gaps.empty,
-//                    displayComment ? Gaps.vGap25 : Gaps.vGap10,
-                    _buildViewText(),
-                    Gaps.line,
-                    Gaps.vGap5
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
+            onTap: () => _forwardDetail(context),
+            behavior: HitTestBehavior.opaque,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildHeader(),
+                TweetBodyWrapper(tweet.body, maxLine: 3, fontSize: 15, height: 1.6),
+                _buildMediaText(),
+                Gaps.vGap8,
+                _buildViewText(),
+                Gaps.line,
+                Gaps.vGap5
+              ],
+            )));
     return wd;
   }
 
@@ -109,8 +68,27 @@ class TweetSelfItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[Container(margin: const EdgeInsets.only(bottom: 5.0), child: _timeLeftContainer(context))],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Container(margin: const EdgeInsets.only(bottom: 5.0), child: _timeLeftContainer(context)),
+        GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              BottomSheetUtil.showBottomSheetView(context, [
+                BottomSheetItem(const Icon(Icons.clear, color: Colors.red), '删除动态', () async {
+                  Util.showDefaultLoadingWithBounds(context);
+                  Result r = await TweetApi.deleteAccountTweets(Application.getAccountId, tweet.id!);
+                  NavigatorUtils.goBack(context, len: 2);
+                  if (r.isSuccess) {
+                    onDelete(tweet.id!);
+                  } else {
+                    ToastUtil.showToast(context, '删除失败');
+                  }
+                })
+              ]);
+            },
+            child: const Icon(Icons.more_horiz_rounded, color: Colors.grey, size: 20))
+      ],
     );
   }
 
@@ -138,8 +116,8 @@ class TweetSelfItem extends StatelessWidget {
   _buildViewText() {
     return Padding(
         padding: const EdgeInsets.only(top: 10.0),
-        child:
-            Text('浏览${tweet.views ?? 1}次', style: const TextStyle(fontSize: 14.0, color: Colours.secondaryFontColor)));
+        child: Text('浏览${tweet.views ?? 1}次$pointSeparator${tweet.praise}点赞$pointSeparator${tweet.replyCount}评论',
+            style: const TextStyle(fontSize: 14.0, color: Colours.secondaryFontColor)));
   }
 
   Widget _timeLeftContainer(BuildContext context) {
@@ -174,8 +152,7 @@ class TweetSelfItem extends StatelessWidget {
         spans.add(
           const TextSpan(text: ' | ', style: TextStyle(color: Colors.grey, fontSize: 15.0)),
         );
-        spans.add(TextSpan(
-            text: '${tweetSent.year}年', style: const TextStyle(fontSize: 15.0, color: Colors.grey)));
+        spans.add(TextSpan(text: '${tweetSent.year}年', style: const TextStyle(fontSize: 15.0, color: Colors.grey)));
       }
     }
     return RichText(
@@ -187,15 +164,10 @@ class TweetSelfItem extends StatelessWidget {
 
   void _forwardDetail(BuildContext context) {
     // TODO 跳转详情
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => TweetDetail(
-    //             this.tweet,
-    //             newLink: !displayLink,
-    //             onDelete: onDetailDelete,
-    //           )),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TweetDetailPage(tweet: tweet, tweetId: tweet.id!), maintainState: true),
+    );
   }
 
   void goAccountDetail(BuildContext context, Account account, bool up) {

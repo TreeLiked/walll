@@ -11,7 +11,7 @@ class Colours {
   // 可点击的action btn
   static const Color actionClickable = Color(0xFF4facfe);
 
-  static const Color textLinkColor = Color(0xFF1E90FF);
+  static const Color textLinkColor = Colors.blueAccent;
 
   static const Color emphasizeFontColor = Color(0xFF000000);
   static const Color emphasizeFontColorDark = Color(0xFFEFF1F3);

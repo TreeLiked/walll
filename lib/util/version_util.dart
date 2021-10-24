@@ -6,6 +6,7 @@ import 'package:wall/constant/app_constant.dart';
 import 'package:wall/model/biz/version/pub_v.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/util/toast_util.dart';
+import 'package:wall/widget/setting/app_update_dialog.dart';
 
 import '../application.dart';
 
@@ -28,8 +29,7 @@ class VersionUtils {
         context: context,
         barrierDismissible: !forceUpdate,
         builder: (BuildContext context) {
-          return Text("111");
-          // return UpdateDialog(version, forceUpdate);
+          return AppUpdateDialog(version, forceUpdate);
         });
   }
 

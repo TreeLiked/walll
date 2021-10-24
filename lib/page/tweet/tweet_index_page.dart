@@ -33,7 +33,7 @@ class TweetIndexPageState extends State<TweetIndexPage>
   void initState() {
     super.initState();
 
-    _tabController = TabController(vsync: this, length: 2);
+    _tabController = TabController(vsync: this, length: 1);
     _tabController.addListener(() {
       _handleTabChanged(_tabController.index);
     });
@@ -147,13 +147,14 @@ class TweetIndexPageState extends State<TweetIndexPage>
                                     labelPadding: const EdgeInsets.only(left: 10.0, right: 6.0),
                                     tabs: const [
                                       Padding(padding: EdgeInsets.only(bottom: 6.0), child: Text('最新')),
-                                      Padding(padding: EdgeInsets.only(bottom: 6.0), child: Text('热门'))
+                                      // Padding(padding: EdgeInsets.only(bottom: 6.0), child: Text('热门'))
                                     ]))
                           ])),
                       Expanded(
-                          child: TabBarView(
-                              controller: _tabController,
-                              children: [TweetIndexLiveTab(key: _tweetLiveTakKey), TweetIndexHotTab()]))
+                          child: TabBarView(controller: _tabController, children: [
+                        TweetIndexLiveTab(key: _tweetLiveTakKey)
+                        // TweetIndexHotTab()
+                      ]))
                     ])
               ])));
     });

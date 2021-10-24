@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' as su;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:wall/api/device_api.dart';
@@ -23,12 +24,9 @@ import 'coll_util.dart';
 import 'navigator_util.dart';
 
 class Util {
-  static void displayDialog(
-    BuildContext context,
-    Widget dialog, {
-    bool barrierDismissible = false,
-  }) {
-    showDialog(context: context, barrierDismissible: barrierDismissible, builder: (_) => dialog);
+
+  static void copyTextToClipBoard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
   }
 
   static void showDefaultLoading(BuildContext context, {double size = 30, Function? call}) {

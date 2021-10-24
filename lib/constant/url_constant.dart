@@ -12,4 +12,8 @@ class UrlCst {
 
   static const String defaultFemaleAvatar =
       "https://iutr-media.oss-cn-hangzhou.aliyuncs.com/almond-donuts/default/default_female_avatar.png";
+
+  // 需要加上当前版本号
+  static const String guideImgPrefix = "https://iutr-media.oss-cn-hangzhou.aliyuncs.com/almond-donuts/image/guide/2.4"
+      ".0_1.png";
 }

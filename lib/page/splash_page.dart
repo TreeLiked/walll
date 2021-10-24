@@ -28,14 +28,14 @@ import 'package:wall/page/account/account_profile_index.dart';
 import 'package:wall/page/home_page.dart';
 import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/provider/theme_provider.dart';
+import 'package:wall/util/asset_util.dart';
 import 'package:wall/util/http_util.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/umeng_util.dart';
 
 import '../application.dart';
 
-class
-SplashPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
@@ -218,7 +218,8 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    prefix0.ScreenUtil.init(BoxConstraints(maxWidth: width, maxHeight: height), designSize: MediaQuery.of(context).size);
+    prefix0.ScreenUtil.init(BoxConstraints(maxWidth: width, maxHeight: height),
+        designSize: MediaQuery.of(context).size);
 
     Application.screenWidth = width;
     Application.screenHeight = height;
@@ -232,7 +233,7 @@ class _SplashPageState extends State<SplashPage> {
         children: [
           Swiper(
               itemBuilder: (BuildContext context, int index) {
-                // return LoadAssetImage("guide/${index + 1}", width: double.infinity, height: double.infinity);
+                return LoadAssetImage("guide/${index + 1}", width: double.infinity, height: double.infinity);
                 // return CachedNetworkImage(
                 //     imageUrl: _guideImages[index],
                 //     width: double.infinity,
@@ -241,7 +242,7 @@ class _SplashPageState extends State<SplashPage> {
                 //     height: double.infinity,
                 //     fadeInCurve: Curves.linear);
                 // TODO 111
-                return Text("111");
+                // return Text("111");
               },
               onIndexChanged: (index) {
                 setState(() {
@@ -252,21 +253,16 @@ class _SplashPageState extends State<SplashPage> {
               layout: SwiperLayout.DEFAULT,
               itemCount: _guideLen),
           Positioned(
-            top: prefix0.ScreenUtil().setHeight(30) + prefix0.ScreenUtil().statusBarHeight,
-            right: prefix0.ScreenUtil().setWidth(60),
+            top: prefix0.ScreenUtil().statusBarHeight + 30,
+            right: prefix0.ScreenUtil().setWidth(30),
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: Colors.black12,
-              ),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.black12),
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
               child: GestureDetector(
                 // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                child: Text(
-                  _currentGuideIndex == _guideLen - 1 ? "完成" : "跳过",
-                  style: TextStyle(fontSize: SizeCst.normalFontSize, color: Colors.black54),
-                ),
+                child: Text(_currentGuideIndex == _guideLen - 1 ? "完成" : "跳过",
+                    style: const TextStyle(fontSize: 15, color: Colors.black54)),
                 onTap: () {
                   setState(() {
                     _status = 1;
@@ -278,16 +274,13 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
           Positioned(
-            bottom: prefix0.ScreenUtil().setHeight(200),
+            bottom: 100,
             left: 0,
             child: Container(
-              // height: 100,
               width: Application.screenWidth,
               alignment: Alignment.center,
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                ),
+                decoration: const BoxDecoration(color: Colors.black12),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -314,8 +307,7 @@ class _SplashPageState extends State<SplashPage> {
                 height: double.infinity,
                 fadeInCurve: Curves.linear,
               ),
-              onTap: () => NavigatorUtils.goWebViewPage(
-                  context, _adValueMap!["jumpTitle"], _adValueMap!["jumpUrl"],
+              onTap: () => NavigatorUtils.goWebViewPage(context, _adValueMap!["jumpTitle"], _adValueMap!["jumpUrl"],
                   source: "1"),
             ),
             Positioned(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wall/config/routes/routes.dart';
 import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/tweet/tweet_account.dart';
+import 'package:wall/page/home_page.dart';
 import 'package:wall/util/fluro_convert_utils.dart';
 
 import '../application.dart';
@@ -35,9 +36,11 @@ class NavigatorUtils {
   }
 
   /// 返回
-  static void goBack(BuildContext context) {
+  static void goBack(BuildContext context, {int len = 1}) {
     FocusScope.of(context).unfocus();
-    Navigator.pop(context);
+    while (len-- > 0) {
+      Navigator.pop(context);
+    }
   }
 
   /// 带参数返回
@@ -62,13 +65,13 @@ class NavigatorUtils {
         '${Routes.webViewPage}?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(url)}&source=$source');
   }
 
-static void goAccountProfileByAcc(BuildContext context, Account account) {
-  push(
-      context,
-      Routes.accountProfile +
-          FluroConvertUtils.packConvertArgs(
-              {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
-}
+  static void goAccountProfileByAcc(BuildContext context, Account account) {
+    push(
+        context,
+        Routes.accountProfile +
+            FluroConvertUtils.packConvertArgs(
+                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+  }
 
   static void goAccountProfileByTweetAcc(BuildContext context, TweetAccount account) {
     push(
@@ -77,6 +80,7 @@ static void goAccountProfileByAcc(BuildContext context, Account account) {
             FluroConvertUtils.packConvertArgs(
                 {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
   }
+
 //
 // static void goAccountProfile3(BuildContext context, CircleAccount account) {
 //   if (account == null) {
@@ -111,10 +115,7 @@ static void goAccountProfileByAcc(BuildContext context, Account account) {
 //   );
 // }
 //
-// static void goIndex(BuildContext context) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(builder: (context) => Index()),
-//   );
-// }
+  static void goIndex(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+  }
 }

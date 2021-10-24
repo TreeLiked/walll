@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:wall/api/invite_api.dart';
 import 'package:wall/application.dart';
+import 'package:wall/config/routes/setting_router.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/constant/shared_constant.dart';
@@ -19,7 +20,6 @@ import 'package:wall/widget/common/custom_app_bar.dart';
 import 'package:wall/widget/common/dialog/bottom_cancel_confirm.dart';
 import 'package:wall/widget/common/real_rich_text.dart';
 import 'package:wall/widget/setting/setting_row_item.dart';
-import 'package:wall/widget/setting/system_exit_dialog.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({Key? key}) : super(key: key);
@@ -87,34 +87,24 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(title: '设置',),
+        appBar: const CustomAppBar(
+          title: '设置',
+        ),
         body: Consumer<AccountLocalProvider>(builder: (_, provider, __) {
           return SingleChildScrollView(
               child: Column(children: <Widget>[
             SettingRowItem(title: '我的组织', content: Application.getOrgName!),
-            SettingRowItem(
-              title: '个人资料',
-              onTap: () {},
-            ),
-            SettingRowItem(
-              title: '隐私设置',
-              onTap: () {},
-            ),
+            SettingRowItem(title: '个人资料', onTap: () => NavigatorUtils.push(context, SettingRouter.profileEditPage)),
+            // SettingRowItem(title: '隐私设置', onTap: () {}),
             Gaps.line,
             SettingRowItem(
               title: '深色模式',
               content: _themeModeStr,
               onTap: () => _handleClickThemeItem(context),
             ),
-            SettingRowItem(
-              title: '其它设置',
-              onTap: () {},
-            ),
+            SettingRowItem(title: '其它设置', onTap: () => NavigatorUtils.push(context, SettingRouter.otherSettingPage)),
             Gaps.line,
-            SettingRowItem(
-              title: '关于我们',
-              onTap: () {},
-            ),
+            SettingRowItem(title: '关于我们', onTap: () => NavigatorUtils.push(context, SettingRouter.aboutSettingPage)),
             _onInvite
                 ? SettingRowItem(
                     title: '我的内测',
@@ -127,11 +117,11 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
                   BottomSheetUtil.showBottomSheet(
                       context,
                       0.3,
-                      BottomCancelConfirmDialog(
+                      BottomLeftRightDialog(
                         content: '确认退出登录吗',
-                        onCancel: () => NavigatorUtils.goBack(context),
-                        confirmBgColor: Colors.orangeAccent,
-                        onConfirm: () {
+                        onClickLeft: () => NavigatorUtils.goBack(context),
+                        rightBgColor: Colors.orangeAccent,
+                        onClickRight: () {
                           Util.loginOut(context);
                         },
                       ));

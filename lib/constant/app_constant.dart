@@ -6,7 +6,7 @@ class AppCst {
 
   /// 版本信息
   static const int versionIdAndroid = 40;
-  static const int versionIdIos = 40;
+  static const int versionIdIos = 20;
   static const String versionRemarkAndroid = "4.0.0";
   static const String versionRemarkIos = "4.0.0";
 

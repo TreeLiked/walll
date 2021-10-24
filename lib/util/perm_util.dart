@@ -89,11 +89,11 @@ class PermissionUtil {
     BottomSheetUtil.showBottomSheet(
         context,
         0.4,
-        BottomCancelConfirmDialog(
+        BottomLeftRightDialog(
             content: content,
             title: title,
-            confirmText: '去设置',
-            onCancel: () => NavigatorUtils.goBack(context),
-            onConfirm: () async => await openAppSettings()));
+            rightText: '去设置',
+            onClickLeft: () => NavigatorUtils.goBack(context),
+            onClickRight: () async => await openAppSettings()));
   }
 }

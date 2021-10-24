@@ -81,7 +81,7 @@ class InteractionMessageItem extends StatelessWidget {
     } else {
       return Gaps.empty;
     }
-    if (account == null && !accountAnonymous) {
+    if (account == null || accountAnonymous) {
       return Gaps.empty;
     }
 
@@ -93,8 +93,7 @@ class InteractionMessageItem extends StatelessWidget {
           if (mstT == MessageType.TWEET_PRAISE || mstT == MessageType.TWEET_REPLY) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => TweetDetailPage(tweetId: refId)),
+              MaterialPageRoute(builder: (context) => TweetDetailPage(tweetId: refId)),
             );
           } else if (mstT == MessageType.TOPIC_REPLY) {
             // NavigatorUtils.push(context, SquareRouter.topicDetail + "?topicId=$refId");
@@ -129,7 +128,7 @@ class InteractionMessageItem extends StatelessWidget {
                         child: AccountAvatar(
                             cache: true,
                             size: 40.0,
-                            avatarUrl: account!.avatarUrl!,
+                            avatarUrl: account.avatarUrl!,
                             anonymous: accountAnonymous,
                             onTap: () => _handleGoAccount(context, account!)))
                   ],

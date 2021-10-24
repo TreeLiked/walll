@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:wall/api/member_api.dart';
+import 'package:wall/application.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
+import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/account/account_edit_param.dart';
 import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/provider/account_local_provider.dart';
 import 'package:wall/util/account_profille_util.dart';
 import 'package:wall/util/bottom_sheet_util.dart';
+import 'package:wall/util/common_util.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -37,15 +41,32 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
   final FocusNode sigFocusNode = FocusNode();
 
   bool isDark = false;
+  BuildContext? _context;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      _getAccountProfile();
+    });
+  }
+
+  // 获取更详细在的资料
+  Future<void> _getAccountProfile() async {
+    Util.showDefaultLoadingWithBounds(_context!);
+    Account? acc = await MemberApi.getAccountProfile(Application.getAccountId!);
+    NavigatorUtils.goBack(_context!);
+    if (acc == null) {
+      NavigatorUtils.goBack(_context!);
+      return;
+    }
+    Provider.of<AccountLocalProvider>(context, listen: false).setAccount(acc);
   }
 
   @override
   Widget build(BuildContext context) {
     isDark = ThemeUtil.isDark(context);
+    _context = context;
 
     return Scaffold(
         appBar: const CustomAppBar(title: '编辑个人资料', isBack: true),
@@ -155,7 +176,7 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
   }
 
   _buildGenderItem(BuildContext context, AccountLocalProvider provider) {
-    var gender = Gender.parseGender(provider.account!.gender);
+    var gender = Gender.parseGender(provider.account!.profile!.gender);
 
     void updateGender(Gender ng) {
       if (gender.name == ng.name) {
@@ -163,7 +184,7 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
         return;
       }
       AccountProfileUtil.updateProfileItem(context, AccountEditParam(AccountEditKey.gender, ng.name), (_) {
-        _render(() => provider.account!.gender = ng.name);
+        _render(() => provider.account!.profile!.gender = ng.name);
         ToastUtil.showToast(context, '更新成功');
         NavigatorUtils.goBack(context);
       });
@@ -182,28 +203,28 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
         onTap: () => BottomSheetUtil.showBottomSheet(
             context,
             0.3,
-            BottomCancelConfirmDialog(
+            BottomLeftRightDialog(
                 average: true,
                 content: '请选择您的性别',
-                cancelItem: LongFlatButton(
+                leftItem: LongFlatButton(
                     text: const Text('女', style: TextStyle(color: Colors.white)),
                     enabled: true,
                     needGradient: false,
                     onPressed: () => updateGender(Gender.female),
                     bgColor: Colours.feMaleMainColor),
-                confirmBgColor: Colours.maleMainColor,
-                confirmText: '男',
-                onConfirm: () => updateGender(Gender.male))));
+                rightBgColor: Colours.maleMainColor,
+                rightText: '男',
+                onClickRight: () => updateGender(Gender.male))));
   }
 
   _buildBirthItem(BuildContext context, AccountLocalProvider provider) {
-    var birth = provider.account!.birthDay;
+    var birth = provider.account!.profile!.birthday;
     var birthStr = birth != null ? DateUtil.formatDate(birth, format: DateFormats.y_mo_d) : "未设置";
 
     void _updateBirth(DateTime newBirth) {
       String dateFormat = DateUtil.formatDate(newBirth, format: DateFormats.full);
       AccountProfileUtil.updateProfileItem(context, AccountEditParam(AccountEditKey.birthday, dateFormat), (res) {
-        _render(() => provider.account!.birthDay = newBirth);
+        _render(() => provider.account!.profile!.birthday = newBirth);
       });
     }
 
@@ -252,8 +273,8 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
       }
     }
 
-    var acc = provider.account!;
-    var areaStr = _assembleAreaStr(acc.province, acc.city, acc.district);
+    var accProfile = provider.account!.profile!;
+    var areaStr = _assembleAreaStr(accProfile.province, accProfile.city, accProfile.district);
 
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -283,24 +304,24 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
             return;
           }
           bool update = false;
-          if (result.provinceName != null && result.provinceName != acc.province) {
+          if (result.provinceName != null && result.provinceName != accProfile.province) {
             update = true;
             AccountProfileUtil.updateProfileItem(
                 context,
                 AccountEditParam(AccountEditKey.province, result.provinceName!),
-                (_) => _render(() => provider.account!.province = result.provinceName),
+                (_) => _render(() => provider.account!.profile!.province = result.provinceName),
                 autoLoading: false);
           }
-          if (result.cityName != null && result.cityName != acc.city) {
+          if (result.cityName != null && result.cityName != accProfile.city) {
             update = true;
             AccountProfileUtil.updateProfileItem(context, AccountEditParam(AccountEditKey.city, result.cityName!),
-                (_) => _render(() => provider.account!.city = result.cityName),
+                (_) => _render(() => provider.account!.profile!.city = result.cityName),
                 autoLoading: false);
           }
-          if (result.areaName != null && result.areaName != acc.district) {
+          if (result.areaName != null && result.areaName != accProfile.district) {
             update = true;
             AccountProfileUtil.updateProfileItem(context, AccountEditParam(AccountEditKey.district, result.areaName!),
-                (_) => _render(() => provider.account!.district = result.areaName),
+                (_) => _render(() => provider.account!.profile!.district = result.areaName),
                 autoLoading: false);
           }
           if (update) {

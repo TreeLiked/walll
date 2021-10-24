@@ -65,6 +65,8 @@ dependencies:
   # ws
   stomp_dart_client: ^0.4.3
 
+  # 网页
+  webview_flutter: ^2.1.2
   # 图片缓存
   cached_network_image: ^3.1.0
   # 地区选择
@@ -73,6 +75,8 @@ dependencies:
   badges: ^2.0.1
   # 文本溢出等
   extended_text: ^7.0.0
+  # 可折叠字体
+  expandable: ^5.0.1
   # flutter 工具类, 包含SharedPreferences Util, Screen Util, Directory Util, Widget Util, Image Util
   flustars: ^2.0.1
   # sp_util从flustars分拆成单独的库, 可以直接引用
@@ -108,6 +112,8 @@ dependencies:
   flare_flutter: ^3.0.2
   # 日期选择
   flutter_datetime_picker: ^1.5.1
+  # 缓存管理
+  flutter_cache_manager: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -137,6 +143,7 @@ flutter:
   assets:
     - assets/flrs/
     - assets/images/
+    - assets/images/guide/
     - assets/icons/
     - assets/icons/common/
     - assets/svg/
