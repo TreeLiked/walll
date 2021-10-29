@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 3.0.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -55,7 +55,7 @@ dependencies:
   # 极光推送
   jpush_flutter: ^2.1.5
   # umeng分析
-  umeng_analytics_plugin: ^1.0.3
+#  umeng_analytics_plugin: ^1.0.3
   # apk安装, ios跳转, 不支持embedded2
   install_plugin: ^2.0.1
   # flutter 长连接
@@ -67,6 +67,9 @@ dependencies:
 
   # 网页
   webview_flutter: ^2.1.2
+  # 网页
+  flutter_inappwebview: ^5.3.2
+  url_launcher: ^6.0.12
   # 图片缓存
   cached_network_image: ^3.1.0
   # 地区选择
@@ -114,6 +117,8 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   # 缓存管理
   flutter_cache_manager: ^3.1.2
+#   TODO
+#  scrollable_positioned_list: ^0.2.2
 
 dev_dependencies:
   flutter_test:

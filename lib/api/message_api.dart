@@ -39,13 +39,12 @@ class MessageApi {
       return [];
     }
     Map<String, dynamic> pageData = res.oriData;
-    List<dynamic> jsonData = pageData["data"];
-    if (jsonData.isEmpty) {
+    List<dynamic> jsonData;
+
+    if (CollUtil.isListEmpty(jsonData = pageData["data"])) {
       return [];
     }
-    return jsonData.map((m) {
-      return AbstractMessage.fromJson(m);
-    }).toList();
+    return jsonData.map((m) => AbstractMessage.fromJson(m)).toList();
   }
 
   static Future<List<AbstractMessage>> querySystemMsg(int currentPage, int pageSize) async {

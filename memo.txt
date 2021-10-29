@@ -1,0 +1,15 @@
+flutter build apk --build-name=1.0.3
+flutter build apk --build-number=3
+flutter build apk --build-name=1.0.3 --build-number=3
+
+flutter build ios --build-name=1.0.3
+
+1、Android
+  flutter build apk --split-per-abi --debug/--profile/--release
+2、IOS
+  flutter build ios --release -> Product -Archive
+
+
+
+### 如果需要调试本地
+地址换掉，member注册的provider的name值改掉

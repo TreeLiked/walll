@@ -44,21 +44,21 @@ class _InteractiveNotificationMainPageState extends State<InteractiveNotificatio
 
   void _fetchInteractiveMessages() async {
     currentPage = 1;
-    List<AbstractMessage> msgs = await getData(1, pageSize);
-    if (msgs.isEmpty) {
+    List<AbstractMessage> msgList = await getData(1, pageSize);
+    if (msgList.isEmpty) {
       setState(() {
-        this.msgs = [];
+        msgs = [];
       });
       _refreshController.refreshCompleted(resetFooterState: true);
       return;
     }
     setState(() {
-      if (this.msgs != null) {
-        this.msgs!.clear();
+      if (msgs != null) {
+        msgs!.clear();
       } else {
-        this.msgs = [];
+        msgs = [];
       }
-      this.msgs!.addAll(msgs);
+      msgs!.addAll(msgList);
     });
     _refreshController.refreshCompleted(resetFooterState: true);
   }

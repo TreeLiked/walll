@@ -45,14 +45,17 @@ class TweetIndexItem extends StatelessWidget {
   final bool myNickClickable;
   final bool needLeftProfile;
   final bool displayType;
+  final bool tweetOption;
   late BuildContext context;
   late bool isDark;
   final Function? onDetailDelete;
+  final String source;
 
   late int indexInList;
 
   TweetIndexItem(this.tweet,
-      {this.upClickable = true,
+      {Key? key,
+      this.upClickable = true,
       this.downClickable = true,
       this.onClickComment,
       this.sendReplyCallback,
@@ -65,8 +68,11 @@ class TweetIndexItem extends StatelessWidget {
       this.myNickClickable = true,
       this.needLeftProfile = true,
       this.displayType = true,
+      this.tweetOption = false,
       this.indexInList = -1,
-      this.onDetailDelete}) {}
+      required this.source,
+      this.onDetailDelete})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +96,8 @@ class TweetIndexItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    TweetIndexItemHeader(tweet, myNickClickable: myNickClickable, official: false,displayType: displayType),
+                    TweetIndexItemHeader(tweet,
+                        myNickClickable: myNickClickable, official: false, displayType: displayType),
                     TweetBodyWrapper(tweet.body, maxLine: 5, fontSize: 15, height: 1.6),
                     TweetMediaWrapper(tweet: tweet),
                     TweetCampusWrapper(tweet: tweet, displayCampus: displayCampus),
@@ -128,20 +135,12 @@ class TweetIndexItem extends StatelessWidget {
         ));
   }
 
-  Widget _profileContainer() {
-    bool anonymous = tweet.anonymous!;
-    Gender gender = anonymous ? Gender.unknown : Gender.parseGender(tweet.account!.gender!);
-    return AccountAvatar(
-        onTap: () => anonymous || !myNickClickable ? null : goAccountDetail2(context, tweet.account!, true),
-        avatarUrl: !anonymous ? (tweet.account!.avatarUrl!) : AssetPathCst.svgAnonymousAvatarPath,
-        gender: gender);
-  }
-
   void _forwardDetail(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => TweetDetailPage(tweetId: tweet.id!, tweet: tweet, onDelete: onDetailDelete)),
+          builder: (context) =>
+              TweetDetailPage(tweetId: tweet.id!, tweet: tweet, onDelete: onDetailDelete, source: source)),
     );
   }
 

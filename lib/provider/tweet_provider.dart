@@ -60,11 +60,12 @@ class TweetProvider extends ChangeNotifier {
       ToastUtil.showToast(context, '回复失败，请稍后重试');
       return;
     }
-    print(tr.toJson());
-    print("--------------------");
 
     BaseTweet? targetTweet = displayTweets!.firstWhereOrNull((tweet) => tweet.id == tr.tweetId);
-    targetTweet!.replyCount = targetTweet.replyCount! + 1;
+    if (targetTweet == null) {
+      return;
+    }
+    targetTweet.replyCount = targetTweet.replyCount! + 1;
     if (tr.type == 1) {
       // 设置到直接回复
       targetTweet.dirReplies ??= [];
@@ -83,7 +84,6 @@ class TweetProvider extends ChangeNotifier {
   void updatePraise(BuildContext context, Account account, int tweetId, bool praise) {
     BaseTweet? targetTweet = displayTweets!.firstWhereOrNull((tweet) => tweet.id == tweetId);
     if (targetTweet == null) {
-      ToastUtil.showToast(context, '内容不存在，请刷新后重试');
       return;
     }
     targetTweet.loved = praise;
@@ -98,7 +98,6 @@ class TweetProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
-    print('12321321321-------------------');
   }
 
   void update(List<BaseTweet> tweets, {bool append = true, bool clear = false}) {

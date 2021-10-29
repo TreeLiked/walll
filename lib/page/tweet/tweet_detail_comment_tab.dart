@@ -1,10 +1,8 @@
 import 'package:expandable/expandable.dart';
-import 'package:extended_text/extended_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wall/api/tweet_api.dart';
@@ -13,9 +11,7 @@ import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/model/biz/common/gender.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
-import 'package:wall/model/biz/tweet/tweet_account.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
-import 'package:wall/model/biz/tweet/tweet_type.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/provider/tweet_provider.dart';
 import 'package:wall/util/bottom_sheet_util.dart';
@@ -47,7 +43,7 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
   List<TweetReply>? _commentList;
 
   final TextStyle replyNickStyle =
-      const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colours.secondaryFontColor);
+      const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w500, color: Colours.secondaryFontColor);
 
   TweetDetailCommentTabState(BaseTweet? tweet) {
     if (tweet != null) {
@@ -60,6 +56,8 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       // _loadData();
+      // _refreshController.requestRefresh();
+      _refreshComment(false);
     });
   }
 
@@ -69,22 +67,22 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
       return Gaps.empty;
     }
 
-    if (CollUtil.isListEmpty(_commentList)) {
-      return Scaffold(
-          body: Container(
-              height: 100,
-              alignment: Alignment.topCenter,
-              margin: const EdgeInsets.only(top: 60),
-              child:
-                  // _commentList == null
-                  //     ? SpinKitDualRing(color: TweetTypeUtil.parseType(widget._tweet!.type).color, size: 13, lineWidth: 2):
-                  const Text('暂无评论', style: TextStyle(color: Colours.secondaryFontColor, fontSize: 13.0))));
-    }
+    // if (CollUtil.isListEmpty(_commentList)) {
+    //   return Scaffold(
+    //       body: Container(
+    //           height: 100,
+    //           alignment: Alignment.topCenter,
+    //           margin: const EdgeInsets.only(top: 60),
+    //           child:
+    //               // _commentList == null
+    //               //     ? SpinKitDualRing(color: TweetTypeUtil.parseType(widget._tweet!.type).color, size: 13, lineWidth: 2):
+    //               const Text('暂无评论', style: TextStyle(color: Colours.secondaryFontColor, fontSize: 13.0))));
+    // }
     return SmartRefresher(
         controller: _refreshController,
         enablePullDown: false,
         enablePullUp: false,
-        onRefresh: () => _refreshComment(false),
+        onRefresh: () => _refreshComment(true),
         header: ClassicHeader(
             iconPos: IconPosition.top,
             refreshingText: '正在刷新',
@@ -96,12 +94,21 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
               return SizedBox(width: 80.0, child: Center(child: child));
             }),
         // onLoading: _loadData,
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (ctx, index) {
-              return _renderReplyItem(ctx, index, _commentList![index], false);
-            },
-            itemCount: _commentList!.length),
+        child: CollUtil.isListEmpty(_commentList)
+            ? Container(
+                height: 100,
+                alignment: Alignment.topCenter,
+                margin: const EdgeInsets.only(top: 60),
+                child:
+                    // _commentList == null
+                    //     ? SpinKitDualRing(color: TweetTypeUtil.parseType(widget._tweet!.type).color, size: 13, lineWidth: 2):
+                    const Text('暂无评论', style: TextStyle(color: Colours.secondaryFontColor, fontSize: 13.0)))
+            : ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) {
+                  return _renderReplyItem(ctx, index, _commentList![index], false);
+                },
+                itemCount: _commentList!.length),
         footer: const ClassicFooter(
           textStyle: TextStyle(color: Colors.grey, fontSize: 13),
           loadStyle: LoadStyle.ShowWhenLoading,
@@ -112,11 +119,14 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
         ));
   }
 
-  void _refreshComment(bool auto) async {
+  void _refreshComment(bool autoFinishRefresh) async {
     List<TweetReply> data = await TweetApi.queryTweetReply(widget._tweet!.id!, true);
     setState(() {
       _commentList = data;
-      if (!auto) {
+      if (widget._tweet != null) {
+        widget._tweet!.dirReplies = _commentList;
+      }
+      if (autoFinishRefresh) {
         _refreshController.refreshCompleted();
       }
     });
@@ -142,9 +152,9 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
   //   }
   // }
 
-  void outerCallRefresh(TweetReply tweetReply) {
-    if (mounted) {
-      _refreshComment(true);
+  void outerCallRefresh(TweetReply? tweetReply, {bool reloadReply = false}) {
+    if (reloadReply) {
+      _refreshComment(false);
     }
   }
 
@@ -174,7 +184,7 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
             BottomSheetUtil.showBottomSheetView(context, options);
           },
           child: Container(
-            margin: EdgeInsets.only(bottom: 0, top: subRender ? 5 : (index == 0 ? 30 : 0), right: 15),
+            margin: EdgeInsets.only(bottom: 0, top: subRender ? 5 : (index == 0 ? 5 : 5), right: 15),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -207,9 +217,7 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
                       //                   style: const TextStyle(color: Colors.blueAccent, fontSize: 14)),
                       //               const Icon(Icons.keyboard_arrow_right, size: 14, color: Colors.blueAccent)
                       //             ])),
-                      Gaps.vGap5,
                       subRender ? Gaps.empty : Gaps.line,
-
                       _buildSubReplyList(context, reply),
                     ],
                   ),
@@ -237,7 +245,7 @@ class TweetDetailCommentTabState extends State<TweetDetailCommentTab> {
     return Padding(
         padding: const EdgeInsets.only(top: 3.0),
         child: Text(TimeUtil.getShortTime(reply.sentTime!),
-            style: const TextStyle(color: Colours.secondaryFontColor, fontWeight: FontWeight.w500, fontSize: 12)));
+            style: const TextStyle(color: Colours.secondaryFontColor, fontWeight: FontWeight.w500, fontSize: 11.5)));
   }
 
   _buildReplyBody(BuildContext context, TweetReply reply, BoxConstraints size) {

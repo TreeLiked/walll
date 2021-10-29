@@ -1,4 +1,4 @@
-import 'package:umeng_analytics_plugin/umeng_analytics_plugin.dart';
+// import 'package:umeng_analytics_plugin/umeng_analytics_plugin.dart';
 
 class UMengUtil {
   static const String pageTweetIndex = "推文首页";
@@ -13,17 +13,17 @@ class UMengUtil {
   static const String pagePc = "个人资料页面";
 
   static Future<void> initUMengAnalytics() async {
-    await UmengAnalyticsPlugin.init(
-      androidKey: '5f6df059906ad8111714de33',
-      iosKey: '5f6c82e880455950e496a742',
-    );
+    // await UmengAnalyticsPlugin.init(
+    //   androidKey: '5f6df059906ad8111714de33',
+    //   iosKey: '5f6c82e880455950e496a742',
+    // );
   }
 
   static void userGoPage(String pageName) {
-    UmengAnalyticsPlugin.pageStart(pageName);
+    // UmengAnalyticsPlugin.pageStart(pageName);
   }
 
   static void userLeavePage(String pageName) {
-    UmengAnalyticsPlugin.pageEnd(pageName);
+    // UmengAnalyticsPlugin.pageEnd(pageName);
   }
 }

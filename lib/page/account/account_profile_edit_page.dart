@@ -131,7 +131,7 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
                 String content = newSig.toString();
                 await AccountProfileUtil.updateProfileItem(
                     context,
-                    AccountEditParam(AccountEditKey.nick, content),
+                    AccountEditParam(AccountEditKey.signature, content),
                     (_) => _render(() {
                           accProvider.account!.signature = content;
                           sigFocusNode.unfocus();
@@ -185,7 +185,6 @@ class _AccountProfileEditPageState extends State<AccountProfileEditPage> {
       }
       AccountProfileUtil.updateProfileItem(context, AccountEditParam(AccountEditKey.gender, ng.name), (_) {
         _render(() => provider.account!.profile!.gender = ng.name);
-        ToastUtil.showToast(context, '更新成功');
         NavigatorUtils.goBack(context);
       });
     }

@@ -60,25 +60,26 @@ class NavigatorUtils {
     } else if (url.contains("kugou.com")) {
       title = "酷狗音乐";
     }
+    // url = url.replaceAll("https", "http");
 
     push(context,
         '${Routes.webViewPage}?title=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(url)}&source=$source');
   }
 
   static void goAccountProfileByAcc(BuildContext context, Account account) {
-    push(
-        context,
-        Routes.accountProfile +
-            FluroConvertUtils.packConvertArgs(
-                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+    // push(
+    //     context,
+    //     Routes.accountProfile +
+    //         FluroConvertUtils.packConvertArgs(
+    //             {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
   }
 
   static void goAccountProfileByTweetAcc(BuildContext context, TweetAccount account) {
-    push(
-        context,
-        Routes.accountProfile +
-            FluroConvertUtils.packConvertArgs(
-                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
+    // push(
+    //     context,
+    //     Routes.accountProfile +
+    //         FluroConvertUtils.packConvertArgs(
+    //             {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
   }
 
 //

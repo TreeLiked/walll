@@ -5,6 +5,7 @@ import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
+import 'package:wall/widget/tweet/tweet_special_text_builder.dart';
 
 class TweetBodyWrapper extends StatelessWidget {
   final String? body;
@@ -30,16 +31,7 @@ class TweetBodyWrapper extends StatelessWidget {
             maxLines: maxLine == -1 ? null : maxLine,
             softWrap: true,
             textAlign: TextAlign.left,
-            // TODO 链接
-            // specialTextSpanBuilder: MySpecialTextSpanBuilder(
-            //     showAtBackground: false,
-            //     onTapCb: (String text) {
-            //       if (text != null && text.length > 0) {
-            //         if (text.startsWith("http")) {
-            //           NavigatorUtils.goWebViewPage(context, text, text.trim());
-            //         }
-            //       }
-            //     }),
+            specialTextSpanBuilder: TweetSpecialTextSpanBuilder(showAtBackground: false),
             selectionEnabled: selectable,
             overflowWidget: maxLine == -1
                 ? null
@@ -51,9 +43,6 @@ class TweetBodyWrapper extends StatelessWidget {
                         Gaps.hGap4,
                         Text("更多", style: TextStyle(color: Colours.secondaryFontColor, fontSize: fontSize))
                       ])),
-            style: TextStyle(
-                fontSize: fontSize,
-                height: height,
-                color: Colours.getEmphasizedTextColor(context))));
+            style: TextStyle(fontSize: fontSize, height: height, color: Colours.getEmphasizedTextColor(context))));
   }
 }

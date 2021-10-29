@@ -53,11 +53,19 @@ class _AccountOtherSettingPageState extends State<AccountOtherSettingPage> {
         body: Consumer<AccountLocalProvider>(builder: (_, provider, __) {
           return SingleChildScrollView(
               child: Column(children: <Widget>[
-            SettingRowItem(title: '清理缓存', onTap: () {
-              PaintingBinding.instance!.imageCache?.clear();
-              DefaultCacheManager().emptyCache();
-              ToastUtil.showToast(context, '清理成功');
-            }),
+            SettingRowItem(
+                title: '清理缓存',
+                onTap: () {
+                  PaintingBinding.instance!.imageCache?.clear();
+                  DefaultCacheManager().emptyCache();
+                  ToastUtil.showToast(context, '清理成功');
+                }),
+            SettingRowItem(
+                title: '恢复已屏蔽的首页内容',
+                onTap: () async {
+                  await SpUtil.remove(SharedCst.unLikeTweetIds);
+                  ToastUtil.showToast(context, '恢复成功，请手动刷新');
+                }),
           ]));
         }));
   }

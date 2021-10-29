@@ -132,46 +132,46 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return [
                 _mySliverAppBar(),
-                SliverList(
-                  ///懒加载代理
-                  delegate: SliverChildBuilderDelegate((BuildContext context, num index) {
-                    ///子Item的布局
-                    return Container(
-                      height: 44,
-                      margin: EdgeInsets.only(bottom: 10),
-                      child: Text("item- $index"),
-                    );
-                  }, childCount: 100), //子Item的个数
-                ),
-                // SliverPersistentHeader(
-                //     delegate: StickyRowDelegate(
-                //   children: [Text('123')],
-                //   height: 200,
-                // )),
-                // SliverFillRemaining(
-                //     child: Container(
-                //   width: double.infinity,
-                //   color: isDark ? darkBg : lightBg,
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.max,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       Gaps.vGap60,
-                //       Text(widget.nick,
-                //           maxLines: 1,
-                //           textAlign: TextAlign.center,
-                //           overflow: TextOverflow.ellipsis,
-                //           style: TextStyle(
-                //               fontSize: 22.0,
-                //               fontWeight: FontWeight.bold,
-                //               color: Colours.emphasizeFontColor)),
-                //       Gaps.vGap10,
-                //       Text("计算机工程学院 软件161 23",
-                //           style: TextStyle(fontSize: 14, color: Colours.secondaryFontColor)),
-                //     ],
-                //   ),
-                // ))
+                // SliverList(
+                //   ///懒加载代理
+                //   delegate: SliverChildBuilderDelegate((BuildContext context, num index) {
+                //     ///子Item的布局
+                //     return Container(
+                //       height: 44,
+                //       margin: EdgeInsets.only(bottom: 10),
+                //       child: Text("item- $index"),
+                //     );
+                //   }, childCount: 100), //子Item的个数
+                // ),
+                SliverPersistentHeader(
+                    delegate: StickyRowDelegate(
+                  children: [Text('123')],
+                  height: 200,
+                )),
+                SliverFillRemaining(
+                    child: Container(
+                  width: double.infinity,
+                  color: isDark ? darkBg : lightBg,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Gaps.vGap60,
+                      Text(widget.nick,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colours.emphasizeFontColor)),
+                      Gaps.vGap10,
+                      Text("计算机工程学院 软件161 23",
+                          style: TextStyle(fontSize: 14, color: Colours.secondaryFontColor)),
+                    ],
+                  ),
+                ))
               ];
             },
             // body: Gaps.empty,
@@ -207,20 +207,20 @@ class _AccountProfileIndexState extends State<AccountProfileIndex> {
                 ))
               ],
             )),
-        // Positioned(
-        //     child: AccountAvatar2(
-        //       avatarUrl: widget.avatarUrl,
-        //       size: 80,
-        //       gender: Gender.female,
-        //       borderColor: isDark ? darkBg : lightBg,
-        //       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-        //           builder: (context) {
-        //             return ImageHeroPage(url: widget.avatarUrl);
-        //           },
-        //           fullscreenDialog: true)),
-        //     ),
-        //     left: (Application.screenWidth! - 84) / 2,
-        //     top: 265)
+        Positioned(
+            child: AccountAvatar2(
+              avatarUrl: widget.avatarUrl,
+              size: 80,
+              gender: Gender.female,
+              borderColor: isDark ? darkBg : lightBg,
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return ImageHeroPage(url: widget.avatarUrl);
+                  },
+                  fullscreenDialog: true)),
+            ),
+            left: (Application.screenWidth! - 84) / 2,
+            top: 265)
       ]),
     );
   }

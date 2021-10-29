@@ -70,7 +70,7 @@ class _TweetCateTabState extends State<TweetCateTab> {
             noDataText: '到底了哦',
             idleText: '继续上滑',
           ),
-          child: tweets.isEmpty &&  !_refreshController.isRefresh
+          child: tweets.isEmpty && !_refreshController.isRefresh
               ? TweetNoDataView(onTapReload: () {
                   _refreshController.resetNoData();
                   _refreshController.requestRefresh();
@@ -80,16 +80,15 @@ class _TweetCateTabState extends State<TweetCateTab> {
                   itemCount: tweets.length,
                   addAutomaticKeepAlives: true,
                   itemBuilder: (context, index) {
-                    return TweetIndexItem(
-                      tweets[index],
-                      displayExtra: true,
-                      displayPraise: true,
-                      displayComment: true,
-                      displayLink: true,
-                      canPraise: true,
-                      indexInList: index,
-                      displayType: false
-                    );
+                    return TweetIndexItem(tweets[index],
+                        displayExtra: true,
+                        displayPraise: true,
+                        displayComment: true,
+                        displayLink: true,
+                        canPraise: true,
+                        indexInList: index,
+                        displayType: false,
+                        source: "2");
                   }),
           onRefresh: () => _onRefresh(context),
           onLoading: _onLoading,

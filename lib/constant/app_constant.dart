@@ -5,10 +5,10 @@ class AppCst {
 
 
   /// 版本信息
-  static const int versionIdAndroid = 40;
-  static const int versionIdIos = 20;
-  static const String versionRemarkAndroid = "4.0.0";
-  static const String versionRemarkIos = "4.0.0";
+  static const int versionIdAndroid = 35;
+  static const int versionIdIos = 35;
+  static const String versionRemarkAndroid = "3.1.0";
+  static const String versionRemarkIos = "3.1.0";
 
   static const String androidAppId = "com.iutr.wall";
 

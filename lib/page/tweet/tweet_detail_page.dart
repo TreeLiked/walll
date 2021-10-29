@@ -5,29 +5,23 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wall/api/account_relation_api.dart';
 import 'package:wall/api/tweet_api.dart';
 import 'package:wall/application.dart';
-import 'package:wall/config/routes/routes.dart';
 import 'package:wall/constant/color_constant.dart';
 import 'package:wall/constant/gap_constant.dart';
 import 'package:wall/constant/shared_constant.dart';
 import 'package:wall/constant/text_constant.dart';
-import 'package:wall/model/biz/account/account.dart';
 import 'package:wall/model/biz/tweet/tweet.dart';
-import 'package:wall/model/biz/tweet/tweet_account.dart';
 import 'package:wall/model/biz/tweet/tweet_reply.dart';
 import 'package:wall/model/biz/tweet/tweet_type.dart';
 import 'package:wall/model/response/result.dart';
 import 'package:wall/page/tweet/tweet_detail_comment_tab.dart';
 import 'package:wall/page/tweet/tweet_detail_praise_tab.dart';
-import 'package:wall/page/tweet/tweet_index_hot_tab.dart';
 import 'package:wall/provider/tweet_provider.dart';
 import 'package:wall/util/bottom_sheet_util.dart';
 import 'package:wall/util/common_util.dart';
 import 'package:wall/util/custom_number_util.dart';
-import 'package:wall/util/fluro_convert_utils.dart';
 import 'package:wall/util/navigator_util.dart';
 import 'package:wall/util/str_util.dart';
 import 'package:wall/util/theme_util.dart';
@@ -35,8 +29,6 @@ import 'package:wall/util/toast_util.dart';
 import 'package:wall/util/tweet_reply_util.dart';
 import 'package:wall/util/umeng_util.dart';
 import 'package:wall/widget/common/dialog/bottom_cancel_confirm.dart';
-import 'package:wall/widget/common/dialog/simple_cancel_confirm_dialog.dart';
-import 'package:wall/widget/common/real_rich_text.dart';
 import 'package:wall/widget/common/sliver/sliver_header_delegate.dart';
 import 'package:wall/widget/tweet/tweet_body_wrapper.dart';
 import 'package:wall/widget/tweet/tweet_detail_bottom_comment_wrapper.dart';
@@ -53,7 +45,11 @@ class TweetDetailPage extends StatefulWidget {
   // 删除回调
   final Function? onDelete;
 
-  TweetDetailPage({Key? key, required this.tweetId, this.tweet, this.onDelete, this.fromHot = false}) : super(key: key);
+  // 是否右上角可以进行推文的操作，例如屏蔽等，除了首页目前都不可以操作
+  final String source;
+
+  TweetDetailPage({Key? key, required this.tweetId, this.tweet, this.onDelete, this.fromHot = false, this.source = "2"})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -104,7 +100,11 @@ class _TweetDetailPageState extends State<TweetDetailPage>
       NavigatorUtils.goBack(context);
       return;
     }
-    _refresh(() => tweet = bt);
+    _refresh(() {
+      tweet = bt;
+    });
+    // _commentTabKey.currentState!.outerCallRefresh(null, reloadReply: true);
+
   }
 
   Widget _buildHeader() {
@@ -182,8 +182,12 @@ class _TweetDetailPageState extends State<TweetDetailPage>
     TRUtil.publicReply(_context, assembleReply, (successFlag, data) {
       if (successFlag) {
         _focusNode.unfocus();
-        Provider.of<TweetProvider>(context, listen: false).updateReply(_context, data);
-        // _commentTabKey.currentState!.outerCallRefresh(data);
+        if (widget.source == "1") {
+          Provider.of<TweetProvider>(context, listen: false).updateReply(_context, data);
+          _commentTabKey.currentState!.outerCallRefresh(data, reloadReply: false);
+        } else {
+          _commentTabKey.currentState!.outerCallRefresh(data, reloadReply: true);
+        }
       } else {
         _focusNode.requestFocus();
         ToastUtil.showToast(_context, data);
@@ -201,25 +205,27 @@ class _TweetDetailPageState extends State<TweetDetailPage>
     return <Widget>[
       SliverAppBar(
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.more_horiz, color: c, size: 20),
-              onPressed: () {
-                bool myTweet = Application.getAccountId! == tweet!.account!.id;
-                if (myTweet) {
-                  return;
-                }
-                BottomSheetUtil.showBottomSheetView(context, [
-                  BottomSheetItem(const Icon(Icons.do_not_disturb_alt, color: Colors.blueGrey), '屏蔽此内容', () {
-                    NavigatorUtils.goBack(context);
-                    _showShieldedBottomSheet(context);
-                  }),
-                  BottomSheetItem(const Icon(Icons.do_not_disturb_on, color: Colors.orangeAccent), '屏蔽此人', () {
-                    NavigatorUtils.goBack(context);
-                    _showShieldedAccountBottomSheet(context);
-                  })
-                ]);
-              },
-            )
+            widget.source == "1"
+                ? IconButton(
+                    icon: Icon(Icons.more_horiz, color: c, size: 20),
+                    onPressed: () {
+                      bool myTweet = Application.getAccountId! == tweet!.account!.id;
+                      if (myTweet) {
+                        return;
+                      }
+                      BottomSheetUtil.showBottomSheetView(context, [
+                        BottomSheetItem(const Icon(Icons.do_not_disturb_alt, color: Colors.blueGrey), '屏蔽此内容', () {
+                          NavigatorUtils.goBack(context);
+                          _showShieldedBottomSheet(context);
+                        }),
+                        BottomSheetItem(const Icon(Icons.do_not_disturb_on, color: Colors.orangeAccent), '屏蔽此人', () {
+                          NavigatorUtils.goBack(context);
+                          _showShieldedAccountBottomSheet(context);
+                        })
+                      ]);
+                    },
+                  )
+                : Gaps.empty
           ],
           backgroundColor: Colours.getScaffoldColor(context),
           centerTitle: true,

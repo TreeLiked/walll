@@ -99,6 +99,8 @@ class TweetMediaWrapper extends StatelessWidget {
       }),
       BottomSheetItem(const Icon(Icons.warning, color: Colors.orange), '图片违规', () {
         Navigator.pop(context);
+        ToastUtil.showToast(context, '举报成功，我们将在第一时间给您反馈');
+
         // NavigatorUtils.goReportPage(
         //     context, ReportPage.REPORT_TWEET_IMAGE, widget.galleryItems[currentIndex].url, "图片举报");
       }),

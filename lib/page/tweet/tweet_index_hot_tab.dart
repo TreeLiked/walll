@@ -97,6 +97,7 @@ class _TweetIndexLiveHotState extends State<TweetIndexHotTab> {
                               displayLink: true,
                               canPraise: true,
                               indexInList: index,
+                              source: "-1",
                               // onClickComment:
                               //     (TweetReply subReply, String targetNick, String targetAccountId) {
                               //   _bottomSheetController =

@@ -76,7 +76,7 @@ class TweetDetailItemHeader extends StatelessWidget {
                   if (anonymous) {
                     return;
                   }
-                  goAccountDetail(context, account, true);
+                  NavigatorUtils.goAccountProfileByTweetAcc(context, account);
                 }),
           // TextSpan(
           //   text: ' · ' + TimeUtil.getShortTime(tweetSent),
@@ -108,7 +108,7 @@ class TweetDetailItemHeader extends StatelessWidget {
     return AccountAvatar(
         displayGender: false,
         anonymous: anonymous,
-        onTap: () => anonymous ? null : goAccountDetail(context, account, true),
+        onTap: () => anonymous ? null : NavigatorUtils.goAccountProfileByTweetAcc(context, account),
         avatarUrl: account.avatarUrl!,
         size: 45);
   }
@@ -117,14 +117,5 @@ class TweetDetailItemHeader extends StatelessWidget {
     TweetTypeEntity en = TweetTypeUtil.parseType(tweet.type);
     String zhTag = en.zhTag;
     return Text('# $zhTag', style: TextStyle(fontSize: 14, color: en.color, fontWeight: FontWeight.w500));
-  }
-
-  void goAccountDetail(BuildContext context, TweetAccount account, bool up) {
-    NavigatorUtils.push(
-        context,
-        Routes.accountProfile +
-            FluroConvertUtils.packConvertArgs(
-                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}),
-        transitionType: TransitionType.fadeIn);
   }
 }

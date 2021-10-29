@@ -72,15 +72,6 @@ class TweetIndexItemHeader extends StatelessWidget {
     );
   }
 
-  void goAccountDetail(BuildContext context, TweetAccount account, bool up) {
-    if (canClick) {
-      NavigatorUtils.push(
-          context,
-          Routes.accountProfile +
-              FluroConvertUtils.packConvertArgs(
-                  {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}));
-    }
-  }
 
   Widget _nickContainer(BuildContext context) {
     if (anonymous) {
@@ -95,7 +86,7 @@ class TweetIndexItemHeader extends StatelessWidget {
               if (anonymous || !myNickClickable) {
                 return;
               }
-              goAccountDetail(context, account, true);
+              NavigatorUtils.goAccountProfileByTweetAcc(context, account);
             }),
     ]);
   }
@@ -137,18 +128,9 @@ class TweetIndexItemHeader extends StatelessWidget {
     Gender gender = anonymous ? Gender.unknown : Gender.parseGender(account.gender!);
     return AccountAvatar(
         anonymous: anonymous,
-        onTap: () => anonymous || !myNickClickable ? null : goAccountDetail2(context, account, true),
+        onTap: () => anonymous || !myNickClickable ? null : NavigatorUtils.goAccountProfileByTweetAcc(context, account),
         avatarUrl: account.avatarUrl!,
         size: 45,
         gender: gender);
-  }
-
-  void goAccountDetail2(BuildContext context, TweetAccount account, bool up) {
-    NavigatorUtils.push(
-        context,
-        Routes.accountProfile +
-            FluroConvertUtils.packConvertArgs(
-                {'nick': account.nick!, 'accId': account.id!, 'avatarUrl': account.avatarUrl!}),
-        transitionType: TransitionType.fadeIn);
   }
 }

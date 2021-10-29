@@ -111,10 +111,10 @@ class _AccountAboutPageState extends State<AccountAboutPage> with SingleTickerPr
                 }),
             SettingRowItem(
                 title: '分享给朋友',
-                onTap: () {
+                onTap: () async{
+                  NavigatorUtils.goWebViewPage(context, "分享给朋友", Api.sharePageUrl);
                   Util.copyTextToClipBoard(Api.sharePageUrl);
                   ToastUtil.showToast(context, '分享链接已复制到粘贴板');
-                  NavigatorUtils.goWebViewPage(context, "分享给朋友", Api.sharePageUrl);
                 })
           ]));
         }));
